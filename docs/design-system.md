@@ -33,13 +33,13 @@
 └─────────────────────────────────────────────────────────┘
 ```
 
-| レイヤ              | 正本                                                                                                                                                                                                                                  | 触るタイミング                                   |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **A. 作者向け意味** | [フローチャート記述ルール.md](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/02_spec/フローチャート記述ルール.md) · [列の意味.md](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/02_spec/列の意味.md) | 図形・色の**意味**を変えるとき（先に仕様）       |
-| **B. キャンバス**   | [`lib/flowchart/flowColors.ts`](../lib/flowchart/flowColors.ts) · [`FlowColorLegend.tsx`](../components/flowchart/FlowColorLegend.tsx)                                                                                                | ノード色・矢印色・枠太さ・凡例                   |
-| **C. 操作 UI**      | [`components/flowchart/flowchartUiClasses.ts`](../components/flowchart/flowchartUiClasses.ts)                                                                                                                                         | ボタン・ナビ・バナー・ワークスペース比率         |
-| **D. shadcn 基盤**  | [`app/globals.css`](../app/globals.css) · [`components/ui/`](../components/ui/)                                                                                                                                                       | ログイン・admin 等（**フロー編集 chrome は C**） |
-| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md)                                                                                                                                                             | 枠・ストロークの太さ方針                         |
+| レイヤ              | 正本                                                                                                                                   | 触るタイミング                                   |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| **A. 作者向け意味** | [フローチャート記述ルール.md](../specs/03_技術仕様/フローチャート記述ルール.md) · [列の意味.md](../specs/03_技術仕様/列の意味.md)      | 図形・色の**意味**を変えるとき（先に仕様）       |
+| **B. キャンバス**   | [`lib/flowchart/flowColors.ts`](../lib/flowchart/flowColors.ts) · [`FlowColorLegend.tsx`](../components/flowchart/FlowColorLegend.tsx) | ノード色・矢印色・枠太さ・凡例                   |
+| **C. 操作 UI**      | [`components/flowchart/flowchartUiClasses.ts`](../components/flowchart/flowchartUiClasses.ts)                                          | ボタン・ナビ・バナー・ワークスペース比率         |
+| **D. shadcn 基盤**  | [`app/globals.css`](../app/globals.css) · [`components/ui/`](../components/ui/)                                                        | ログイン・admin 等（**フロー編集 chrome は C**） |
+| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md)                                                              | 枠・ストロークの太さ方針                         |
 
 ### なぜ 1 ファイルに統合しないか
 

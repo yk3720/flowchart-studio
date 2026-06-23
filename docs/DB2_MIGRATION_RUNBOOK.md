@@ -304,5 +304,5 @@ select proname from pg_proc where proname = 'rpc_delete_module';
 ## 6. 参照
 
 - [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
-- [DB-2\_スキーマ草案.md](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/02_spec/DB-2_スキーマ草案.md)
+- [DB-2\_スキーマ草案.md](../specs/03_技術仕様/DB-2_スキーマ草案.md)
 - ADR-014 · handoffs `2026-05-31_10_db2-schema-design-session-end.md` §4

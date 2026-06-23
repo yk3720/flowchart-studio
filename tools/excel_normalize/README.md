@@ -2,7 +2,7 @@
 
 入力用 Excel（構成 + ユニットシート · 横並びテーブル）を `import.json` に変換します。
 
-**SSOT:** `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/02_spec/Excel取込_正規化パイプライン.md`
+**SSOT:** `c:/yk-application/flowchart-studio/specs/03_技術仕様/Excel取込_正規化パイプライン.md`
 
 ## 作者 Excel の置き場所
 
