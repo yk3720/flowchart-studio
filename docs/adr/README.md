@@ -16,4 +16,6 @@
 - ADR-010: React Flow 本線 · `flowchart-studio`（旧 `flowchart-web-reactflow`）
 - ADR-011: Phase 3 — 3 ペイン（ユニット→モジュールナビ｜表｜図）、モジュール単位の退避・stale
 - ADR-012: 9 列モデル（段 + 列）— ドラフト
-- ADR-013: 永続化（Supabase）· 認証 · Vercel 公開 — DB-1（3 ペインより先、オフライン閲覧のみ）— **実装着手 2026-05-27**
+- ADR-013: 永続化（Supabase）· 認証 · Vercel 公開 — DB-1
+- ADR-014: 装置階層 DB-2（4表 + flow_documents 分離）— dev/本番適用済
+- ADR-015: フロー共同編集 — 編集は全 editor · 削除は所有者/admin

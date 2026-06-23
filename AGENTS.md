@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-web`                                                             |
 | **Product Spec 正本** | 本リポ `specs/`（コードと同居 · SDD）                                       |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-23（specs を実装リポへ移行）                                        |
+| **更新**              | 2026-06-23（specs 移行 · doc-sync）                                         |
 
 ---
 
@@ -25,7 +25,7 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-web/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-web/2026-06-23_14_login-restore-complete-session-end.md
+@c:/yk-memo/handoffs/flowchart-web/2026-06-23_16_doc-sync-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
 続きから。§4 の1件だけ。終わったら止めて報告。
 ```
@@ -59,7 +59,7 @@
 | §4           | handoffs 最新                               | 毎セッション                       |
 | 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）           | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md)
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md) — Magic Link / PKCE
 
 ---
 
@@ -110,6 +110,7 @@ npm run test:e2e
 | 概要 · 境界                  | `specs/01_要求定義/プロジェクト概要.md`                     |
 | MVP                          | `specs/01_要求定義/MVP定義.md`                              |
 | 完成の定義                   | `specs/01_要求定義/完成チェックリスト.md`                   |
+| 現状 · ロードマップ          | `specs/02_機能設計/現状とロードマップ.md`                   |
 | データモデル                 | `specs/03_技術仕様/データモデル.md`                         |
 | 図形・色                     | `specs/03_技術仕様/フローチャート記述ルール.md`             |
 | 開発経緯                     | `specs/05_開発ガイドライン/decision-log.md`                 |
