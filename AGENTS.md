@@ -25,9 +25,9 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-web/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-web/2026-06-23_16_doc-sync-session-end.md
+@c:/yk-memo/handoffs/flowchart-web/2026-06-24_17_magic-link-google-oauth-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
-続きから。§4 の1件だけ。終わったら止めて報告。
+続きから。§4 の1件だけ。一個ずつ。終わったら止めて報告。
 ```
 
 > セッション MD が更新されたら、2行目を HANDOFF の「最新セッション」に差し替える。
