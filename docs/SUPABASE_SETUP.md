@@ -4,9 +4,37 @@
 
 1. [Supabase](https://supabase.com/) で **本番用** と **開発（プレビュー）用** の 2 プロジェクトを作成
 2. 各プロジェクトで **Authentication → Providers** で **Google** と **Azure（Microsoft）** を有効化
-3. Redirect URL に次を追加:
-   - `http://localhost:3000/auth/callback`
-   - `https://YOUR_VERCEL_DOMAIN/auth/callback`
+3. **URL Configuration**（Authentication → URL Configuration）:
+   - **Site URL:** 本番は `https://flowchart-studio-dun.vercel.app`（`-dun` 必須）· 開発は `http://localhost:3000`
+   - **Redirect URLs** に次を追加（クエリなし · パスのみ）:
+     - `http://localhost:3000/auth/callback` — OAuth（Google / Azure）
+     - `http://localhost:3000/auth/confirm` — Magic Link（メール）
+     - `https://YOUR_VERCEL_DOMAIN/auth/callback`
+     - `https://YOUR_VERCEL_DOMAIN/auth/confirm`
+   - Preview デプロイを使う場合は `https://*.vercel.app/auth/callback` と `.../auth/confirm` も追加
+
+### 1-1. Magic Link メールテンプレ（PKCE / token_hash）
+
+**Authentication → Email → Magic Link** で、デフォルトの `{{ .ConfirmationURL }}`（PKCE）ではなく **token_hash** リンクに差し替える。
+
+```html
+<h2>Flowchart Web ログイン</h2>
+<p>次のリンクをクリックしてログインしてください。</p>
+<p>
+  <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email">
+    ログインする
+  </a>
+</p>
+<p>心当たりがない場合はこのメールを無視してください。</p>
+```
+
+| ルート           | 用途                                | アプリ側                          |
+| ---------------- | ----------------------------------- | --------------------------------- |
+| `/auth/confirm`  | Magic Link · サインアップ確認メール | `verifyOtp({ type, token_hash })` |
+| `/auth/callback` | OAuth（Google / Azure）             | `exchangeCodeForSession(code)`    |
+
+**開発:** Email プロバイダー有効 · Magic Link / パスワード UI 表示（`SUPABASE_RULES` §6）。  
+**本番:** Email プロバイダーはダッシュボードで**無効化**（Google / Azure のみ · UI 非表示だけでは不十分）。
 
 ## 2. マイグレーション
 

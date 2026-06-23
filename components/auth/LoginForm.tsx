@@ -21,8 +21,9 @@ export function LoginForm({ nextPath, authError }: Props) {
     authError ? "ログインに失敗しました。もう一度お試しください。" : null
   );
 
-  // Supabase Redirect URLs はクエリ付き URL を拒否するため path のみ（next は callback 側で "/" 既定）
+  // Supabase Redirect URLs はクエリ付き URL を拒否するため path のみ
   const authCallbackUrl = () => `${window.location.origin}/auth/callback`;
+  const authConfirmUrl = () => `${window.location.origin}/auth/confirm`;
 
   const signIn = async (provider: "google" | "azure") => {
     setLoading(provider);
@@ -69,10 +70,9 @@ export function LoginForm({ nextPath, authError }: Props) {
     setError(null);
     try {
       const supabase = createSupabaseBrowserClient();
-      const redirectTo = authCallbackUrl();
       const { error: signInError } = await supabase.auth.signInWithOtp({
         email: email.trim(),
-        options: { emailRedirectTo: redirectTo },
+        options: { emailRedirectTo: authConfirmUrl() },
       });
       if (signInError) {
         setError(signInError.message);
