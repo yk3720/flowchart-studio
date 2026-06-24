@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 
-import { deleteEquipmentByInternalCode } from "@/lib/admin/actions/deleteEquipment";
+import { deleteEquipmentByInternalCode } from "@/lib/flowchart/actions/delete/deleteEquipment";
 
 export function DeleteEquipmentForm() {
   const [internalCode, setInternalCode] = useState("");

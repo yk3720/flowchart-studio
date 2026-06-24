@@ -19,7 +19,7 @@
     "excel:template": "python python/scripts/build_template.py",
     "excel:new-device": "python python/scripts/scaffold_device.py",
     "excel:fixture": "python python/scripts/build_fixture.py",
-    "excel:normalize": "python -m excel_normalize.cli python/testdata/input-device-z00001.xlsx -o python/testdata/import-z00001.json",
+    "excel:normalize": "python -m excel_normalize.cli python/testdata/fixtures/input-device-z00001.xlsx -o python/testdata/fixtures/import-z00001.json",
     "excel:test001:build": "python python/scripts/build_test001.py",
     "excel:test001:normalize": "python python/scripts/normalize_device.py TEST-001",
     "excel:test001": "npm run excel:test001:build ; npm run excel:test001:normalize",

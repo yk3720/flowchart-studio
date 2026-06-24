@@ -24,18 +24,25 @@ import {
   normalizeFlowchartDocument,
   parseFlowchartDocument,
   serializeDocument,
-} from "@/lib/flowchart/document";
-import { clearDraft, loadDraft, saveDraft } from "@/lib/flowchart/draftStorage";
-import { generateFlowchart } from "@/lib/flowchart/generate";
-import { resolveColumnCount } from "@/lib/flowchart/tableColumns";
-import { toReactFlow, type FlowNodeData } from "@/lib/flowchart/toReactFlow";
-import type { FlowchartDocument } from "@/lib/flowchart/types";
+} from "@/lib/flowchart/model/document";
+import {
+  clearDraft,
+  loadDraft,
+  saveDraft,
+} from "@/lib/flowchart/browser/draftStorage";
+import { generateFlowchart } from "@/lib/flowchart/graph/generate";
+import { resolveColumnCount } from "@/lib/flowchart/table/tableColumns";
+import {
+  toReactFlow,
+  type FlowNodeData,
+} from "@/lib/flowchart/graph/toReactFlow";
+import type { FlowchartDocument } from "@/lib/flowchart/model/types";
 import {
   errorRowIndices,
   validateTableWarnings,
   WARNING_BANNER_HINT,
-} from "@/lib/flowchart/validationMeta";
-import { isModuleContentDirty } from "@/lib/flowchart/moduleContentDirty";
+} from "@/lib/flowchart/model/validationMeta";
+import { isModuleContentDirty } from "@/lib/flowchart/model/moduleContentDirty";
 import { cn } from "@/lib/utils";
 import { captureFlowPng } from "./exportPng";
 import { captureFlowSvg } from "./exportSvg";

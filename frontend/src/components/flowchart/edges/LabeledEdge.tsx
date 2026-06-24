@@ -11,8 +11,8 @@ import { memo } from "react";
 import {
   branchFromEdgeLabel,
   placementForEdgeLabel,
-} from "@/lib/flowchart/edgeLabelPlacement";
-import type { FlowEdgeData } from "@/lib/flowchart/toReactFlow";
+} from "@/lib/flowchart/graph/edgeLabelPlacement";
+import type { FlowEdgeData } from "@/lib/flowchart/graph/toReactFlow";
 
 function LabeledEdgeComponent({
   id,

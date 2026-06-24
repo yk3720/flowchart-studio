@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { StyleGuideClient } from "./StyleGuideClient";
+import { StyleGuideClient } from "@/components/dev/StyleGuideClient";
 
 /** 開発時のみ — 操作 UI の見本（docs/design-system.md Phase 2） */
 export default function DevStylePage() {

@@ -2,9 +2,9 @@
 
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { parseCsvPaste } from "@/lib/flowchart/parseCsv";
-import { parseExcelBuffer } from "@/lib/flowchart/parseExcel";
-import type { FlowTableRow } from "@/lib/flowchart/types";
+import { parseCsvPaste } from "@/lib/flowchart/table/parseCsv";
+import { parseExcelBuffer } from "@/lib/flowchart/table/parseExcel";
+import type { FlowTableRow } from "@/lib/flowchart/model/types";
 import {
   fcBtnCompactPrimary,
   fcBtnCompactSecondary,

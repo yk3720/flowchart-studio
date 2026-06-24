@@ -31,7 +31,7 @@ alwaysApply: false
 | `lib/flowchart/moduleHierarchy.ts` | 装置一覧 · `moduleDraftKey` · 旧キー |
 | `frontend/components/flowchart/ModuleNavPane.tsx` | 装置 select |
 | `frontend/components/flowchart/EditorMoreMenu.tsx` | その他メニュー · セクション IA · **装置取込** · 取込 file input は **`data-testid="import-bundle-file"`**（**メニュー open 時のみ DOM** · 表読込 input と別） |
-| `lib/flowchart/actions/importEquipmentBundle.ts` | import.json → RPC `import_equipment_bundle` · **E2E:** `PLAYWRIGHT_E2E=1` + `IMPORT_E2E_STUB=1` 時のみ RPC スキップ（`playwright.config` · 本番・通常 dev 無効） |
+| `backend/src/lib/flowchart/actions/import/importEquipmentBundle.ts` | import.json → RPC `import_equipment_bundle` · **E2E:** `PLAYWRIGHT_E2E=1` + `IMPORT_E2E_STUB=1` 時のみ RPC スキップ（`playwright.config` · 本番・通常 dev 無効） |
 | `python/` | 入力用 xlsx → import.json（**正規化 SSOT · pytest**）· **xlsx は Git 非追跡** |
 | `python/testdata/devices/README.md` | **作者 Excel 置き場 SSOT** · `{社内番号}_{装置名}/` · 現行 `A0001_塗布装置/` |
 | `frontend/components/flowchart/flowchartUiClasses.ts` | 操作 UI class 正本（`fcBtn*` · `fcTable*` · `fcColorLegend*` · バナー） |

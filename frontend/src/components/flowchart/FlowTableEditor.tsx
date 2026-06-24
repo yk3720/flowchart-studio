@@ -10,14 +10,14 @@ import {
   resolveColumnCount,
   SHAPE_TYPE_OPTIONS,
   suggestNextId,
-} from "@/lib/flowchart/tableColumns";
-import { COLOR_HINT_SELECT_OPTIONS } from "@/lib/flowchart/flowColors";
+} from "@/lib/flowchart/table/tableColumns";
+import { COLOR_HINT_SELECT_OPTIONS } from "@/lib/flowchart/visual/flowColors";
 import {
   applyPartialPaste,
   parseClipboardGrid,
   parsePasteCellValue,
-} from "@/lib/flowchart/pasteTableCells";
-import type { FlowTableRow } from "@/lib/flowchart/types";
+} from "@/lib/flowchart/table/pasteTableCells";
+import type { FlowTableRow } from "@/lib/flowchart/model/types";
 import { cn } from "@/lib/utils";
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import {

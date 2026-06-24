@@ -1,6 +1,6 @@
 ﻿# Decision Log — フローチャート Web
 
-**更新:** 2026-06-24（四層レイアウト v3.2 · フォルダ中身協議へ）  
+**更新:** 2026-06-24（docs 整理 · archive 分離）  
 **役割:** 開発経緯の **入口**。本ファイルは **リンクと1行要約のみ** — 確定事項の正本は ADR、実行の正本は handoffs §4。
 
 ---
@@ -33,24 +33,24 @@
 
 ## 種別凡例
 
-| 種別         | 意味                                     | 正本                                                               |
-| ------------ | ---------------------------------------- | ------------------------------------------------------------------ |
-| **theme**    | 個人テーマ選定 · 提出                    | `c:/yk-memo/.../00_テーマ/`                                        |
-| **調査**     | Web 調査 · 比較（ADR 化後は archive 可） | `01_要求定義/調査_*.md` · `c:/yk-memo/.../99_アーカイブ/research/` |
-| **grill-me** | 対話深掘り · 優先順位 · 未決             | `01_要求定義/grill-me_*` · `相談_*`                                |
-| **計画**     | 相談→実装の分解                          | `01_要求定義/計画_*.md`                                            |
-| **ADR**      | Accepted 技術・プロダクト決定            | `03_技術仕様/意思決定記録(ADR).md`                                 |
-| **handoff**  | 実装セッション · 次の1件                 | `c:/yk-memo/handoffs/flowchart-web/`                               |
-| **evidence** | 完了証跡                                 | `c:/yk-memo/.../99_アーカイブ/evidence/`                           |
+| 種別         | 意味                                     | 正本                                                                            |
+| ------------ | ---------------------------------------- | ------------------------------------------------------------------------------- |
+| **theme**    | 個人テーマ選定 · 提出                    | `c:/yk-memo/.../00_テーマ/`                                                     |
+| **調査**     | Web 調査 · 比較（ADR 化後は archive 可） | `docs/archive/01_要求定義/調査_*.md` · `c:/yk-memo/.../99_アーカイブ/research/` |
+| **grill-me** | 対話深掘り · 優先順位 · 未決             | `docs/archive/01_要求定義/grill-me_*` · `相談_*`                                |
+| **計画**     | 相談→実装の分解                          | `docs/archive/01_要求定義/計画_*.md`                                            |
+| **ADR**      | Accepted 技術・プロダクト決定            | `03_技術仕様/意思決定記録(ADR).md`                                              |
+| **handoff**  | 実装セッション · 次の1件                 | `c:/yk-memo/handoffs/flowchart-studio/`                                         |
+| **evidence** | 完了証跡                                 | `c:/yk-memo/.../99_アーカイブ/evidence/`                                        |
 
 ---
 
 ## 戦略 vs 戦術（ズレても正常）
 
-| 軸               | 正本                                                                            | 現状（2026-06-24）                       |
-| ---------------- | ------------------------------------------------------------------------------- | ---------------------------------------- |
-| **戦略優先**     | [相談\_2026-05-30](../01_要求定義/相談_2026-05-30_Web版ブラッシュアップ方針.md) | UX · **作る操作の手間削減** 最優先       |
-| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md)                   | **フォルダ中身の協議**（§4 · 1論点ずつ） |
+| 軸               | 正本                                                          | 現状（2026-06-24）                 |
+| ---------------- | ------------------------------------------------------------- | ---------------------------------- |
+| **戦略優先**     | [製品戦略.md](../01_要求定義/製品戦略.md)                     | UX · **作る操作の手間削減** 最優先 |
+| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | **U0 動作001 本文**（§4）          |
 
 **開発ログイン（2026-06-24）:** Magic Link は `/auth/confirm` + token_hash テンプレ · OAuth は `/auth/callback` · パスワードは Server Action — **開発 Supabase（`flowchart-dev`）で3方式共存**。Vercel 本番 URL（`-dun`）は現状この dev プロジェクトに接続。**専用本番 Supabase 分離後**は Email 無効 · Google/Azure のみ（`SUPABASE_RULES` §6）。
 
@@ -62,11 +62,11 @@
 
 ### 立ち上げ · MVP · Web完成（2026-05-20〜26）
 
-[調査\_使いやすい](../01_要求定義/調査_使いやすいフローチャート.md) → [ADR-007〜009](<../03_技術仕様/意思決定記録(ADR).md>) → [MVP定義](../01_要求定義/MVP定義.md) · [完成チェックリスト](../01_要求定義/完成チェックリスト.md) → [C-2 記録](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/99_アーカイブ/evidence/C-2_実務PNG貼付_記録_2026-05-26.md)
+[調査\_使いやすい](../archive/01_要求定義/調査_使いやすいフローチャート.md) → [ADR-007〜009](<../03_技術仕様/意思決定記録(ADR).md>) → [製品要求](../01_要求定義/製品要求.md) → [C-2 記録](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/99_アーカイブ/evidence/C-2_実務PNG貼付_記録_2026-05-26.md)
 
 ### 9列 · M002 レイアウト（2026-05-24〜26）
 
-[調査\_表列設計](../01_要求定義/調査_表列設計とレイアウト再現.md) → [ADR-012](<../03_技術仕様/意思決定記録(ADR).md#adr-012-9-列モデル段--列ドラフト>) → [M002 サンプル](../03_技術仕様/M002_9列サンプル表.md) → [handoff \_4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-26_4_web-complete-tier-layout-session-end.md)
+[調査\_表列設計](../archive/01_要求定義/調査_表列設計とレイアウト再現.md) → [ADR-012](<../03_技術仕様/意思決定記録(ADR).md#adr-012-9-列モデル段--列ドラフト>) → [M002 サンプル](../archive/03_技術仕様/M002_9列サンプル表.md) → [handoff \_4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-26_4_web-complete-tier-layout-session-end.md)
 
 ### Supabase · DB-1（2026-05-27〜29）
 
@@ -74,19 +74,19 @@
 
 ### UX ブラッシュアップ · 3ペイン（2026-05-30）
 
-[相談\_2026-05-30](../01_要求定義/相談_2026-05-30_Web版ブラッシュアップ方針.md) → [計画\_2026-05-30](../01_要求定義/計画_2026-05-30_図の見た目と装置階層.md) → [ADR-011](<../03_技術仕様/意思決定記録(ADR).md#adr-011-phase-3-画面--3-ペイン装置階層ナビ表図>) · [ADR-012](<../03_技術仕様/意思決定記録(ADR).md#adr-012-9-列モデル段--列ドラフト>)（菱形枠等）→ [handoff \_8](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_8_tauri-spike-architecture-session-end.md) · [\_9](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_9_vercel-prod-deploy-session-end.md)
+[製品戦略](../01_要求定義/製品戦略.md) → [計画\_2026-05-30](../archive/01_要求定義/計画_2026-05-30_図の見た目と装置階層.md) → [ADR-011](<../03_技術仕様/意思決定記録(ADR).md#adr-011-phase-3-画面--3-ペイン装置階層ナビ表図>) · [ADR-012](<../03_技術仕様/意思決定記録(ADR).md#adr-012-9-列モデル段--列ドラフト>)（菱形枠等）→ [handoff \_8](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_8_tauri-spike-architecture-session-end.md) · [\_9](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_9_vercel-prod-deploy-session-end.md)
 
 ### 色列（10列目 · 2026-06-06）
 
-[計画\_2026-05-30 §B](../01_要求定義/計画_2026-05-30_図の見た目と装置階層.md) → [色列\_仕様整理](../03_技術仕様/色列_仕様整理.md)（着手可）→ （当時）10列実装
+[計画\_2026-05-30 §B](../archive/01_要求定義/計画_2026-05-30_図の見た目と装置階層.md) → [作者ガイド §3](../03_技術仕様/作者ガイド.md) → 10列実装済
 
 ### DB-2 装置階層（2026-05-31〜）
 
-[grill-me_2026-05-31](../01_要求定義/grill-me_2026-05-31_DB-2装置階層.md) → [DB-2 草案](../03_技術仕様/DB-2_スキーマ草案.md) → [ADR-014](<../03_技術仕様/意思決定記録(ADR).md#adr-014-永続化--装置階層-db-2草案--2026-05-31>) → [handoff \_10](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_10_db2-schema-design-session-end.md) · [\_11](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_11_db2-dev-migration-docs-session-end.md)
+[grill-me_2026-05-31](../archive/01_要求定義/grill-me_2026-05-31_DB-2装置階層.md) → [DB設計](../03_技術仕様/DB設計.md) → [ADR-014](<../03_技術仕様/意思決定記録(ADR).md#adr-014-永続化--装置階層-db-2草案--2026-05-31>) → [handoff \_10](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_10_db2-schema-design-session-end.md) · [\_11](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_11_db2-dev-migration-docs-session-end.md)
 
 ### 企画 SSOT 整理（2026-05-31）
 
-[grill-me\_企画SSOT整理](../01_要求定義/grill-me_2026-05-31_企画SSOT整理.md) → README/AGENTS/decision-log 委譲 · 調査\_永続化→archive → [handoff \_12](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_12_planning-ssot-cleanup-session-end.md)
+[grill-me\_企画SSOT整理](../archive/01_要求定義/grill-me_2026-05-31_企画SSOT整理.md) → README/AGENTS/decision-log 委譲 · 調査\_永続化→archive → [handoff \_12](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_12_planning-ssot-cleanup-session-end.md)
 
 ---
 
@@ -104,7 +104,7 @@
 | 2026-05-24      | handoff  | Excel 取込 · PoC レイアウト調査                                                 | [2026-05-24_2](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-24_2_excel-import-session-end.md) · [2026-05-24_3](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-24_3_poc-layout-schema-research-session-end.md)     | 完了                              | ADR-012 へ                                                                                                                           |
 | 2026-05-24      | grill-me | 3 ペイン画面（Nav｜表｜図）                                                     | （記録なし · handoff 要約のみ）                                                                                                                                                                                                     | Accepted                          | → ADR-011                                                                                                                            |
 | 2026-05-26      | 調査     | 9 列（段+列）· M002 レイアウト                                                  | [調査\_表列設計とレイアウト再現](../01_要求定義/調査_表列設計とレイアウト再現.md)                                                                                                                                                   | 凍結                              | → ADR-012                                                                                                                            |
-| 2026-05-26      | ADR      | 9 列モデル · 段→tier · 列→level                                                 | [ADR-012](<../03_技術仕様/意思決定記録(ADR).md#adr-012-9-列モデル段--列ドラフト>)                                                                                                                                                   | Accepted · layoutGrid tier 実装済 | [M002 サンプル](../03_技術仕様/M002_9列サンプル表.md)                                                                                |
+| 2026-05-26      | ADR      | 9 列モデル · 段→tier · 列→level                                                 | [ADR-012](<../03_技術仕様/意思決定記録(ADR).md#adr-012-9-列モデル段--列ドラフト>)                                                                                                                                                   | Accepted · layoutGrid tier 実装済 | [M002 サンプル](../archive/03_技術仕様/M002_9列サンプル表.md)                                                                        |
 | 2026-05-26      | handoff  | Web 完成 · layoutGrid 段ベース着手                                              | [2026-05-26_4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-26_4_web-complete-tier-layout-session-end.md)                                                                                                                 | 完了                              | [C-2 記録](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/99_アーカイブ/evidence/C-2_実務PNG貼付_記録_2026-05-26.md) |
 | 2026-05-27      | 調査     | 永続化 · Supabase vs Neon                                                       | [調査\_永続化](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/99_アーカイブ/research/調査_永続化とセキュリティ_Web公開.md)                                                                                          | 凍結 · archive                    | → ADR-013                                                                                                                            |
 | 2026-05-27      | grill-me | Supabase · editor/viewer · オフライン閲覧                                       | （記録なし · ADR 本文に要約）                                                                                                                                                                                                       | Accepted                          | → ADR-013                                                                                                                            |
@@ -116,14 +116,14 @@
 | 2026-05-30      | ADR      | 3 ペイン UX · 装置セレクタ                                                      | [ADR-011](<../03_技術仕様/意思決定記録(ADR).md#adr-011-phase-3-画面--3-ペイン装置階層ナビ表図>)                                                                                                                                     | Accepted                          | mock → ADR-013 接続                                                                                                                  |
 | 2026-05-30      | handoff  | Tauri スパイク · Vercel 本番デプロイ                                            | [2026-05-30_8](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_8_tauri-spike-architecture-session-end.md) · [2026-05-30_9](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_9_vercel-prod-deploy-session-end.md) | 完了                              | 本番 URL 稼働                                                                                                                        |
 | 2026-05-31      | grill-me | DB-2 装置階層 · legacy_key · DELETE 方針                                        | [grill-me_2026-05-31](../01_要求定義/grill-me_2026-05-31_DB-2装置階層.md)                                                                                                                                                           | Accepted                          | ADR-014                                                                                                                              |
-| 2026-05-31      | ADR      | DB-2 · 装置4表 + flow_documents 分離                                            | [ADR-014](<../03_技術仕様/意思決定記録(ADR).md#adr-014-永続化--装置階層-db-2草案--2026-05-31>)                                                                                                                                      | Accepted · dev/本番適用済         | [DB-2 草案](../03_技術仕様/DB-2_スキーマ草案.md)                                                                                     |
+| 2026-05-31      | ADR      | DB-2 · 装置4表 + flow_documents 分離                                            | [ADR-014](<../03_技術仕様/意思決定記録(ADR).md#adr-014-永続化--装置階層-db-2草案--2026-05-31>)                                                                                                                                      | Accepted · dev/本番適用済         | [DB設計](../03_技術仕様/DB設計.md)                                                                                                   |
 | 2026-05-31      | handoff  | DB-2 dev へ 003+004 適用                                                        | [2026-05-31_11](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_11_db2-dev-migration-docs-session-end.md)                                                                                                                 | ✅ 完了                           | 次: #2 アプリ uuid 化                                                                                                                |
 | 2026-05-31      | grill-me | 企画 SSOT 整理 · 第1–3フェーズ                                                  | [grill-me*2026-05-31*企画SSOT整理](../01_要求定義/grill-me_2026-05-31_企画SSOT整理.md)                                                                                                                                              | 確定                              | README/AGENTS/新チャット/再開メモ/decision-log · 調査\_永続化→archive                                                                |
 | 2026-05-31      | handoff  | 企画 SSOT commit · 別件5件削除 · 引き継ぎ \_12                                  | [2026-05-31_12 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_12_planning-ssot-cleanup-session-end.md)                                                                                                               | 完了                              | 次: #2 uuid 化 · `5d591f0` · `b61d8fd`                                                                                               |
 | 2026-05-31      | handoff  | uuid 化 · LOCAL_DEV · 要望 D · 引き継ぎ \_13                                    | [2026-05-31_13 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_13_uuid-localdev-layout-req-session-end.md)                                                                                                            | 完了                              | 次: D レイアウト                                                                                                                     |
 | 2026-05-31      | handoff  | Yes/No ラベル · Playwright E2E · 引き継ぎ \_14                                  | [2026-05-31_14 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_14_edge-label-playwright-e2e-session-end.md)                                                                                                           | 完了                              | 次: 色列                                                                                                                             |
 | 2026-05-31      | handoff  | 9列デフォルト（段+列）· 雛形/fixtures · 引き継ぎ \_15                           | [2026-05-31_15 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_15_tier9-default-columns-session-end.md)                                                                                                               | 完了                              | 次: 計画 B 色列                                                                                                                      |
-| 2026-06-06      | 計画     | 10列目「色」— データ源 · 表示 · flowColors 整理 · **着手可**                    | [色列\_仕様整理](../03_技術仕様/色列_仕様整理.md)                                                                                                                                                                                   | 確定                              | 実装は次 §4 · ADR-012 追記は実装後                                                                                                   |
+| 2026-06-06      | 計画     | 10列目「色」— データ源 · 表示 · flowColors 整理 · **着手可**                    | [作者ガイド §3](../03_技術仕様/作者ガイド.md)                                                                                                                                                                                       | 確定                              | 実装は次 §4 · ADR-012 追記は実装後                                                                                                   |
 | 2026-06-10      | handoff  | Excel テンプレ · import E2E · CI build/mypy · 本番 deploy                       | [2026-06-10_23 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-10_23_excel-import-ci-deploy-session-end.md)                                                                                                              | 完了                              | 次: admin M-3                                                                                                                        |
 | 2026-06-11      | handoff  | §5.6 レース/プレビュー · M-3 admin · 006 · 本番 deploy                          | [2026-06-11_26 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-11_26_admin-m3-session-end.md)                                                                                                                            | 完了                              | 次: document.ts Zod                                                                                                                  |
 | 2026-06-15      | ADR      | フロー共同編集 — 編集は全 editor · 削除は所有者/admin                           | [ADR-015](<../03_技術仕様/意思決定記録(ADR).md#adr-015-フロー共同編集--編集は全-editor--削除は所有者admin2026-06-15>)                                                                                                               | Accepted · 本番適用済             | `016` · handoff #5                                                                                                                   |

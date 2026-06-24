@@ -5,6 +5,7 @@ import {
   ensureWorkspaceLoaded,
   loadSampleFromMenu,
   openPreviewWithSample,
+  selectModule,
 } from "./helpers/flowchart";
 
 async function assertBranchLabelHalo(
@@ -103,7 +104,7 @@ test.describe("分岐ラベル配置（Yes と縦線）", () => {
   }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await page.getByRole("button", { name: "供給動作" }).click();
+    await selectModule(page, "供給動作");
     await loadSampleFromMenu(page, "例を見る: カレーの作り方");
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
     await expect(page.locator('[data-edge-label-text="Yes"]')).toHaveCount(3);
@@ -118,7 +119,7 @@ test.describe("分岐ラベル配置（Yes と縦線）", () => {
   }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await page.getByRole("button", { name: "供給動作" }).click();
+    await selectModule(page, "供給動作");
     await loadSampleFromMenu(page, "例を見る: カレーの作り方");
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
     const curryCell = page.getByText("レシピを確認");

@@ -10,7 +10,7 @@ import {
 
 const IMPORT_FIXTURE = path.join(
   process.cwd(),
-  "python/testdata/import-z00001.json"
+  "python/testdata/fixtures/import-z00001.json"
 );
 
 const A0001_IMPORT = path.join(
@@ -34,7 +34,7 @@ test.describe("import.json 装置一括取込", () => {
     await openMoreMenu(page);
     const item = page.getByRole("menuitem", { name: "import.json を取込…" });
     await expect(item).toBeDisabled();
-    await expect(item.locator("span")).toHaveAttribute(
+    await expect(item).toHaveAttribute(
       "title",
       "クラウド未設定のため取込できません"
     );
@@ -59,12 +59,20 @@ test.describe("import.json 装置一括取込", () => {
     );
 
     const json = fs.readFileSync(A0001_IMPORT, "utf-8");
+    const bundle = JSON.parse(json) as {
+      internal_code: string;
+      flows: unknown[];
+    };
     await importBundleJsonFile(page, {
       name: "import.json",
       buffer: Buffer.from(json),
     });
 
-    await expect(page.getByText("取込完了: A0001（フロー 4 件）")).toBeVisible({
+    await expect(
+      page.getByText(
+        `取込完了: ${bundle.internal_code}（フロー ${bundle.flows.length} 件）`
+      )
+    ).toBeVisible({
       timeout: 15_000,
     });
   });

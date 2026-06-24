@@ -20,7 +20,7 @@
 - `database/migrations/003_db2_schema.sql`
 - `database/migrations/004_flow_documents_module_fk.sql`
 - `database/migrations/005_import_equipment_bundle.sql`（Excel `import.json` 一括取込 · 任意だが Web 取込に必須）
-- `database/migrations/verify_db2.sql`（検証のみ）
+- `database/sql/verify/verify_db2.sql`（検証のみ）
 
 ---
 
@@ -130,7 +130,7 @@ select proname from pg_proc where proname = 'import_equipment_bundle';
 ```powershell
 cd c:\yk-application\flowchart-studio
 npm run excel:normalize
-# → python/testdata/import-z00001.json
+# → python/testdata/fixtures/import-z00001.json
 ```
 
 **005 未適用時:** Server Action が `import_equipment_bundle` RPC 不在で失敗。
@@ -154,7 +154,7 @@ npm run excel:normalize
 **開発 Supabase のみ。** 前提: 004 適用済み（`admin_delete_equipment` 存在）。
 
 1. [SQL Editor](https://supabase.com/dashboard/project/jnywuetpkbzjdmcqghoh/sql/new) → New query
-2. **`database/sql/apply_006_admin_dev.sql` の全文** を貼り付け → **Run**
+2. **`database/sql/dev/apply_006_admin_dev.sql` の全文** を貼り付け → **Run**
 3. 末尾の検証で `ykoba56@gmail.com` が `role = admin` · RPC が 2 行であること
 
 個別適用する場合は `006_admin_role_and_rpc.sql` のみ Run し、profiles は手動:
@@ -304,5 +304,5 @@ select proname from pg_proc where proname = 'rpc_delete_module';
 ## 6. 参照
 
 - [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
-- [DB-2\_スキーマ草案.md](../docs/03_技術仕様/DB-2_スキーマ草案.md)
+- [DB設計.md](../03_技術仕様/DB設計.md)
 - ADR-014 · handoffs `2026-05-31_10_db2-schema-design-session-end.md` §4

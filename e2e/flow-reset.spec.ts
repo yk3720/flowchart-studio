@@ -5,6 +5,7 @@ import {
   ensureWorkspaceLoaded,
   loadSampleFromMenu,
   openMoreMenu,
+  selectModule,
 } from "./helpers/flowchart";
 
 test.describe("フロー中身リセット", () => {
@@ -16,7 +17,7 @@ test.describe("フロー中身リセット", () => {
     page,
   }) => {
     await ensureNavExpanded(page);
-    await page.getByRole("button", { name: "供給動作" }).click();
+    await selectModule(page, "供給動作");
     await loadSampleFromMenu(page, "例を見る: カレーの作り方");
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
     await expect(page.getByText("レシピを確認")).toBeVisible();

@@ -7,33 +7,33 @@ import { AppAuthBar } from "@/components/auth/AppAuthBar";
 import { canEditFlowchart } from "@/lib/auth/roles";
 
 import type { ProfileRole } from "@/lib/auth/types";
-import { deleteEquipmentByInternalCode } from "@/lib/flowchart/actions/deleteEquipment";
-import { deleteModuleById } from "@/lib/flowchart/actions/deleteModule";
-import { deleteUnitById } from "@/lib/flowchart/actions/deleteUnit";
-import { resetFlowContentByModuleId } from "@/lib/flowchart/actions/resetFlowContent";
-import { importEquipmentBundle } from "@/lib/flowchart/actions/importEquipmentBundle";
+import { deleteEquipmentByInternalCode } from "@/lib/flowchart/actions/delete/deleteEquipment";
+import { deleteModuleById } from "@/lib/flowchart/actions/delete/deleteModule";
+import { deleteUnitById } from "@/lib/flowchart/actions/delete/deleteUnit";
+import { resetFlowContentByModuleId } from "@/lib/flowchart/actions/documents/resetFlowContent";
+import { importEquipmentBundle } from "@/lib/flowchart/actions/import/importEquipmentBundle";
 import {
   statusBannerClassName,
   statusBannerTone,
-} from "@/lib/flowchart/statusBanner";
+} from "@/lib/flowchart/visual/statusBanner";
 import {
   loadModuleDraft,
   persistModuleDraft,
-} from "@/lib/flowchart/moduleDraftLoader";
-import type { ModuleSnapshot } from "@/lib/flowchart/moduleDraftRepository";
-import type { Device } from "@/lib/flowchart/moduleHierarchy";
+} from "@/client/moduleDraftLoader";
+import type { ModuleSnapshot } from "@/lib/flowchart/browser/moduleDraftRepository";
+import type { Device } from "@/lib/flowchart/equipment/moduleHierarchy";
 import {
   excludeModulesFromDevices,
   findDevice,
   findModule,
   hasModuleInDevices,
   moduleStorageKey,
-} from "@/lib/flowchart/moduleHierarchy";
+} from "@/lib/flowchart/equipment/moduleHierarchy";
 import {
   getOfflineModuleCache,
   setOfflineModulePinned,
-} from "@/lib/flowchart/offlineFlowCache";
-import { getStarterFlowSnapshot } from "@/lib/flowchart/starterFlowSnapshot";
+} from "@/lib/flowchart/browser/offlineFlowCache";
+import { getStarterFlowSnapshot } from "@/lib/flowchart/equipment/starterFlowSnapshot";
 
 import { FlowAlertDialog } from "./FlowAlertDialog";
 import { FlowchartEditor, type FlowchartEditorHandle } from "./FlowchartEditor";
@@ -633,7 +633,7 @@ async function putOfflineFromEditor(
 ) {
   if (!editorRef.current) return;
   const { putOfflineModuleCache } =
-    await import("@/lib/flowchart/offlineFlowCache");
+    await import("@/lib/flowchart/browser/offlineFlowCache");
   await putOfflineModuleCache(storageKey, editorRef.current.getSnapshot(), {
     pinned,
   });

@@ -6,6 +6,17 @@ export const DEVICE_PRESS_A_ID = "a0000001-0001-4001-8001-000000000001";
 export const DEVICE_PRESS_B_ID = "a0000001-0001-4001-8001-000000000002";
 export const MODULE_SUPPLY_FEED_A_ID = "c0000001-0001-4001-8001-000000001001";
 
+/** ナビ内の動作選択ボタン（削除ボタンの aria-label との strict mode 衝突を避ける） */
+export function moduleNavButton(page: Page, label: string) {
+  return page
+    .getByRole("navigation", { name: "ユニットと動作" })
+    .getByRole("button", { name: label, exact: true });
+}
+
+export async function selectModule(page: Page, label: string) {
+  await moduleNavButton(page, label).click();
+}
+
 export function headerRegenerate(page: Page) {
   return page.locator("header").getByRole("button", { name: "再生成" });
 }

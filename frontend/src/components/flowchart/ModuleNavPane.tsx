@@ -14,7 +14,7 @@ import {
   type Device,
   type FlowModule,
   type FlowUnit,
-} from "@/lib/flowchart/moduleHierarchy";
+} from "@/lib/flowchart/equipment/moduleHierarchy";
 import { cn } from "@/lib/utils";
 
 import {

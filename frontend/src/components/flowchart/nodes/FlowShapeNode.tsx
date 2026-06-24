@@ -8,8 +8,8 @@ import {
   FLOW_NODE_FRAME_WIDTH,
   nodeBackgroundColor,
   type ColorHint,
-} from "@/lib/flowchart/flowColors";
-import type { FlowNodeData } from "@/lib/flowchart/toReactFlow";
+} from "@/lib/flowchart/visual/flowColors";
+import type { FlowNodeData } from "@/lib/flowchart/graph/toReactFlow";
 
 const HANDLE_STYLE = { width: 6, height: 6, opacity: 0 };
 

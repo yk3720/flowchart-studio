@@ -40,5 +40,5 @@ npm run test:e2e
 | **仕様**           | `docs/`                                                         | 要求定義〜ADR · Runbook          |
 | **E2E**            | `e2e/`                                                          | Playwright                       |
 
-列の意味: [`docs/03_技術仕様/列の意味.md`](./docs/03_技術仕様/列の意味.md)  
+列の意味: [`docs/03_技術仕様/作者ガイド.md`](./docs/03_技術仕様/作者ガイド.md)  
 スタイル索引: [docs/design-system.md](./docs/design-system.md)

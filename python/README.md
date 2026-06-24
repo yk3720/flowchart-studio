@@ -2,7 +2,7 @@
 
 入力用 Excel（構成 + ユニットシート · 横並びテーブル）を `import.json` に変換します。
 
-**SSOT:** `c:/yk-application/flowchart-studio/docs/03_技術仕様/Excel取込_正規化パイプライン.md`
+**SSOT:** `c:/yk-application/flowchart-studio/docs/03_技術仕様/Excel取込.md`
 
 ## 作者 Excel の置き場所
 
@@ -10,14 +10,15 @@
 
 **Git（2026-06-21）:** 作者用 **`.xlsx` / `.xls` はコミットしない**（`.gitignore`）。リポジトリに載せるのは **`import.json`** と Python コード。テンプレ・pytest 用 xlsx は `npm run excel:template` / `excel:fixture` でローカルまたは CI 生成。
 
-| 種別               | パス（リポジトリルートから）                                                    |
-| ------------------ | ------------------------------------------------------------------------------- |
-| **装置ルート**     | `python/testdata/devices/{社内番号}_{装置名}/`                                  |
-| **装置一式の正本** | 上記 / `{社内番号}_{装置名}.xlsx`（フォルダ名と同名）                           |
-| **正規化出力**     | 上記 / `import.json`                                                            |
-| **1 動作の試行**   | 上記 / `_scratch/{動作名}.xlsx`（1 シート · 10 列 · Web 表タブの Excel 取込用） |
-| **旧版退避**       | 上記 / `archive/`                                                               |
-| **空テンプレ**     | `python/templates/入力用テンプレ_v0.2.xlsx`（v0.2 小規模用）                    |
+| 種別                 | パス（リポジトリルートから）                                                    |
+| -------------------- | ------------------------------------------------------------------------------- |
+| **装置ルート**       | `python/testdata/devices/{社内番号}_{装置名}/`                                  |
+| **装置一式の正本**   | 上記 / `{社内番号}_{装置名}.xlsx`（フォルダ名と同名）                           |
+| **正規化出力**       | 上記 / `import.json`                                                            |
+| **1 動作の試行**     | 上記 / `_scratch/{動作名}.xlsx`（1 シート · 10 列 · Web 表タブの Excel 取込用） |
+| **旧版退避**         | 上記 / `archive/`                                                               |
+| **空テンプレ**       | `python/templates/入力用テンプレ_v0.2.xlsx`（v0.2 小規模用 · 生成 · Git 外）    |
+| **共有フィクスチャ** | `python/testdata/fixtures/`（Z00001 等 · import.json · 生成 xlsx）              |
 
 ### v0.3（大規模装置 · A0001 で採用）
 
@@ -103,12 +104,12 @@ python scripts/scaffold_device.py Z00002 プレス機D --import-json
 python scripts/build_fixture.py
 ```
 
-`testdata/input-device-z00001.xlsx` が出力されます（テンプレと同構成 · `_使い方` なし）。
+`testdata/fixtures/input-device-z00001.xlsx` が出力されます（テンプレと同構成 · `_使い方` なし）。
 
 ## 正規化
 
 ```powershell
-python -m excel_normalize.cli testdata/input-device-z00001.xlsx -o testdata/import-z00001.json
+python -m excel_normalize.cli testdata/fixtures/input-device-z00001.xlsx -o testdata/fixtures/import-z00001.json
 ```
 
 ## テスト
@@ -130,7 +131,7 @@ npm run excel:test
 
 ## Web 取込（import.json）
 
-1. 上記で `testdata/import-z00001.json` を生成（または `-o` で任意パス）
+1. 上記で `testdata/fixtures/import-z00001.json` を生成（または `-o` で任意パス）
 2. dev Supabase に **`005_import_equipment_bundle.sql`** を適用（`docs/runbooks/DB2_MIGRATION_RUNBOOK.md`）
 3. Web アプリ（editor ログイン）→ **その他 → import.json を取込…**
 4. 左ナビに装置が追加され、各動作のフローが読み込めること

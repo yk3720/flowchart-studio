@@ -1,13 +1,13 @@
-﻿import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { getAuthState } from "@/lib/auth/session";
 import { FlowchartWorkspace } from "@/components/flowchart/FlowchartWorkspace";
-import { fetchDeviceHierarchy } from "@/lib/flowchart/actions/deviceHierarchy";
+import { fetchDeviceHierarchy } from "@/lib/flowchart/actions/hierarchy/deviceHierarchy";
 import {
   mapDemoDevicesForClient,
   mapDevicesForClient,
 } from "@/lib/flowchart/mapDevicesForClient";
-import { DEMO_DEVICES } from "@/lib/flowchart/moduleHierarchy";
+import { DEMO_DEVICES } from "@/lib/flowchart/equipment/moduleHierarchy";
 
 export default async function HomePage() {
   const state = await getAuthState();

@@ -3,7 +3,7 @@
 import {
   COLOR_HINT_LEGEND_ITEMS,
   FLOW_NODE_FRAME_STROKE,
-} from "@/lib/flowchart/flowColors";
+} from "@/lib/flowchart/visual/flowColors";
 import { fcColorLegend } from "./flowchartUiClasses";
 
 /** プレビュー列 chrome 帯に配置する色列凡例 */

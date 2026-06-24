@@ -10,6 +10,7 @@ import {
   ensureWorkspaceLoaded,
   headerRegenerate,
   loadSampleFromMenu,
+  moduleNavButton,
   openMoreMenu,
   openPreviewWithSample,
 } from "./helpers/flowchart";
@@ -66,12 +67,12 @@ test.describe("M2 AC + P0 UX 手動確認（自動化）", () => {
       .getByRole("combobox", { name: "装置を選択" })
       .selectOption(DEVICE_PRESS_B_ID);
     await expect(page.getByText("供給ユニット")).toBeVisible();
-    await expect(page.getByRole("button", { name: "供給動作" })).toBeVisible();
+    await expect(moduleNavButton(page, "供給動作")).toBeVisible();
     await page
       .getByRole("combobox", { name: "装置を選択" })
       .selectOption(DEVICE_PRESS_A_ID);
     await expect(page.getByText("供給ユニット")).toBeVisible();
-    await expect(page.getByRole("button", { name: "供給動作" })).toBeVisible();
+    await expect(moduleNavButton(page, "供給動作")).toBeVisible();
   });
 
   test("AC-8: 1画面で表とプレビュー", async ({ page }) => {

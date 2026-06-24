@@ -4,13 +4,14 @@ import {
   ensureNavExpanded,
   ensureWorkspaceLoaded,
   loadSampleFromMenu,
+  selectModule,
 } from "./helpers/flowchart";
 
 test.describe("サンプルプレビューと上書き防止", () => {
   test("編集後: 例を見る → プレビュー終了で元の表が残る", async ({ page }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await page.getByRole("button", { name: "供給動作" }).click();
+    await selectModule(page, "供給動作");
     const editCell = page.getByLabel("行2 Text1");
     await expect(editCell).toBeVisible({ timeout: 15_000 });
     await editCell.fill("自作フロー");
@@ -33,7 +34,7 @@ test.describe("サンプルプレビューと上書き防止", () => {
   }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await page.getByRole("button", { name: "供給動作" }).click();
+    await selectModule(page, "供給動作");
     await page.getByLabel("行2 Text1").fill("残したい");
     await page.getByRole("button", { name: "再生成" }).click();
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });

@@ -17,8 +17,8 @@ import {
   useMemo,
   type KeyboardEvent,
 } from "react";
-import type { FlowNodeData } from "@/lib/flowchart/toReactFlow";
-import { flowPreviewAriaLabel } from "@/lib/flowchart/flowPreviewA11y";
+import type { FlowNodeData } from "@/lib/flowchart/graph/toReactFlow";
+import { flowPreviewAriaLabel } from "@/lib/flowchart/visual/flowPreviewA11y";
 import { cn } from "@/lib/utils";
 import {
   fcCanvasA11y,

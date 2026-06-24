@@ -6,21 +6,21 @@
  *   npm run seed:device -- --write-sql A0001
  *
  * 前提:
- *   1. SQL Editor で database/sql/seed_equipment_bundle_fn.sql を Run（初回のみ）
+ *   1. SQL Editor で database/sql/seed/seed_equipment_bundle_fn.sql を Run（初回のみ）
  *   2. .env.local に SUPABASE_SERVICE_ROLE_KEY（service_role 直接取込時）
  */
 import { createClient } from "@supabase/supabase-js";
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
-import { parseImportBundleJson } from "@/lib/flowchart/importBundleSchema";
-import { prepareImportBundleForRpc } from "@/lib/flowchart/prepareImportBundle";
-import type { RpcImportBundle } from "@/lib/flowchart/importBundleSchema";
+import { parseImportBundleJson } from "@/lib/flowchart/import/importBundleSchema";
+import { prepareImportBundleForRpc } from "@/lib/flowchart/import/prepareImportBundle";
+import type { RpcImportBundle } from "@/lib/flowchart/import/importBundleSchema";
 
 const ROOT = resolve(import.meta.dirname, "../../..");
 const DEVICES_DIR = join(ROOT, "python/testdata/devices");
-const FN_SQL = join(ROOT, "database/sql/seed_equipment_bundle_fn.sql");
-const GENERATED_SQL = join(ROOT, "database/sql/seed_device_run.sql");
+const FN_SQL = join(ROOT, "database/sql/seed/seed_equipment_bundle_fn.sql");
+const GENERATED_SQL = join(ROOT, "database/sql/seed/seed_device_run.sql");
 
 function loadEnvLocal(): void {
   const path = join(ROOT, ".env.local");
@@ -116,7 +116,7 @@ async function importViaServiceRole(bundle: RpcImportBundle): Promise<boolean> {
   if (error) {
     if (error.message.includes("Could not find the function")) {
       console.error(
-        "seed_equipment_bundle が未作成です。先に seed_equipment_bundle_fn.sql を SQL Editor で Run してください。"
+        "seed_equipment_bundle が未作成です。先に database/sql/seed/seed_equipment_bundle_fn.sql を SQL Editor で Run してください。"
       );
       return false;
     }

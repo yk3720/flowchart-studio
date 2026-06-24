@@ -5,13 +5,14 @@ import {
   ensureNavExpanded,
   ensureWorkspaceLoaded,
   loadSampleFromMenu,
+  selectModule,
 } from "./helpers/flowchart";
 
 test.describe("モジュール読込 UX", () => {
   test("装置切替後は「読み込み中」バナーが残らない", async ({ page }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await page.getByRole("button", { name: "供給動作" }).click();
+    await selectModule(page, "供給動作");
     await expect(page.getByLabel("行1 Text1")).toBeVisible({ timeout: 15_000 });
 
     await page
@@ -27,7 +28,7 @@ test.describe("モジュール読込 UX", () => {
   test("モジュール選択後は雛形プレースホルダが残らない", async ({ page }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await page.getByRole("button", { name: "供給動作" }).click();
+    await selectModule(page, "供給動作");
     await expect(page.getByLabel("行1 Text1")).toBeVisible({ timeout: 15_000 });
     await expect(page.getByText("ここに処理名")).toHaveCount(0);
     await expect(page.getByTestId("module-loading-overlay")).toHaveCount(0);
@@ -38,7 +39,7 @@ test.describe("モジュール読込 UX", () => {
   }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await page.getByRole("button", { name: "供給動作" }).click();
+    await selectModule(page, "供給動作");
     await expect(page.getByLabel("行2 Text1")).toBeVisible({ timeout: 15_000 });
 
     await loadSampleFromMenu(page, "例を見る: カレーの作り方");
@@ -46,7 +47,7 @@ test.describe("モジュール読込 UX", () => {
       timeout: 15_000,
     });
 
-    await page.getByRole("button", { name: "検知動作" }).click();
+    await selectModule(page, "検知動作");
     await expect(page.getByText("レシピを確認")).toHaveCount(0, {
       timeout: 15_000,
     });

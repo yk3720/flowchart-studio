@@ -22,9 +22,12 @@
       "@/components/*": ["./frontend/src/components/*"],
       "@/samples/*": ["./frontend/src/samples/*"],
       "@/lib/auth/*": ["./backend/src/lib/auth/*"],
-      "@/lib/admin/*": ["./backend/src/lib/admin/*"],
       "@/lib/supabase/*": ["./backend/src/lib/supabase/*"],
       "@/lib/flowchart/actions/*": ["./backend/src/lib/flowchart/actions/*"],
+      "@/lib/flowchart/mapDevicesForClient": [
+        "./backend/src/lib/flowchart/mapDevicesForClient"
+      ],
+      "@/client/*": ["./frontend/src/lib/*"],
       "@/*": ["./*"]
     }
   },

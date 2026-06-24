@@ -4,7 +4,11 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     environment: "node",
-    include: ["lib/**/*.test.ts", "backend/**/*.test.ts"],
+    include: [
+      "lib/**/*.test.ts",
+      "backend/**/*.test.ts",
+      "frontend/src/lib/**/*.test.ts",
+    ],
   },
   resolve: {
     alias: [
@@ -21,10 +25,6 @@ export default defineConfig({
         replacement: path.resolve(__dirname, "backend/src/lib/auth"),
       },
       {
-        find: "@/lib/admin",
-        replacement: path.resolve(__dirname, "backend/src/lib/admin"),
-      },
-      {
         find: "@/lib/supabase",
         replacement: path.resolve(__dirname, "backend/src/lib/supabase"),
       },
@@ -34,6 +34,10 @@ export default defineConfig({
           __dirname,
           "backend/src/lib/flowchart/actions"
         ),
+      },
+      {
+        find: "@/client",
+        replacement: path.resolve(__dirname, "frontend/src/lib"),
       },
       { find: "@", replacement: path.resolve(__dirname, ".") },
     ],
