@@ -205,7 +205,7 @@ Supabase → 左ナビ + フロー表
 | ----------------------------------------------------------------------------------------- | ------------------------ |
 | [grill-me_2026-05-31_DB-2装置階層.md](../01_要求定義/grill-me_2026-05-31_DB-2装置階層.md) | Q8–Q10 正規化 · VBA 却下 |
 | [DB設計 §8](./DB設計.md)                                                                  | Excel パイプライン草案   |
-| `flowchart-studio/lib/flowchart/tableColumns.ts`                                          | 10 列 SSOT               |
+| `flowchart-studio/lib/flowchart/table/tableColumns.ts`                                    | 10 列 SSOT               |
 
 ---
 

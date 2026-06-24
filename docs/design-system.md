@@ -33,13 +33,13 @@
 └─────────────────────────────────────────────────────────┘
 ```
 
-| レイヤ              | 正本                                                                                                                                            | 触るタイミング                                   |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **A. 作者向け意味** | [作者ガイド.md](./03_技術仕様/作者ガイド.md)                                                                                                    | 図形・色の**意味**を変えるとき（先に仕様）       |
-| **B. キャンバス**   | [`lib/flowchart/flowColors.ts`](../lib/flowchart/flowColors.ts) · [`FlowColorLegend.tsx`](../frontend/components/flowchart/FlowColorLegend.tsx) | ノード色・矢印色・枠太さ・凡例                   |
-| **C. 操作 UI**      | [`frontend/components/flowchart/flowchartUiClasses.ts`](../frontend/components/flowchart/flowchartUiClasses.ts)                                 | ボタン・ナビ・バナー・ワークスペース比率         |
-| **D. shadcn 基盤**  | [`app/globals.css`](../app/globals.css) · [`components/ui/`](../components/ui/)                                                                 | ログイン・admin 等（**フロー編集 chrome は C**） |
-| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md)                                                                       | 枠・ストロークの太さ方針                         |
+| レイヤ              | 正本                                                                                                                                                              | 触るタイミング                                   |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| **A. 作者向け意味** | [作者ガイド.md](./03_技術仕様/作者ガイド.md)                                                                                                                      | 図形・色の**意味**を変えるとき（先に仕様）       |
+| **B. キャンバス**   | [`lib/flowchart/visual/flowColors.ts`](../lib/flowchart/visual/flowColors.ts) · [`FlowColorLegend.tsx`](../frontend/src/components/flowchart/FlowColorLegend.tsx) | ノード色・矢印色・枠太さ・凡例                   |
+| **C. 操作 UI**      | [`frontend/src/components/flowchart/flowchartUiClasses.ts`](../frontend/src/components/flowchart/flowchartUiClasses.ts)                                           | ボタン・ナビ・バナー・ワークスペース比率         |
+| **D. shadcn 基盤**  | [`app/globals.css`](../app/globals.css) · [`frontend/src/components/ui/`](../frontend/src/components/ui/)                                                         | ログイン・admin 等（**フロー編集 chrome は C**） |
+| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md)                                                                                         | 枠・ストロークの太さ方針                         |
 
 ### なぜ 1 ファイルに統合しないか
 
@@ -56,14 +56,14 @@
 
 | 変えたいもの                   | 更新順                        | 主なファイル                                                                                     |
 | ------------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------ |
-| 表「色」列の意味（黄・橙・青） | 仕様 → コード → 凡例          | `docs/03_技術仕様/作者ガイド.md` → `flowColors.ts` → `FlowColorLegend`                           |
-| ノード枠・菱形の太さ           | 横断ルール確認 → コード → E2E | `VISUAL_DESIGN_RULES` → `flowColors.ts` → `e2e/`                                                 |
-| 矢印・Yes/No ラベル色          | コード                        | `flowColors.ts` · `edgeLabelPlacement.ts`                                                        |
+| 表「色」列の意味（黄・橙・青） | 仕様 → コード → 凡例          | `docs/03_技術仕様/作者ガイド.md` → `lib/flowchart/visual/flowColors.ts` → `FlowColorLegend`      |
+| ノード枠・菱形の太さ           | 横断ルール確認 → コード → E2E | `VISUAL_DESIGN_RULES` → `lib/flowchart/visual/flowColors.ts` → `e2e/`                            |
+| 矢印・Yes/No ラベル色          | コード                        | `lib/flowchart/visual/flowColors.ts` · `lib/flowchart/graph/edgeLabelPlacement.ts`               |
 | 再生成ボタン・その他メニュー   | class SSOT                    | `flowchartUiClasses.ts`（新規はここに追加）                                                      |
 | 左ナビ・装置 select            | class SSOT + コンポーネント   | `flowchartUiClasses.ts` · `ModuleNavPane.tsx`                                                    |
 | 表 : プレビュー比率            | レイアウト定数                | `FC_WORKSPACE_MAIN_GRID` · [REACTFLOW §5.6-2a](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md) |
-| ログイン画面                   | shadcn                        | `globals.css` · `components/ui/` · `LoginForm.tsx`                                               |
-| 10 列表の列ヘルプ              | 列定義                        | `lib/flowchart/tableColumns.ts` · `docs/03_技術仕様/作者ガイド.md`                               |
+| ログイン画面                   | shadcn                        | `globals.css` · `frontend/src/components/ui/` · `LoginForm.tsx`                                  |
+| 10 列表の列ヘルプ              | 列定義                        | `lib/flowchart/table/tableColumns.ts` · `docs/03_技術仕様/作者ガイド.md`                         |
 
 **禁止（手戻りの元）**
 
@@ -75,7 +75,7 @@
 
 ## 4. 操作 UI の部品一覧（class SSOT）
 
-定義: [`flowchartUiClasses.ts`](../frontend/components/flowchart/flowchartUiClasses.ts)
+定義: [`flowchartUiClasses.ts`](../frontend/src/components/flowchart/flowchartUiClasses.ts)
 
 | 名前                                                     | 用途                          |
 | -------------------------------------------------------- | ----------------------------- |
@@ -94,7 +94,7 @@
 
 ## 5. キャンバス色（固定・テーマ非追従）
 
-定義: [`flowColors.ts`](../lib/flowchart/flowColors.ts)
+定義: [`flowColors.ts`](../lib/flowchart/visual/flowColors.ts)
 
 | 定数                                               | 役割                 |
 | -------------------------------------------------- | -------------------- |
@@ -109,12 +109,12 @@
 
 ## 6. shadcn の位置づけ
 
-| 項目                    | 決定（Phase 0）                                                     |
-| ----------------------- | ------------------------------------------------------------------- |
-| 導入状態                | `components.json` · `globals.css` · `components/ui/button.tsx` あり |
-| フロー編集 chrome       | **shadcn `Button` は使わない**。`fcBtn*` が正                       |
-| ログイン・将来の汎用 UI | shadcn + `globals.css` の `--primary` 等                            |
-| テーマ切替 / dark       | **現仕様では却下**（キャンバス固定色と整合）                        |
+| 項目                    | 決定（Phase 0）                                                                  |
+| ----------------------- | -------------------------------------------------------------------------------- |
+| 導入状態                | `components.json` · `globals.css` · `frontend/src/components/ui/button.tsx` あり |
+| フロー編集 chrome       | **shadcn `Button` は使わない**。`fcBtn*` が正                                    |
+| ログイン・将来の汎用 UI | shadcn + `globals.css` の `--primary` 等                                         |
+| テーマ切替 / dark       | **現仕様では却下**（キャンバス固定色と整合）                                     |
 
 ---
 
@@ -148,12 +148,12 @@
 
 ## 10. Phase 3（完了 · 2026-06-19）
 
-| 項目             | 内容                                                      |
-| ---------------- | --------------------------------------------------------- |
-| ステータスバナー | `statusBanner.ts` → `flow-*`（success / error / neutral） |
-| 認証バー         | `AppAuthBar` → `fcAuthBar*`                               |
-| 読込オーバーレイ | `moduleLoading` + `fcModuleLoadingOverlay`                |
-| カタログ拡充     | `/dev/style` に status · auth 見本                        |
+| 項目             | 内容                                                                           |
+| ---------------- | ------------------------------------------------------------------------------ |
+| ステータスバナー | `lib/flowchart/visual/statusBanner.ts` → `flow-*`（success / error / neutral） |
+| 認証バー         | `AppAuthBar` → `fcAuthBar*`                                                    |
+| 読込オーバーレイ | `moduleLoading` + `fcModuleLoadingOverlay`                                     |
+| カタログ拡充     | `/dev/style` に status · auth 見本                                             |
 
 本番ビルドでは `/dev/style` は **404**。
 
@@ -169,4 +169,4 @@
 
 ---
 
-*入口 SSOT: 本ファイル · キャンバス: `flowColors.ts` · 操作 UI: `flowchartUiClasses.ts` · 意味: `docs/03*技術仕様/作者ガイド.md`\_
+*入口 SSOT: 本ファイル · キャンバス: `lib/flowchart/visual/flowColors.ts` · 操作 UI: `flowchartUiClasses.ts` · 意味: `docs/03*技術仕様/作者ガイド.md`\_
