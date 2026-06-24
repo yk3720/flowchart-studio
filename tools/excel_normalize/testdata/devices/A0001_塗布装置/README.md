@@ -1,10 +1,10 @@
-# A0001 塗布装置 — 作者 Excel
+﻿# A0001 塗布装置 — 作者 Excel
 
 | 項目     | 値                                                                                          |
 | -------- | ------------------------------------------------------------------------------------------- |
 | 社内番号 | `A0001`                                                                                     |
 | 装置名   | 塗布装置                                                                                    |
-| フォルダ | `c:/yk-application/flowchart-studio/tools/excel_normalize/fixtures/devices/A0001_塗布装置/` |
+| フォルダ | `c:/yk-application/flowchart-studio/tools/excel_normalize/testdata/devices/A0001_塗布装置/` |
 
 ## ファイル
 

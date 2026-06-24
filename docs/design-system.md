@@ -1,4 +1,4 @@
-# スタイルガイド索引（flowchart-studio）
+﻿# スタイルガイド索引（flowchart-studio）
 
 **状態:** Phase 2 完了（2026-06-19）— 人間・エージェント向けの**唯一の入口**  
 **方針:** 正本ファイルは役割ごとに分離する。本書は「どこを触るか」の索引。
@@ -63,7 +63,7 @@
 | 左ナビ・装置 select            | class SSOT + コンポーネント   | `flowchartUiClasses.ts` · `ModuleNavPane.tsx`                                                    |
 | 表 : プレビュー比率            | レイアウト定数                | `FC_WORKSPACE_MAIN_GRID` · [REACTFLOW §5.6-2a](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md) |
 | ログイン画面                   | shadcn                        | `globals.css` · `components/ui/` · `LoginForm.tsx`                                               |
-| 10 列表の列ヘルプ              | 列定義                        | `lib/flowchart/tableColumns.ts` · `docs/列の意味.md`                                             |
+| 10 列表の列ヘルプ              | 列定義                        | `lib/flowchart/tableColumns.ts` · `specs/03_技術仕様/列の意味.md`                                |
 
 **禁止（手戻りの元）**
 
@@ -165,7 +165,7 @@
 | [LOCAL_DEV.md](./LOCAL_DEV.md)                                                          | ローカル確認                               |
 | [flowchart-practical-ux-yk.mdc](../.cursor/rules/flowchart-practical-ux-yk.mdc)         | エージェント L0                            |
 | [USABILITY_HEURISTICS_RULES.md](c:/yk-skill/rule/10_meta/USABILITY_HEURISTICS_RULES.md) | ニールセン10原則 · UI/UX レビュー（No 20） |
-| [fixtures/devices/README.md](../tools/excel_normalize/fixtures/devices/README.md)       | 作者 Excel 置き場                          |
+| [testdata/devices/README.md](../tools/excel_normalize/testdata/devices/README.md)       | 作者 Excel 置き場                          |
 
 ---
 

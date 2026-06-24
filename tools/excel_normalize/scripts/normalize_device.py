@@ -11,7 +11,7 @@ from excel_normalize.device_paths import resolve_device_workbook
 from excel_normalize.normalize import normalize_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
-DEVICES_DIR = ROOT / "fixtures" / "devices"
+DEVICES_DIR = ROOT / "testdata" / "devices"
 
 
 def find_device_dir(internal_code: str) -> Path:
@@ -46,7 +46,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "device",
-        help="社内番号（例: A0001）または fixtures/devices 以下のフォルダ名",
+        help="社内番号（例: A0001）または testdata/devices 以下のフォルダ名",
     )
     parser.add_argument(
         "-o",

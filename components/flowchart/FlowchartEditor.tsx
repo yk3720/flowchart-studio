@@ -11,14 +11,14 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import sampleCurry from "@/fixtures/sample-curry.json";
-import sampleMorning from "@/fixtures/sample-morning.json";
-import sampleAtm from "@/fixtures/sample-atm.json";
-import sampleBasic from "@/fixtures/sample-basic.json";
-import sampleSimpleYes from "@/fixtures/sample-simple-yes.json";
-import templateLinear from "@/fixtures/template-linear.json";
-import templateStarter from "@/fixtures/template-starter.json";
-import sampleM002NineCol from "@/fixtures/sample-m002-9col.json";
+import sampleCurry from "@/samples/sample-curry.json";
+import sampleMorning from "@/samples/sample-morning.json";
+import sampleAtm from "@/samples/sample-atm.json";
+import sampleBasic from "@/samples/sample-basic.json";
+import sampleSimpleYes from "@/samples/sample-simple-yes.json";
+import templateLinear from "@/samples/template-linear.json";
+import templateStarter from "@/samples/template-starter.json";
+import sampleM002NineCol from "@/samples/sample-m002-9col.json";
 import {
   downloadJson,
   normalizeFlowchartDocument,
@@ -74,6 +74,8 @@ import {
   fcWarningBannerHint,
   fcWarningBannerLink,
   fcModuleLoadingOverlay,
+  fcPreviewChrome,
+  fcZoomBtn,
 } from "./flowchartUiClasses";
 import { FlowColorLegend } from "./FlowColorLegend";
 import { CsvPastePanel } from "./CsvPastePanel";
@@ -446,7 +448,11 @@ export const FlowchartEditor = forwardRef<
     notifyUserContentOverride();
     clearModuleSamplePreview();
     refreshWarnings(doc.table);
-    runGenerate(jsonText, { persist: true });
+    const ok = runGenerate(jsonText, { persist: true });
+    if (ok) {
+      setPaneView("canvas");
+      window.setTimeout(() => canvasRef.current?.fitView(), 60);
+    }
   };
 
   const loadDocument = (
@@ -1011,13 +1017,6 @@ export const FlowchartEditor = forwardRef<
   );
 
   const renderPreviewCanvas = (fullBleed: boolean) => {
-    const wrapClass = fullBleed
-      ? cn(
-          "relative flex min-h-[280px] flex-1 flex-col lg:min-h-0",
-          isStale && fcStaleRingInset
-        )
-      : cn("relative min-h-[420px] flex-1", isStale && fcStaleRing);
-
     if (!showEditorPanes) {
       return (
         <div className={fullBleed ? fcEmptyStateLg : fcEmptyStateMd}>
@@ -1031,29 +1030,65 @@ export const FlowchartEditor = forwardRef<
     }
     if (hasPreview) {
       return (
-        <div className={wrapClass}>
-          <FlowCanvas
-            canvasRef={canvasRef}
-            nodes={nodes}
-            edges={edges}
-            fillContainer={fullBleed}
-          />
-          {showColorLegend ? <FlowColorLegend /> : null}
-          {isStale && (
-            <div className={fcStaleOverlay}>
-              <p className={fcStaleCallout}>
-                入力が変更されています。{" "}
-                <button
-                  type="button"
-                  onClick={() => headerRegenerateRef.current?.click()}
-                  className={fcLink}
-                >
-                  再生成
-                </button>
-                でプレビューを更新してください。
-              </p>
+        <div
+          className={
+            fullBleed
+              ? "flex min-h-0 flex-1 flex-col lg:min-h-0"
+              : "flex flex-1 flex-col"
+          }
+        >
+          {/* プレビュー chrome 帯: 凡例 + ズームボタン */}
+          <div className={fcPreviewChrome}>
+            {showColorLegend ? <FlowColorLegend /> : <span />}
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                aria-label="縮小"
+                className={fcZoomBtn}
+                onClick={() => canvasRef.current?.zoomOut()}
+              >
+                −
+              </button>
+              <button
+                type="button"
+                aria-label="拡大"
+                className={fcZoomBtn}
+                onClick={() => canvasRef.current?.zoomIn()}
+              >
+                +
+              </button>
             </div>
-          )}
+          </div>
+          {/* キャンバス本体 */}
+          <div
+            className={cn(
+              "relative flex-1",
+              fullBleed ? "min-h-[280px] lg:min-h-0" : "min-h-[420px]",
+              isStale && (fullBleed ? fcStaleRingInset : fcStaleRing)
+            )}
+          >
+            <FlowCanvas
+              canvasRef={canvasRef}
+              nodes={nodes}
+              edges={edges}
+              fillContainer={fullBleed}
+            />
+            {isStale && (
+              <div className={fcStaleOverlay}>
+                <p className={fcStaleCallout}>
+                  入力が変更されています。{" "}
+                  <button
+                    type="button"
+                    onClick={() => headerRegenerateRef.current?.click()}
+                    className={fcLink}
+                  >
+                    再生成
+                  </button>
+                  でプレビューを更新してください。
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       );
     }
@@ -1104,7 +1139,7 @@ export const FlowchartEditor = forwardRef<
                 <div className="flex min-w-0 flex-col gap-0.5">
                   <div className="flex flex-wrap items-center gap-2">
                     <h1 className="text-base font-semibold tracking-tight">
-                      Flowchart Web
+                      Flowchart Studio
                     </h1>
                     <span className={fcBadgeAccent}>実用版</span>
                   </div>
@@ -1182,7 +1217,7 @@ export const FlowchartEditor = forwardRef<
           <div className="flex min-w-0 flex-col gap-0.5">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-lg font-semibold tracking-tight">
-                Flowchart Web
+                Flowchart Studio
               </h1>
               <span className={fcBadgeAccent}>実用版</span>
             </div>

@@ -10,12 +10,12 @@ import {
 
 const IMPORT_FIXTURE = path.join(
   process.cwd(),
-  "tools/excel_normalize/fixtures/import-z00001.json"
+  "tools/excel_normalize/testdata/import-z00001.json"
 );
 
 const A0001_IMPORT = path.join(
   process.cwd(),
-  "tools/excel_normalize/fixtures/devices/A0001_塗布装置/import.json"
+  "tools/excel_normalize/testdata/devices/A0001_塗布装置/import.json"
 );
 
 test.describe("import.json 装置一括取込", () => {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import templateStarter from "@/fixtures/template-starter.json";
+import templateStarter from "@/samples/template-starter.json";
 import { FlowColorLegend } from "@/components/flowchart/FlowColorLegend";
 import { FlowTableEditor } from "@/components/flowchart/FlowTableEditor";
 import {

@@ -6,7 +6,7 @@ import { toReactFlow } from "./toReactFlow";
 import type { FlowchartDocument } from "./types";
 
 function loadFixture(name: string): FlowchartDocument {
-  const raw = readFileSync(join(process.cwd(), "fixtures", name), "utf-8");
+  const raw = readFileSync(join(process.cwd(), "samples", name), "utf-8");
   return JSON.parse(raw) as FlowchartDocument;
 }
 

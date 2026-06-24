@@ -14,7 +14,9 @@ export interface ModuleDraftRepository {
   set(storageKey: string, snapshot: ModuleSnapshot): void;
 }
 
-const STORAGE_PREFIX = "flowchart-web:module-v1:";
+import { MODULE_DRAFT_PREFIX } from "./storageKeys";
+
+const STORAGE_PREFIX = MODULE_DRAFT_PREFIX;
 
 export function normalizeModuleSnapshot(raw: unknown): ModuleSnapshot | null {
   if (!raw || typeof raw !== "object") return null;

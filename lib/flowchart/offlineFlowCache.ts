@@ -1,6 +1,7 @@
 import type { ModuleSnapshot } from "./moduleDraftRepository";
+import { OFFLINE_DB_NAME } from "./storageKeys";
 
-const DB_NAME = "flowchart-web-offline-v1";
+const DB_NAME = OFFLINE_DB_NAME;
 const STORE = "modules";
 const DB_VERSION = 1;
 

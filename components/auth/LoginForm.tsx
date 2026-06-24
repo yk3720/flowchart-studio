@@ -89,7 +89,9 @@ export function LoginForm({ nextPath, authError }: Props) {
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 px-4">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Flowchart Web</h1>
+        <h1 className="text-2xl font-semibold text-slate-900">
+          Flowchart Studio
+        </h1>
         <p className="mt-2 text-sm text-slate-600">
           社内アカウントでログインしてください。初回は管理者が許可リストにメールを登録した後に利用できます。
         </p>

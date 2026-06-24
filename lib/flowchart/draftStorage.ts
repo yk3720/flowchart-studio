@@ -1,4 +1,4 @@
-const DRAFT_KEY = "flowchart-web:draft-v1";
+import { DRAFT_KEY } from "./storageKeys";
 
 export function saveDraft(jsonText: string): void {
   if (typeof window === "undefined") return;

@@ -1,4 +1,4 @@
-# DB-2 マイグレーション Runbook（003 → 005）
+﻿# DB-2 マイグレーション Runbook（003 → 005）
 
 **対象:** 開発用 Supabase プロジェクト（`flowchart-dev` · `.env.local` の URL）  
 **前提:** `001_db1_schema.sql` · `002_fix_profiles_role_protection.sql` **適用済み**  
@@ -130,7 +130,7 @@ select proname from pg_proc where proname = 'import_equipment_bundle';
 ```powershell
 cd c:\yk-application\flowchart-studio
 npm run excel:normalize
-# → tools/excel_normalize/fixtures/import-z00001.json
+# → tools/excel_normalize/testdata/import-z00001.json
 ```
 
 **005 未適用時:** Server Action が `import_equipment_bundle` RPC 不在で失敗。
@@ -154,7 +154,7 @@ npm run excel:normalize
 **開発 Supabase のみ。** 前提: 004 適用済み（`admin_delete_equipment` 存在）。
 
 1. [SQL Editor](https://supabase.com/dashboard/project/jnywuetpkbzjdmcqghoh/sql/new) → New query
-2. **`supabase/scripts/apply_006_admin_dev.sql` の全文** を貼り付け → **Run**
+2. **`scripts/supabase/apply_006_admin_dev.sql` の全文** を貼り付け → **Run**
 3. 末尾の検証で `ykoba56@gmail.com` が `role = admin` · RPC が 2 行であること
 
 個別適用する場合は `006_admin_role_and_rpc.sql` のみ Run し、profiles は手動:

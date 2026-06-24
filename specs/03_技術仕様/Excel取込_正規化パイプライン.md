@@ -1,4 +1,4 @@
-# Excel 取込 — 正規化パイプライン
+﻿# Excel 取込 — 正規化パイプライン
 
 **作成:** 2026-06-07  
 **状態:** **Python v0.1 · Web 取込 v0.1 実装済み** · dev DB への **005 マイグレーション適用** · 手動 E2E 確認は未  
@@ -47,8 +47,8 @@ Supabase → 左ナビ + フロー表
 - フォルダ名と社内番号を揃える運用を推奨
 
 **作者 Excel の置き場（パス SSOT · 2026-06-19）:**  
-`c:/yk-application/flowchart-studio/tools/excel_normalize/fixtures/devices/{社内番号}_{装置名}/`  
-— 正本 `{社内番号}_{装置名}.xlsx`（フォルダ名と同名 · **Git 対象外**）· **共有は `import.json`** · **v0.3**（構成6列 + U0〜U9 + マスター表）· 1 動作試行 `_scratch/{動作名}.xlsx` · 一覧 [`fixtures/devices/README.md`](c:/yk-application/flowchart-studio/tools/excel_normalize/fixtures/devices/README.md)  
+`c:/yk-application/flowchart-studio/tools/excel_normalize/testdata/devices/{社内番号}_{装置名}/`  
+— 正本 `{社内番号}_{装置名}.xlsx`（フォルダ名と同名 · **Git 対象外**）· **共有は `import.json`** · **v0.3**（構成6列 + U0〜U9 + マスター表）· 1 動作試行 `_scratch/{動作名}.xlsx` · 一覧 [`testdata/devices/README.md`](c:/yk-application/flowchart-studio/tools/excel_normalize/testdata/devices/README.md)  
 — 手書き作業中の実装置: **`A0001_塗布装置`**
 
 ### 3.2 シート構成

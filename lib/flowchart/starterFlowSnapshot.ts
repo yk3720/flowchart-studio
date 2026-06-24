@@ -1,4 +1,4 @@
-import templateStarter from "@/fixtures/template-starter.json";
+import templateStarter from "@/samples/template-starter.json";
 
 import type { ModuleSnapshot } from "./moduleDraftRepository";
 import { snapshotFromFlowchartDocument } from "./snapshotFromDocument";

@@ -2,7 +2,7 @@
 
 **正本:** 本リポ `specs/`（[GitHub Spec Kit](https://github.com/github/spec-kit) / SDD の「仕様はコードと同居」に準拠）。
 
-**セッション進捗（次の 1 件）:** [`handoffs/flowchart-web`](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md) — ここには書かない。
+**セッション進捗（次の 1 件）:** [`handoffs/flowchart-studio`](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — ここには書かない。
 
 **エージェント憲法:** [`../AGENTS.md`](../AGENTS.md)
 
@@ -19,7 +19,7 @@
 | [05\_開発ガイドライン/](./05_開発ガイドライン/) | 開発ガイドライン | decision-log        |
 | [06\_ユビキタス言語/](./06_ユビキタス言語/)     | 用語集           | 必要時              |
 
-**運用手順（実装隣接）:** [`../docs/`](../docs/) — LOCAL_DEV · Supabase · DB マイグレーション等。
+**運用手順（実装隣接）:** [`../docs/`](../docs/) · [`../docs/runbooks/`](../docs/runbooks/) — LOCAL_DEV · Supabase · DB マイグレーション。
 
 **講座・提出（別枠）:** `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/`
 

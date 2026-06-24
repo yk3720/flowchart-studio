@@ -18,7 +18,7 @@ from excel_normalize.device_workbook import (
 from excel_normalize.normalize import normalize_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
-DEVICES_DIR = ROOT / "fixtures" / "devices"
+DEVICES_DIR = ROOT / "testdata" / "devices"
 
 
 def parse_args() -> argparse.Namespace:

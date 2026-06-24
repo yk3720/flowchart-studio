@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Flowchart Web",
+  title: "Flowchart Studio",
   description: "表からフローチャートを自動生成する Web アプリ",
 };
 

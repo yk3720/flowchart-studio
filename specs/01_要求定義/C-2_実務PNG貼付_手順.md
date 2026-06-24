@@ -83,7 +83,7 @@ C-2 は「編集 → 再生成」の流れ確認が目的。
 貼付だけだと「古い図」になりやすい。同じメモに **次の1行** を残す。
 
 ```text
-元データ: Flowchart Web · 表 JSON または Excel ○○.xlsx
+元データ: Flowchart Studio · 表 JSON または Excel ○○.xlsx
 更新手順: 表を直す → 再生成 → PNG を差し替え
 ```
 

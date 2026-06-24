@@ -10,7 +10,7 @@ import {
 
 const A0001_SCRATCH_XLSX = path.join(
   process.cwd(),
-  "tools/excel_normalize/fixtures/devices/A0001_塗布装置/_scratch/取出.xlsx"
+  "tools/excel_normalize/testdata/devices/A0001_塗布装置/_scratch/取出.xlsx"
 );
 
 function buildWorkbookBuffer(

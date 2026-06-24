@@ -11,7 +11,7 @@ from excel_normalize.device_paths import device_workbook_path
 from excel_normalize.workbook_builder import _add_flow_table
 
 ROOT = Path(__file__).resolve().parents[1]
-DEVICE_DIR = ROOT / "fixtures" / "devices" / "TEST-001_試験装置"
+DEVICE_DIR = ROOT / "testdata" / "devices" / "TEST-001_試験装置"
 
 INTERNAL_CODE = "TEST-001"
 DISPLAY_NAME = "試験装置"

@@ -7,7 +7,7 @@ from pathlib import Path
 from excel_normalize.workbook_builder import build_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURES = ROOT / "fixtures"
+FIXTURES = ROOT / "testdata"
 
 
 def main() -> None:

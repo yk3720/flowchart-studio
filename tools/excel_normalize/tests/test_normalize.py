@@ -11,7 +11,7 @@ from excel_normalize.device_paths import resolve_device_workbook
 from excel_normalize.normalize import normalize_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURES = ROOT / "fixtures"
+FIXTURES = ROOT / "testdata"
 TEMPLATES = ROOT / "templates"
 INPUT_XLSX = FIXTURES / "input-device-z00001.xlsx"
 TEMPLATE_XLSX = TEMPLATES / "入力用テンプレ_v0.2.xlsx"

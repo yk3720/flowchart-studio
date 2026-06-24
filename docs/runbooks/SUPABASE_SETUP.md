@@ -18,7 +18,7 @@
 **Authentication → Email → Magic Link** で、デフォルトの `{{ .ConfirmationURL }}`（PKCE）ではなく **token_hash** リンクに差し替える。
 
 ```html
-<h2>Flowchart Web ログイン</h2>
+<h2>Flowchart Studio ログイン</h2>
 <p>次のリンクをクリックしてログインしてください。</p>
 <p>
   <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email">

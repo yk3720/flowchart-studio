@@ -1,8 +1,8 @@
-# grill-me 記録 — 企画ドキュメント SSOT 整理
+﻿# grill-me 記録 — 企画ドキュメント SSOT 整理
 
 **記録日:** 2026-05-31  
 **形式:** grill-me（計画・設計の深掘り）  
-**関連:** [decision-log.md](../05_開発ガイドライン/decision-log.md) · [AGENTS.md](../05_開発ガイドライン/エージェント憲法.md) · [README.md](../README.md) · [APP_PROJECT_RULES §13](c:/yk-skill/rule/10_meta/APP_PROJECT_RULES.md)
+**関連:** [decision-log.md](../05_開発ガイドライン/decision-log.md) · [AGENTS.md](../../AGENTS.md) · [README.md](../README.md) · [APP_PROJECT_RULES §13](c:/yk-skill/rule/10_meta/APP_PROJECT_RULES.md)
 
 ---
 
@@ -112,5 +112,5 @@
 ## 7. 関連ファイル
 
 - [decision-log.md](../05_開発ガイドライン/decision-log.md) — テーマチェーン · タイムライン
-- [AGENTS.md](../05_開発ガイドライン/エージェント憲法.md) — ゲート委譲 · 引き継ぎ終了4点
+- [AGENTS.md](../../AGENTS.md) — ゲート委譲 · 引き継ぎ終了4点
 - [99*アーカイブ/research/調査*永続化とセキュリティ\_Web公開.md](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/99_アーカイブ/research/調査_永続化とセキュリティ_Web公開.md) — ADR-013 前の調査（凍結）

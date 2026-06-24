@@ -1,4 +1,4 @@
-# DB-2 スキーマ草案 — 装置階層 + フロー表分離
+﻿# DB-2 スキーマ草案 — 装置階層 + フロー表分離
 
 **作成:** 2026-05-31  
 **状態:** **草案**（grill-me 2026-05-31 合意 · 実装前）  
@@ -18,20 +18,20 @@
 
 ## 2. 合意済みの設計原則（grill-me 2026-05-31）
 
-| #   | 原則                                                                                                                                  |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **装置構成**と**フロー表（9列）**はテーブル分離                                                                                       |
-| 2   | 装置側は **4 テーブル**: 社内番号マスタ → 装置（表示名）→ ユニット → モジュール（動作）                                               |
-| 3   | **1 社内番号 = 1 装置**（フォルダ管理と同じ）                                                                                         |
-| 4   | 社内番号マスタには **番号のみ**（客先名等・外部流出時に問題になる情報は載せない）                                                     |
-| 5   | ユニット/動作に社内サブ番号は **ない**（キーは名称 · DB 内部は **uuid** で不変 ID）                                                   |
-| 6   | フロー表は **A: 1 動作 = `flow_documents` 1 行**（`payload jsonb` に `FlowchartDocument` 丸ごと）                                     |
-| 7   | 正本: **Excel 主 + Web 微修正** · 正規化は **Python 等の別ツール**（Excel マクロ回避）                                                |
-| 8   | Web 構成編集: **理想 B**（追加/削除可）· 複雑なら **初版 A**（名称・並び順のみ）— **スキーマは B 見据え**                             |
-| 9   | **削除（2026-05-31 確定）:** Web（editor）は **フロー表の中身** のみ UPDATE。装置/ユニット/動作の **DB 行 DELETE は日常機能にしない** |
-| 10  | **legacy_key（2026-05-31 確定）:** **`{社内番号}:{module_slug}`** · 左は必ず社内番号                                                  |
-| 11  | **誤登録削除（2026-05-31 確定）:** Supabase **プロジェクト管理者** → 最終形 **`admin` + 管理画面**                                    |
-| 12  | **viewer（2026-05-31 確定）:** 全閲覧可 · JSON DL 不可は UI のみ · **画面変更なし** · 社内限定                                        |
+| #   | 原則                                                                                                                                                     |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **装置構成**と**フロー表（9列）**はテーブル分離                                                                                                          |
+| 2   | 装置側は **3 テーブル**: 装置（`devices` · `internal_code` が社内番号 UK）→ ユニット → モジュール（動作）（`equipment_codes` は migration-012 で統合済） |
+| 3   | **1 社内番号 = 1 装置**（フォルダ管理と同じ）                                                                                                            |
+| 4   | `devices.internal_code` に **番号のみ**（客先名等・外部流出時に問題になる情報は載せない）                                                                |
+| 5   | ユニット/動作に社内サブ番号は **ない**（キーは名称 · DB 内部は **uuid** で不変 ID）                                                                      |
+| 6   | フロー表は **A: 1 動作 = `flow_documents` 1 行**（`payload jsonb` に `FlowchartDocument` 丸ごと）                                                        |
+| 7   | 正本: **Excel 主 + Web 微修正** · 正規化は **Python 等の別ツール**（Excel マクロ回避）                                                                   |
+| 8   | Web 構成編集: **理想 B**（追加/削除可）· 複雑なら **初版 A**（名称・並び順のみ）— **スキーマは B 見据え**                                                |
+| 9   | **削除（2026-05-31 確定）:** Web（editor）は **フロー表の中身** のみ UPDATE。装置/ユニット/動作の **DB 行 DELETE は日常機能にしない**                    |
+| 10  | **legacy_key（2026-05-31 確定）:** **`{社内番号}:{module_slug}`** · 左は必ず社内番号                                                                     |
+| 11  | **誤登録削除（2026-05-31 確定）:** Supabase **プロジェクト管理者** → 最終形 **`admin` + 管理画面**                                                       |
+| 12  | **viewer（2026-05-31 確定）:** 全閲覧可 · JSON DL 不可は UI のみ · **画面変更なし** · 社内限定                                                           |
 
 ---
 
@@ -39,18 +39,13 @@
 
 ```mermaid
 erDiagram
-  equipment_codes ||--|| devices : "1:1"
   devices ||--o{ units : "1:N"
   units ||--o{ modules : "1:N"
   modules ||--o| flow_documents : "1:0..1"
 
-  equipment_codes {
-    text internal_code PK
-    timestamptz created_at
-  }
   devices {
     uuid id PK
-    text internal_code FK UK
+    text internal_code UK
     text display_name
     int sort_order
   }
@@ -79,26 +74,20 @@ erDiagram
 
 ## 4. テーブル定義（草案）
 
-### 4.1 `equipment_codes` — 社内番号マスタ
+### ~~4.1 `equipment_codes`~~ — 廃止（migration-012 で統合済）
 
-| 列              | 型            | 制約                   | 説明                                 |
-| --------------- | ------------- | ---------------------- | ------------------------------------ |
-| `internal_code` | `text`        | **PK**                 | 社内ユニーク番号（フォルダ名と同じ） |
-| `created_at`    | `timestamptz` | NOT NULL DEFAULT now() | 登録日時                             |
+> `equipment_codes` テーブルは migration-012（2026-06-14）で廃止。`devices.internal_code` が社内番号 UK を兼ねる。
 
-- **載せない:** 客先名 · フォルダフルパス · 番号から読み取れるメタの分解列
-- フォルダパスは **命名規則で導出**（アプリ/運用側 · DB 外）
+### 4.2 `devices` — 装置（社内番号 + 表示名）
 
-### 4.2 `devices` — 装置（表示名）
-
-| 列              | 型            | 制約                                 | 説明                                            |
-| --------------- | ------------- | ------------------------------------ | ----------------------------------------------- |
-| `id`            | `uuid`        | **PK** DEFAULT gen_random_uuid()     | 内部 ID（FK 用 · 将来 API）                     |
-| `internal_code` | `text`        | **FK → equipment_codes**, **UNIQUE** | 1:1                                             |
-| `display_name`  | `text`        | NOT NULL                             | 表示名（Web で名称変更可 · 客先特定名は避ける） |
-| `sort_order`    | `int`         | NOT NULL DEFAULT 0                   | Nav 並び（将来複数一覧用）                      |
-| `created_at`    | `timestamptz` | NOT NULL DEFAULT now()               |                                                 |
-| `updated_at`    | `timestamptz` | NOT NULL DEFAULT now()               |                                                 |
+| 列              | 型            | 制約                             | 説明                                                                |
+| --------------- | ------------- | -------------------------------- | ------------------------------------------------------------------- |
+| `id`            | `uuid`        | **PK** DEFAULT gen_random_uuid() | 内部 ID（FK 用 · 将来 API）                                         |
+| `internal_code` | `text`        | **UNIQUE NOT NULL**              | 社内番号（旧 `equipment_codes.internal_code` · 客先特定名は避ける） |
+| `display_name`  | `text`        | NOT NULL                         | 表示名（Web で名称変更可 · 客先特定名は避ける）                     |
+| `sort_order`    | `int`         | NOT NULL DEFAULT 0               | Nav 並び（将来複数一覧用）                                          |
+| `created_at`    | `timestamptz` | NOT NULL DEFAULT now()           |                                                                     |
+| `updated_at`    | `timestamptz` | NOT NULL DEFAULT now()           |                                                                     |
 
 ### 4.3 `units` — ユニット
 
@@ -127,15 +116,15 @@ erDiagram
 | `updated_at` | `timestamptz` | NOT NULL DEFAULT now()            |                                                                            |
 
 - **ユニーク:** `UNIQUE (unit_id, label)`
-- **`legacy_key`（2026-05-31 確定）:** 移行用 · 形式 **`{社内番号}:{module_slug}`** · 左は **必ず `equipment_codes.internal_code`**
+- **`legacy_key`（2026-05-31 確定）:** 移行用 · 形式 **`{社内番号}:{module_slug}`** · 左は **必ず `devices.internal_code`**
 
 ### 4.4.1 `legacy_key` 規約（移行用 · 2026-05-31 確定）
 
-| 部分                  | 内容                                   | 例                  |
-| --------------------- | -------------------------------------- | ------------------- |
-| **左（社内番号）**    | `equipment_codes.internal_code` と同一 | `12345`             |
-| **右（module_slug）** | コード上の安定 ID（表示名ではない）    | `supply-feed`       |
-| **合成**              | `{社内番号}:{module_slug}`             | `12345:supply-feed` |
+| 部分                  | 内容                                | 例                  |
+| --------------------- | ----------------------------------- | ------------------- |
+| **左（社内番号）**    | `devices.internal_code` と同一      | `12345`             |
+| **右（module_slug）** | コード上の安定 ID（表示名ではない） | `supply-feed`       |
+| **合成**              | `{社内番号}:{module_slug}`          | `12345:supply-feed` |
 
 - **DB-1 の `flow_documents.module_id text`** を backfill するときの対応表
 - **デモ seed:** `press-01` 等は使わず、仮の社内番号（例: `DEMO-001`）を `equipment_codes` に登録してから合成
@@ -158,10 +147,11 @@ erDiagram
 ```typescript
 export type FlowchartDocument = {
   version: 1;
+  /** 例: table-9col-v1 · table-10col-v1（ADR-012 + 色列） */
+  schema?: string;
   title?: string;
-  table: FlowTableRow[]; // 9列（段+列）
+  table: FlowTableRow[]; // 9列〜10列（段+列+色）
   layout: LayoutConfig;
-  themeId?: string;
   createdAt: string;
 };
 ```
@@ -205,7 +195,7 @@ export type FlowchartDocument = {
 
 ### 削除順序（RESTRICT 前提）
 
-対象 `internal_code` について **子 → 親**: `flow_documents` → `modules` → `units` → `devices` → `equipment_codes`。
+対象 `internal_code` について **子 → 親**: `flow_documents` → `modules` → `units` → `devices`。
 
 **M-2 草案:** `admin_delete_equipment(internal_code)` — `004_flow_documents_module_fk.sql` · SQL Editor から実行（`authenticated` 非公開）。
 
@@ -218,12 +208,12 @@ export type FlowchartDocument = {
 
 ## 5. DB-1 からの移行（案）
 
-| 段階 | 内容                                                                                          |
-| ---- | --------------------------------------------------------------------------------------------- |
-| M1   | 新 4 テーブル作成 · RLS 追加                                                                  |
-| M2   | デモ seed · `legacy_key` = **`{internal_code}:{module_slug}`** · **`004` で seed + backfill** |
-| M3   | `flow_documents.module_id` text → uuid FK — **`004_flow_documents_module_fk.sql`**            |
-| M4   | アプリの `moduleDraftRepository` を uuid ベースに差し替え · Nav は join で取得                |
+| 段階 | 内容                                                                                                        |
+| ---- | ----------------------------------------------------------------------------------------------------------- |
+| M1   | 新 3 テーブル作成（`devices` · `units` · `modules`）· RLS 追加（`equipment_codes` は migration-012 で廃止） |
+| M2   | デモ seed · `legacy_key` = **`{internal_code}:{module_slug}`** · **`004` で seed + backfill**               |
+| M3   | `flow_documents.module_id` text → uuid FK — **`004_flow_documents_module_fk.sql`**                          |
+| M4   | アプリの `moduleDraftRepository` を uuid ベースに差し替え · Nav は join で取得                              |
 
 **互換:** 移行期間のみ Server Actions が `legacy_key` フォールバックを許容可（1 リリース限り）。
 
@@ -231,13 +221,12 @@ export type FlowchartDocument = {
 
 ## 6. RLS（方針 · DB-1 踏襲 + DELETE 制限）
 
-| テーブル          | SELECT                   | INSERT           | UPDATE                   | DELETE           |
-| ----------------- | ------------------------ | ---------------- | ------------------------ | ---------------- |
-| `equipment_codes` | authenticated + profiles | editor           | editor                   | **なし（禁止）** |
-| `devices`         | 同上                     | editor           | editor                   | **なし**         |
-| `units`           | 同上                     | editor           | editor                   | **なし**         |
-| `modules`         | 同上                     | editor           | editor                   | **なし**         |
-| `flow_documents`  | 同上                     | editor（取込等） | **editor（Web 表編集）** | **なし（初版）** |
+| テーブル         | SELECT                   | INSERT           | UPDATE                   | DELETE           |
+| ---------------- | ------------------------ | ---------------- | ------------------------ | ---------------- |
+| `devices`        | authenticated + profiles | editor           | editor                   | **なし**         |
+| `units`          | 同上                     | editor           | editor                   | **なし**         |
+| `modules`        | 同上                     | editor           | editor                   | **なし**         |
+| `flow_documents` | 同上                     | editor（取込等） | **editor（Web 表編集）** | **なし（初版）** |
 
 - **viewer:** 装置構成 + フロー **閲覧可**（ADR-013 · **2026-05-31 確定**）。JSON DL 不可は **UI**（ボタンなし）— DB/RLS は変更しない。社内メンバー限定 · 画面は editor/viewer 同型。
 - **将来の別アプリ:** 装置 4 テーブルに対する **読取専用 API**（Server Actions / Route Handler · service role はサーバーのみ）
@@ -268,7 +257,7 @@ GET /api/equipment/{internal_code}/tree
 
 取込時の DB 操作（案）:
 
-1. `internal_code` で `equipment_codes` / `devices` を upsert
+1. `internal_code` で `devices` を upsert（`equipment_codes` は migration-012 で廃止済み）
 2. シート名 → `units.label` upsert
 3. 動作名列 → `modules.label` upsert（uuid は既存維持 · 新規は insert）
 4. 各動作ブロック → `flow_documents.payload` upsert
@@ -286,7 +275,7 @@ GET /api/equipment/{internal_code}/tree
 
 ## 10. 参照 SQL
 
-正本: `c:/yk-application/flowchart-studio/supabase/migrations/003_db2_schema.sql` · `004_flow_documents_module_fk.sql` · **dev 適用済（2026-05-31 Dashboard）** · 手順: `docs/DB2_MIGRATION_RUNBOOK.md`
+正本: `c:/yk-application/flowchart-studio/supabase/migrations/003_db2_schema.sql` · `004_flow_documents_module_fk.sql` · **dev 適用済（2026-05-31 Dashboard）** · 手順: `docs/runbooks/DB2_MIGRATION_RUNBOOK.md`
 
 ---
 

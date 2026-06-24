@@ -1,10 +1,10 @@
-# 装置ごとの作者 Excel（置き場所 SSOT）
+﻿# 装置ごとの作者 Excel（置き場所 SSOT）
 
 **正本の詳細:** [`../README.md` §作者 Excel の置き場所](../README.md#作者-excel-の置き場所)
 
 ## ルート
 
-`c:/yk-application/flowchart-studio/tools/excel_normalize/fixtures/devices/`
+`c:/yk-application/flowchart-studio/tools/excel_normalize/testdata/devices/`
 
 ## フォルダ名
 

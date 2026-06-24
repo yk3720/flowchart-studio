@@ -10,7 +10,7 @@ from excel_normalize.device_paths import device_workbook_path
 from excel_normalize.normalize import normalize_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
-DEVICE_DIR = ROOT / "fixtures" / "devices" / "A0001_塗布装置"
+DEVICE_DIR = ROOT / "testdata" / "devices" / "A0001_塗布装置"
 IMPORT_JSON = DEVICE_DIR / "import.json"
 
 

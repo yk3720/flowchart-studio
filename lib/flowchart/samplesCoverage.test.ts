@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import sampleAtm from "@/fixtures/sample-atm.json";
-import sampleCurry from "@/fixtures/sample-curry.json";
-import sampleMorning from "@/fixtures/sample-morning.json";
+import sampleAtm from "@/samples/sample-atm.json";
+import sampleCurry from "@/samples/sample-curry.json";
+import sampleMorning from "@/samples/sample-morning.json";
 import { generateFlowchart } from "./generate";
 import { COLOR_HINT_SELECT_OPTIONS } from "./flowColors";
 import { SHAPE_TYPE_OPTIONS } from "./tableColumns";

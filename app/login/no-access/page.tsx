@@ -21,7 +21,7 @@ export default async function NoAccessPage() {
       <p className="text-sm text-slate-600">
         {user?.email ? (
           <>
-            <strong>{user.email}</strong> はまだ Flowchart Web
+            <strong>{user.email}</strong> はまだ Flowchart Studio
             の利用許可がありません。管理者にアクセス許可の付与を依頼してください。
           </>
         ) : (

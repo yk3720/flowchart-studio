@@ -418,22 +418,35 @@ export const fcTableDeleteBtn = cn(
   "rounded px-1 text-xs text-flow-danger hover:bg-flow-danger-muted disabled:cursor-not-allowed disabled:opacity-30"
 );
 
-/* ── プレビュー凡例（キャンバス上の chrome） ── */
+/* ── プレビュー凡例（chrome 帯に inline 表示） ── */
 
 export const fcColorLegend = cn(
   "flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border border-flow-border bg-flow-surface/95 px-2.5 py-1.5 text-[10px] text-flow-text-body shadow-sm"
 );
 
+/** @deprecated キャンバス内 absolute 配置は廃止。fcPreviewChrome 内に inline 配置 */
 export const fcColorLegendFloating = cn(
   fcColorLegend,
   "pointer-events-none absolute bottom-2 left-2 z-10"
 );
 
-/** ノードが少ないときは下余白を多めにしてプレビュー内で上寄りに見えないよう調整 */
+/* ── プレビュー列 chrome（凡例・ズームボタン帯） ── */
+
+export const fcPreviewChrome = cn(
+  fcBorderB,
+  "flex shrink-0 items-center justify-between gap-2 px-3 py-1.5"
+);
+
+export const fcZoomBtn = cn(
+  fcFocusRing,
+  fcTargetMin,
+  "rounded border border-flow-border-strong px-2 py-1 text-xs font-medium text-flow-text-body hover:bg-flow-surface-muted"
+);
+
 export function fcFitViewOptions(nodeCount: number): FitViewOptions {
   const padding =
     nodeCount <= 5
-      ? { top: 0.08, bottom: 0.32, left: 0.16, right: 0.16 }
+      ? { top: 0.1, bottom: 0.16, left: 0.15, right: 0.15 }
       : { top: 0.1, bottom: 0.18, left: 0.15, right: 0.15 };
   return { padding, duration: 200, maxZoom: 1.25 };
 }

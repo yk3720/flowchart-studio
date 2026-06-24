@@ -2,7 +2,6 @@
 
 import {
   Background,
-  Controls,
   ReactFlow,
   ReactFlowProvider,
   useReactFlow,
@@ -31,6 +30,8 @@ import { flowEdgeTypes, flowNodeTypes } from "./flowTypes";
 
 export type FlowCanvasHandle = {
   fitView: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
   getExportElement: () => HTMLElement | null;
 };
 
@@ -58,10 +59,12 @@ function FlowCanvasInner(
       fitView: () => {
         void fitView(fcFitViewOptions(nodeCount));
       },
+      zoomIn: () => zoomIn(),
+      zoomOut: () => zoomOut(),
       getExportElement: () =>
         document.querySelector("[data-flowchart-export-root]"),
     }),
-    [fitView, nodeCount]
+    [fitView, nodeCount, zoomIn, zoomOut]
   );
 
   useEffect(() => {
@@ -162,7 +165,6 @@ function FlowCanvasInner(
           proOptions={{ hideAttribution: true }}
         >
           <Background gap={16} size={1} color="var(--flow-border)" />
-          <Controls showInteractive={false} />
         </ReactFlow>
       </div>
     </div>
