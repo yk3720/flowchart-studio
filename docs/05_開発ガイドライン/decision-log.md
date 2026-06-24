@@ -1,5 +1,7 @@
 ﻿# Decision Log — フローチャート Web
 
+**目次:** [00\_目次.md](./00_目次.md)
+
 **更新:** 2026-06-24（docs 整理 · archive 分離）  
 **役割:** 開発経緯の **入口**。本ファイルは **リンクと1行要約のみ** — 確定事項の正本は ADR、実行の正本は handoffs §4。
 
@@ -49,7 +51,7 @@
 
 | 軸               | 正本                                                          | 現状（2026-06-24）                 |
 | ---------------- | ------------------------------------------------------------- | ---------------------------------- |
-| **戦略優先**     | [製品戦略.md](../01_要求定義/製品戦略.md)                     | UX · **作る操作の手間削減** 最優先 |
+| **戦略優先**     | [要求定義書.md](../01_要求定義/要求定義書.md) §4              | UX · **作る操作の手間削減** 最優先 |
 | **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | **U0 動作001 本文**（§4）          |
 
 **開発ログイン（2026-06-24）:** Magic Link は `/auth/confirm` + token_hash テンプレ · OAuth は `/auth/callback` · パスワードは Server Action — **開発 Supabase（`flowchart-dev`）で3方式共存**。Vercel 本番 URL（`-dun`）は現状この dev プロジェクトに接続。**専用本番 Supabase 分離後**は Email 無効 · Google/Azure のみ（`SUPABASE_RULES` §6）。
@@ -62,7 +64,7 @@
 
 ### 立ち上げ · MVP · Web完成（2026-05-20〜26）
 
-[調査\_使いやすい](../archive/01_要求定義/調査_使いやすいフローチャート.md) → [ADR-007〜009](<../03_技術仕様/意思決定記録(ADR).md>) → [製品要求](../01_要求定義/製品要求.md) → [C-2 記録](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/99_アーカイブ/evidence/C-2_実務PNG貼付_記録_2026-05-26.md)
+[調査\_使いやすい](../archive/01_要求定義/調査_使いやすいフローチャート.md) → [ADR-007〜009](<../03_技術仕様/意思決定記録(ADR).md>) → [要求定義書](../01_要求定義/要求定義書.md) → [C-2 記録](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/99_アーカイブ/evidence/C-2_実務PNG貼付_記録_2026-05-26.md)
 
 ### 9列 · M002 レイアウト（2026-05-24〜26）
 
@@ -74,7 +76,7 @@
 
 ### UX ブラッシュアップ · 3ペイン（2026-05-30）
 
-[製品戦略](../01_要求定義/製品戦略.md) → [計画\_2026-05-30](../archive/01_要求定義/計画_2026-05-30_図の見た目と装置階層.md) → [ADR-011](<../03_技術仕様/意思決定記録(ADR).md#adr-011-phase-3-画面--3-ペイン装置階層ナビ表図>) · [ADR-012](<../03_技術仕様/意思決定記録(ADR).md#adr-012-9-列モデル段--列ドラフト>)（菱形枠等）→ [handoff \_8](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_8_tauri-spike-architecture-session-end.md) · [\_9](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_9_vercel-prod-deploy-session-end.md)
+[要求定義書 §4](../01_要求定義/要求定義書.md#4-優先順位製品戦略--2026-05-30-合意) → [計画\_2026-05-30](../archive/01_要求定義/計画_2026-05-30_図の見た目と装置階層.md) → [ADR-011](<../03_技術仕様/意思決定記録(ADR).md#adr-011-phase-3-画面--3-ペイン装置階層ナビ表図>) · [ADR-012](<../03_技術仕様/意思決定記録(ADR).md#adr-012-9-列モデル段--列ドラフト>)（菱形枠等）→ [handoff \_8](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_8_tauri-spike-architecture-session-end.md) · [\_9](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-30_9_vercel-prod-deploy-session-end.md)
 
 ### 色列（10列目 · 2026-06-06）
 
@@ -128,15 +130,15 @@
 | 2026-06-11      | handoff  | §5.6 レース/プレビュー · M-3 admin · 006 · 本番 deploy                          | [2026-06-11_26 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-11_26_admin-m3-session-end.md)                                                                                                                            | 完了                              | 次: document.ts Zod                                                                                                                  |
 | 2026-06-15      | ADR      | フロー共同編集 — 編集は全 editor · 削除は所有者/admin                           | [ADR-015](<../03_技術仕様/意思決定記録(ADR).md#adr-015-フロー共同編集--編集は全-editor--削除は所有者admin2026-06-15>)                                                                                                               | Accepted · 本番適用済             | `016` · handoff #5                                                                                                                   |
 | 2026-06-21      | handoff  | A0001 Excel v0.3 · 正規化 · Vercel import.json 取込                             | [2026-06-21_11 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-21_11_a0001-excel-v03-session-end.md)                                                                                                                     | 完了                              | 次: U0 動作001 本文（1個ずつ）                                                                                                       |
-| 2026-06-23      | 運用     | `flowchart-studio` — yk-tool から yk-application へ独立リポ移行                 | [リポジトリ構造](../04_リポジトリ構造/リポジトリ構造.md)                                                                                                                                                                            | 完了                              | `c:/yk-application/flowchart-studio/`                                                                                                |
+| 2026-06-23      | 運用     | `flowchart-studio` — yk-tool から yk-application へ独立リポ移行                 | [構成詳細](../04_リポジトリ構造/構成詳細.md)                                                                                                                                                                                        | 完了                              | `c:/yk-application/flowchart-studio/`                                                                                                |
 | 2026-06-23      | 運用     | spec-in-repo 移行後 doc-sync（リンク · ロードマップ）                           | [現状とロードマップ](../02_機能設計/現状とロードマップ.md) · [handoff \_16](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-23_16_doc-sync-session-end.md)                                                                   | 完了                              | `7432afe` · フェーズ計画 Historical 化                                                                                               |
 | 2026-06-24      | 運用     | Magic Link / PKCE — `/auth/confirm` + メールテンプレ整合                        | [SUPABASE_SETUP.md](../../docs/runbooks/SUPABASE_SETUP.md) §1-1 · `8593089`                                                                                                                                                         | 完了                              | 本番 `-dun` 確認済                                                                                                                   |
 | 2026-06-24      | 運用     | doc-sync 矛盾解消（AGENTS · yk-skill · Excel · archive 注記）                   | [handoff \_18](c:/yk-memo/handoffs/flowchart-studio/2026-06-24_18_doc-sync-contradiction-cleanup-session-end.md)                                                                                                                    | 完了                              | 次: U0 動作001 §4                                                                                                                    |
-| 2026-06-24      | 運用     | repo-layout v2 — 系統別整理（samples · scripts/\* · docs/runbooks · stub 削除） | [リポジトリ構造.md](../04_リポジトリ構造/リポジトリ構造.md) · [YK テンプレ](c:/yk-skill/templates/independent-app-repo/STRUCTURE.md)                                                                                                | 完了                              | テンプレ正本化                                                                                                                       |
+| 2026-06-24      | 運用     | repo-layout v2 — 系統別整理（samples · scripts/\* · docs/runbooks · stub 削除） | [構成詳細.md](../04_リポジトリ構造/構成詳細.md) · [YK テンプレ](c:/yk-skill/templates/independent-app-repo/STRUCTURE.md)                                                                                                            | 完了                              | テンプレ正本化                                                                                                                       |
 | 2026-06-24      | 運用     | Google OAuth（flowchart-dev）— GCP + Supabase Providers                         | [handoff \_17](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_17_magic-link-google-oauth-session-end.md)                                                                                                              | dev 完了                          | 本番 Supabase 分離 · Microsoft はバックログ                                                                                          |
 | 2026-06-24      | 運用     | UX パック — 名称統一・内部キー・再生成 UX・凡例 chrome・handoffs slug           | [handoff \_19](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_19_ux-rename-scroll-legend-handoff.md)                                                                                                                  | 完了                              | archive                                                                                                                              |
-| 2026-06-24      | 運用     | 四層レイアウト v3.2 — `docs/` · frontend/backend/database/python + `src/`       | [リポジトリ構造.md](../04_リポジトリ構造/リポジトリ構造.md) · [handoff \_21](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_21_four-layer-layout-session-end.md)                                                      | 完了                              | → folder-e2e-docs §4                                                                                                                 |
-| 2026-06-24      | 運用     | フォルダ中身協議 · E2E 43/43 · docs 整理                                        | [リポジトリ構造.md](../04_リポジトリ構造/リポジトリ構造.md) · [handoff \_22](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_22_folder-e2e-docs-session-end.md)                                                        | 完了                              | → doc-sync-rules §4                                                                                                                  |
+| 2026-06-24      | 運用     | 四層レイアウト v3.2 — `docs/` · frontend/backend/database/python + `src/`       | [構成詳細.md](../04_リポジトリ構造/構成詳細.md) · [handoff \_21](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_21_four-layer-layout-session-end.md)                                                                  | 完了                              | → folder-e2e-docs §4                                                                                                                 |
+| 2026-06-24      | 運用     | フォルダ中身協議 · E2E 43/43 · docs 整理                                        | [構成詳細.md](../04_リポジトリ構造/構成詳細.md) · [handoff \_22](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_22_folder-e2e-docs-session-end.md)                                                                    | 完了                              | → doc-sync-rules §4                                                                                                                  |
 | 2026-06-24      | handoff  | yk-skill 横断ルール doc-sync（四層パス · docs 正本 · slug）                     | [REACTFLOW_RULES](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md) · [handoff \_23](c:/yk-memo/handoffs/flowchart-studio/2026-06-24_23_doc-sync-rules-session-end.md)                                                              | 完了                              | 次: yk-memo 整理 §4                                                                                                                  |
 
 ---

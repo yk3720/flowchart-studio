@@ -58,7 +58,7 @@ create index if not exists modules_unit_sort_idx on public.modules (unit_id, sor
 -- 2. flow_documents: text module_id -> uuid FK (requires data migration)
 -- ---------------------------------------------------------------------------
 -- NOTE: Apply in 004_flow_documents_module_fk.sql after seeding modules.
--- Draft steps documented in DB-2_スキーマ草案.md §5.
+-- Draft steps documented in docs/03_技術仕様/DB設計.md §5.
 
 -- ---------------------------------------------------------------------------
 -- 3. RLS (authenticated read; editor INSERT/UPDATE only — no DELETE per ADR-014)

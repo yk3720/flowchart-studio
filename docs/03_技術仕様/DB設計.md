@@ -1,5 +1,7 @@
 ﻿# DB-2 スキーマ設計 — 装置階層 + フロー表分離
 
+**目次:** [00\_目次.md](./00_目次.md)
+
 **作成:** 2026-05-31  
 **状態:** **設計書（migration 003〜016 適用済 · dev/本番）**  
 **関連:** [データモデル.md](./データモデル.md) · [ADR-014](<./意思決定記録(ADR).md>) · [ADR-013](<./意思決定記録(ADR).md>) · [001_db1_schema.sql](c:/yk-application/flowchart-studio/database/migrations/001_db1_schema.sql)

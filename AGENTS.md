@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-studio`                                                          |
 | **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-24（doc-sync · 四層パス整合）                                       |
+| **更新**              | 2026-06-24（docs 00\_目次統一）                                             |
 
 ---
 
@@ -25,14 +25,14 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-studio/2026-06-24_23_doc-sync-rules-session-end.md
+@c:/yk-memo/handoffs/flowchart-studio/2026-06-24_24_docs-toc-consolidation-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
-続きから。§4 の1件だけ。yk-memo の中身を協議から。一個ずつ。終わったら止めて報告。
+続きから。§4 の1件だけ。yk-memo 個人テーマフォルダのリンク棚卸しから。一個ずつ。終わったら止めて報告。
 ```
 
 > セッション MD が更新されたら、2行目を HANDOFF の「最新セッション」に差し替える。
 
-**仕様疑問時のみ追加 Read:** `docs/03_技術仕様/データモデル.md` · `docs/03_技術仕様/意思決定記録(ADR).md` · `docs/05_開発ガイドライン/decision-log.md`
+**仕様疑問時のみ追加 Read:** `docs/**/00_目次.md` → 該当フォルダの**1ファイル**だけ（例: `03_技術仕様/00_目次.md` → `データモデル.md`）
 
 ---
 
@@ -100,29 +100,30 @@ npm run test:e2e
 
 ## やる / やらない
 
-| やる                                      | やらない                   |
-| ----------------------------------------- | -------------------------- |
-| 表 → IR → 格子レイアウト → React Flow     | Excel COM · Office Add-in  |
-| JSON / CSV / Excel 取込 · 表 UI · PNG/SVG | 図解管理 WS との統合       |
-| 1 セッション = §4 の **1 件**             | 製品要求の全項目の一括実装 |
-| 変更前に ADR → docs → コードの順          | dagre でノード位置決定     |
+| やる                                      | やらない                     |
+| ----------------------------------------- | ---------------------------- |
+| 表 → IR → 格子レイアウト → React Flow     | Excel COM · Office Add-in    |
+| JSON / CSV / Excel 取込 · 表 UI · PNG/SVG | 図解管理 WS との統合         |
+| 1 セッション = §4 の **1 件**             | 要求定義書の全項目の一括実装 |
+| 変更前に ADR → docs → コードの順          | dagre でノード位置決定       |
 
 ---
 
 ## SSOT マップ
 
-| ドメイン                       | 正本                                                                     |
-| ------------------------------ | ------------------------------------------------------------------------ |
-| **セッション進捗 · 次の1件**   | `c:/yk-memo/handoffs/flowchart-studio/`                                  |
-| **講座提出**                   | `yk-memo/.../00_テーマ/選定表_記入稿.md`                                 |
-| 概要 · 境界 · MVP · 完成ゲート | `docs/01_要求定義/製品要求.md`                                           |
-| 戦略 · Excel 手順              | `docs/01_要求定義/製品戦略.md`                                           |
-| 現状 · ロードマップ            | `docs/02_機能設計/現状とロードマップ.md`                                 |
-| UI 仕様                        | `docs/02_機能設計/UI仕様.md`                                             |
-| データモデル                   | `docs/03_技術仕様/データモデル.md`                                       |
-| 図形・色 · 列（作者向け）      | `docs/03_技術仕様/作者ガイド.md` · `lib/flowchart/table/tableColumns.ts` |
-| 開発経緯                       | `docs/05_開発ガイドライン/decision-log.md`                               |
-| ADR                            | `docs/03_技術仕様/意思決定記録(ADR).md`                                  |
+| ドメイン                     | 正本                                                                         |
+| ---------------------------- | ---------------------------------------------------------------------------- |
+| **セッション進捗 · 次の1件** | `c:/yk-memo/handoffs/flowchart-studio/`                                      |
+| **講座提出**                 | `yk-memo/.../00_テーマ/選定表_記入稿.md`                                     |
+| 要求定義                     | `docs/01_要求定義/00_目次.md` → 必要時 `要求定義書.md`（§単位）              |
+| 機能設計                     | `docs/02_機能設計/00_目次.md` → 必要時 `現状とロードマップ.md` / `UI仕様.md` |
+| 技術仕様                     | `docs/03_技術仕様/00_目次.md` → 必要時1本                                    |
+| リポジトリ構成               | `docs/04_リポジトリ構造/構成詳細.md`（入口: `00_目次.md`）                   |
+| 開発経緯                     | `docs/05_開発ガイドライン/00_目次.md` → `decision-log.md`                    |
+| ユビキタス言語               | `docs/06_ユビキタス言語/00_目次.md`                                          |
+| データモデル                 | `docs/03_技術仕様/データモデル.md`                                           |
+| 図形・色 · 列（作者向け）    | `docs/03_技術仕様/作者ガイド.md` · `lib/flowchart/table/tableColumns.ts`     |
+| ADR                          | `docs/03_技術仕様/意思決定記録(ADR).md`                                      |
 
 ---
 
