@@ -39,15 +39,15 @@ export const TABLE_HEADERS_9 = [
   "Text3",
 ] as const;
 
-/** 作者向け · 図形種別（自動機）— SSOT: 02_spec/フローチャート記述ルール.md §2 */
+/** 作者向け · 図形種別（自動機）— SSOT: specs/03_技術仕様/フローチャート記述ルール.md §2 */
 export const SHAPE_TYPE_COLUMN_HELP =
   "端子=開始/終了 · 処理=自動ステップ · 判断=分岐(Yes下/No右) · 入出力=PLC/上位 · 手動入力=オペ操作";
 
-/** 作者向け · 色列（自動機）— SSOT: 02_spec/フローチャート記述ルール.md §3 */
+/** 作者向け · 色列（自動機）— SSOT: specs/03_技術仕様/フローチャート記述ルール.md §3 */
 export const COLOR_COLUMN_HELP =
   "背景色。通常=自動運転 · 黄=重要な判断 · 橙=要注意/異常系 · 青=手動確認。形+ラベルと併用（表の赤警告とは別）";
 
-/** 作者向け · 接続先（Yes/No · ループ）— SSOT: 02_spec/フローチャート記述ルール.md §4 */
+/** 作者向け · 接続先（Yes/No · ループ）— SSOT: specs/03_技術仕様/フローチャート記述ルール.md §4 */
 export const CONNECT_DOWN_HELP =
   "この ID へ下矢印（判断の Yes 側になりやすい）";
 export const CONNECT_RIGHT_HELP =

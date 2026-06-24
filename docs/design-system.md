@@ -56,7 +56,7 @@
 
 | 変えたいもの                   | 更新順                        | 主なファイル                                                                                     |
 | ------------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------ |
-| 表「色」列の意味（黄・橙・青） | 仕様 → コード → 凡例          | `02_spec/フローチャート記述ルール.md` → `flowColors.ts` → `FlowColorLegend`                      |
+| 表「色」列の意味（黄・橙・青） | 仕様 → コード → 凡例          | `specs/03_技術仕様/フローチャート記述ルール.md` → `flowColors.ts` → `FlowColorLegend`            |
 | ノード枠・菱形の太さ           | 横断ルール確認 → コード → E2E | `VISUAL_DESIGN_RULES` → `flowColors.ts` → `e2e/`                                                 |
 | 矢印・Yes/No ラベル色          | コード                        | `flowColors.ts` · `edgeLabelPlacement.ts`                                                        |
 | 再生成ボタン・その他メニュー   | class SSOT                    | `flowchartUiClasses.ts`（新規はここに追加）                                                      |
@@ -123,7 +123,7 @@
 1. UI を触る前に **本ファイルでレイヤーを確認**
 2. フロー編集画面のボタン → `flowchartUiClasses.ts` に追加してから使う
 3. キャンバス色 → `flowColors.ts` のみ（chrome に波及させない）
-4. 意味の変更 → `02_spec` 先
+4. 意味の変更 → `specs/03_技術仕様/フローチャート記述ルール.md` 先
 5. 枠太さ → [VISUAL_DESIGN_RULES](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md) §2
 6. 実装詳細 → [REACTFLOW_RULES §5.6](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md) · [flowchart-practical-ux-yk.mdc](../.cursor/rules/flowchart-practical-ux-yk.mdc)
 
@@ -169,4 +169,4 @@
 
 ---
 
-_入口 SSOT: 本ファイル · キャンバス: `flowColors.ts` · 操作 UI: `flowchartUiClasses.ts` · 意味: `02_spec/フローチャート記述ルール.md`_
+*入口 SSOT: 本ファイル · キャンバス: `flowColors.ts` · 操作 UI: `flowchartUiClasses.ts` · 意味: `specs/03*技術仕様/フローチャート記述ルール.md`\_

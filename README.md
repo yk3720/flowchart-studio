@@ -57,7 +57,8 @@ npm run test:e2e # Playwright（Cursor 内部ブラウザ設定と無関係）
 
 ## DB-1（ADR-013 · Supabase）
 
-- [x] Supabase Auth（Google / Microsoft）
+- [x] Supabase Auth — **開発（`flowchart-dev` · 現行 Vercel `-dun` も接続）:** Email Magic Link · パスワード · Google OAuth
+- [x] Supabase Auth — **専用本番 Supabase 分離後の想定:** Google / Microsoft（Email 無効）
 - [x] `profiles` 許可リスト · editor / viewer
 - [x] `flow_documents` クラウド保存（Server Actions）
 - [x] オフライン閲覧キャッシュ（IndexedDB · 開いたフロー + ピン）

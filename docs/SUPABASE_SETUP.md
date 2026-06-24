@@ -34,7 +34,8 @@
 | `/auth/callback` | OAuth（Google / Azure）             | `exchangeCodeForSession(code)`    |
 
 **開発:** Email プロバイダー有効 · Magic Link / パスワード UI 表示（`SUPABASE_RULES` §6）。  
-**本番:** Email プロバイダーはダッシュボードで**無効化**（Google / Azure のみ · UI 非表示だけでは不十分）。
+**専用本番 Supabase（未分離）:** 現行 Vercel 本番 URL（`-dun`）は **`flowchart-dev` に接続** — Email / Magic Link は有効のまま運用可。  
+**本番 Supabase 分離後:** Email プロバイダーはダッシュボードで**無効化**（Google / Azure のみ · UI 非表示だけでは不十分）。
 
 ## 2. マイグレーション
 

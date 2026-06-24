@@ -55,7 +55,7 @@ test.describe("import.json 装置一括取込", () => {
   test("A0001 import.json で取込成功バナーが表示される", async ({ page }) => {
     test.skip(
       !fs.existsSync(A0001_IMPORT),
-      "npm run excel:a0001:build で import.json を生成してください"
+      "npm run excel:a0001:normalize で import.json を生成してください"
     );
 
     const json = fs.readFileSync(A0001_IMPORT, "utf-8");

@@ -29,7 +29,7 @@ const COLOR_CELL_TO_HINT: Record<string, ColorHint> = {
   青: "blue",
 };
 
-/** 凡例表示用 — SSOT: 02_spec/フローチャート記述ルール.md §3 */
+/** 凡例表示用 — SSOT: specs/03_技術仕様/フローチャート記述ルール.md §3 */
 export const COLOR_HINT_LEGEND_ITEMS: {
   hint: ColorHint;
   label: string;

@@ -1,6 +1,6 @@
 # Decision Log — フローチャート Web
 
-**更新:** 2026-06-23（spec-in-repo 移行 · リンク修正 · 戦術同期）  
+**更新:** 2026-06-24（doc-sync · リンク修正 · 次タスク粒度）  
 **役割:** 開発経緯の **入口**。本ファイルは **リンクと1行要約のみ** — 確定事項の正本は ADR、実行の正本は handoffs §4。
 
 ---
@@ -47,18 +47,18 @@
 
 ## 戦略 vs 戦術（ズレても正常）
 
-| 軸               | 正本                                                                            | 現状（2026-06-23）                  |
+| 軸               | 正本                                                                            | 現状（2026-06-24）                  |
 | ---------------- | ------------------------------------------------------------------------------- | ----------------------------------- |
 | **戦略優先**     | [相談\_2026-05-30](../01_要求定義/相談_2026-05-30_Web版ブラッシュアップ方針.md) | UX · **作る操作の手間削減** 最優先  |
-| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md)                      | **U0 動作001〜009 本文**（§4 正本） |
+| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md)                      | **U0 動作001 本文**（§4 · 1個ずつ） |
 
-**開発ログイン（2026-06-24）:** Magic Link は `/auth/confirm` + token_hash テンプレ · OAuth は `/auth/callback` · パスワードは Server Action — **開発 Supabase で3方式共存**。本番は Email 無効（Google/Azure のみ · `SUPABASE_RULES` §6）。
+**開発ログイン（2026-06-24）:** Magic Link は `/auth/confirm` + token_hash テンプレ · OAuth は `/auth/callback` · パスワードは Server Action — **開発 Supabase（`flowchart-dev`）で3方式共存**。Vercel 本番 URL（`-dun`）は現状この dev プロジェクトに接続。**専用本番 Supabase 分離後**は Email 無効 · Google/Azure のみ（`SUPABASE_RULES` §6）。
 
 ---
 
 ## テーマチェーン（論点ごと · 深掘り用）
 
-タイムラインは日付順。同じ論点を **調査 / 合意 → ADR → 実装** の順で辿るときはこちら（本文は各リンク先 · 本節はリンクのみ）。
+タイムラインは日付順。同じ論点を **調査 / 合意 → ADR → 実装** の順で辿るときはこちら（本文は各リンク先 · 本節はリンクのみ）。**チェーン内の「次 §4」は当時のスナップショット** — 今やる1件は [HANDOFF §4](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md) のみ。
 
 ### 立ち上げ · MVP · Web完成（2026-05-20〜26）
 
@@ -78,15 +78,15 @@
 
 ### 色列（10列目 · 2026-06-06）
 
-[計画\_2026-05-30 §B](../01_要求定義/計画_2026-05-30_図の見た目と装置階層.md) → [色列\_仕様整理](../03_技術仕様/色列_仕様整理.md)（着手可）→ **次 §4:** 10列実装
+[計画\_2026-05-30 §B](../01_要求定義/計画_2026-05-30_図の見た目と装置階層.md) → [色列\_仕様整理](../03_技術仕様/色列_仕様整理.md)（着手可）→ （当時）10列実装
 
 ### DB-2 装置階層（2026-05-31〜）
 
-[grill-me_2026-05-31](../01_要求定義/grill-me_2026-05-31_DB-2装置階層.md) → [DB-2 草案](../03_技術仕様/DB-2_スキーマ草案.md) → [ADR-014](<../03_技術仕様/意思決定記録(ADR).md#adr-014-永続化--装置階層-db-2草案--2026-05-31>) → [handoff \_10](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_10_db2-schema-design-session-end.md) · [\_11](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_11_db2-dev-migration-docs-session-end.md) → **次 §4:** uuid 化（[HANDOFF §6](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md)）
+[grill-me_2026-05-31](../01_要求定義/grill-me_2026-05-31_DB-2装置階層.md) → [DB-2 草案](../03_技術仕様/DB-2_スキーマ草案.md) → [ADR-014](<../03_技術仕様/意思決定記録(ADR).md#adr-014-永続化--装置階層-db-2草案--2026-05-31>) → [handoff \_10](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_10_db2-schema-design-session-end.md) · [\_11](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_11_db2-dev-migration-docs-session-end.md)
 
 ### 企画 SSOT 整理（2026-05-31）
 
-[grill-me\_企画SSOT整理](../01_要求定義/grill-me_2026-05-31_企画SSOT整理.md) → README/AGENTS/decision-log 委譲 · 調査\_永続化→archive → [handoff \_12](c:/yk-memo/handoffs/flowchart-web/2026-05-31_12_planning-ssot-cleanup-session-end.md) → **次 §4:** uuid 化
+[grill-me\_企画SSOT整理](../01_要求定義/grill-me_2026-05-31_企画SSOT整理.md) → README/AGENTS/decision-log 委譲 · 調査\_永続化→archive → [handoff \_12](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_12_planning-ssot-cleanup-session-end.md)
 
 ---
 
@@ -122,16 +122,17 @@
 | 2026-05-31      | handoff  | 企画 SSOT commit · 別件5件削除 · 引き継ぎ \_12                  | [2026-05-31_12 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_12_planning-ssot-cleanup-session-end.md)                                                                                                               | 完了                              | 次: #2 uuid 化 · `5d591f0` · `b61d8fd`                                                                                               |
 | 2026-05-31      | handoff  | uuid 化 · LOCAL_DEV · 要望 D · 引き継ぎ \_13                    | [2026-05-31_13 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_13_uuid-localdev-layout-req-session-end.md)                                                                                                            | 完了                              | 次: D レイアウト                                                                                                                     |
 | 2026-05-31      | handoff  | Yes/No ラベル · Playwright E2E · 引き継ぎ \_14                  | [2026-05-31_14 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_14_edge-label-playwright-e2e-session-end.md)                                                                                                           | 完了                              | 次: 色列                                                                                                                             |
-| 2026-05-31      | handoff  | 9列デフォルト（段+列）· 雛形/fixtures · 引き継ぎ \_15           | [2026-05-31_15 §4](c:/yk-memo/handoffs/flowchart-web/2026-05-31_15_tier9-default-columns-session-end.md)                                                                                                                            | 完了                              | 次: 計画 B 色列                                                                                                                      |
+| 2026-05-31      | handoff  | 9列デフォルト（段+列）· 雛形/fixtures · 引き継ぎ \_15           | [2026-05-31_15 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-05-31_15_tier9-default-columns-session-end.md)                                                                                                               | 完了                              | 次: 計画 B 色列                                                                                                                      |
 | 2026-06-06      | 計画     | 10列目「色」— データ源 · 表示 · flowColors 整理 · **着手可**    | [色列\_仕様整理](../03_技術仕様/色列_仕様整理.md)                                                                                                                                                                                   | 確定                              | 実装は次 §4 · ADR-012 追記は実装後                                                                                                   |
 | 2026-06-10      | handoff  | Excel テンプレ · import E2E · CI build/mypy · 本番 deploy       | [2026-06-10_23 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-10_23_excel-import-ci-deploy-session-end.md)                                                                                                              | 完了                              | 次: admin M-3                                                                                                                        |
-| 2026-06-11      | handoff  | §5.6 レース/プレビュー · M-3 admin · 006 · 本番 deploy          | [2026-06-11_26 §4](c:/yk-memo/handoffs/flowchart-web/2026-06-11_26_admin-m3-session-end.md)                                                                                                                                         | 完了                              | 次: document.ts Zod                                                                                                                  |
+| 2026-06-11      | handoff  | §5.6 レース/プレビュー · M-3 admin · 006 · 本番 deploy          | [2026-06-11_26 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-11_26_admin-m3-session-end.md)                                                                                                                            | 完了                              | 次: document.ts Zod                                                                                                                  |
 | 2026-06-15      | ADR      | フロー共同編集 — 編集は全 editor · 削除は所有者/admin           | [ADR-015](<../03_技術仕様/意思決定記録(ADR).md#adr-015-フロー共同編集--編集は全-editor--削除は所有者admin2026-06-15>)                                                                                                               | Accepted · 本番適用済             | `016` · handoff #5                                                                                                                   |
-| 2026-06-21      | handoff  | A0001 Excel v0.3 · 正規化 · Vercel import.json 取込             | [2026-06-21_11 §4](c:/yk-memo/handoffs/flowchart-web/2026-06-21_11_a0001-excel-v03-session-end.md)                                                                                                                                  | 完了                              | 次: U0 動作001〜009 本文                                                                                                             |
+| 2026-06-21      | handoff  | A0001 Excel v0.3 · 正規化 · Vercel import.json 取込             | [2026-06-21_11 §4](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-21_11_a0001-excel-v03-session-end.md)                                                                                                                     | 完了                              | 次: U0 動作001 本文（1個ずつ）                                                                                                       |
 | 2026-06-23      | 運用     | `flowchart-studio` — yk-tool から yk-application へ独立リポ移行 | [リポジトリ構造](../04_リポジトリ構造/リポジトリ構造.md)                                                                                                                                                                            | 完了                              | `c:/yk-application/flowchart-studio/`                                                                                                |
-| 2026-06-23      | 運用     | spec-in-repo 移行後 doc-sync（リンク · ロードマップ）           | [現状とロードマップ](../02_機能設計/現状とロードマップ.md) · [handoff \_16](c:/yk-memo/handoffs/flowchart-web/2026-06-23_16_doc-sync-session-end.md)                                                                                | 完了                              | `7432afe` · フェーズ計画 Historical 化                                                                                               |
+| 2026-06-23      | 運用     | spec-in-repo 移行後 doc-sync（リンク · ロードマップ）           | [現状とロードマップ](../02_機能設計/現状とロードマップ.md) · [handoff \_16](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-23_16_doc-sync-session-end.md)                                                                   | 完了                              | `7432afe` · フェーズ計画 Historical 化                                                                                               |
 | 2026-06-24      | 運用     | Magic Link / PKCE — `/auth/confirm` + メールテンプレ整合        | [SUPABASE_SETUP.md](../../docs/SUPABASE_SETUP.md) §1-1 · `8593089`                                                                                                                                                                  | 完了                              | 本番 `-dun` 確認済                                                                                                                   |
-| 2026-06-24      | 運用     | Google OAuth（flowchart-dev）— GCP + Supabase Providers         | [handoff \_17](c:/yk-memo/handoffs/flowchart-web/2026-06-24_17_magic-link-google-oauth-session-end.md)                                                                                                                              | dev 完了                          | 本番 Supabase 分離 · Microsoft はバックログ                                                                                          |
+| 2026-06-24      | 運用     | doc-sync 矛盾解消（AGENTS · yk-skill · Excel · archive 注記）   | [handoff \_18](c:/yk-memo/handoffs/flowchart-web/2026-06-24_18_doc-sync-contradiction-cleanup-session-end.md)                                                                                                                       | 完了                              | 次: U0 動作001 §4                                                                                                                    |
+| 2026-06-24      | 運用     | Google OAuth（flowchart-dev）— GCP + Supabase Providers         | [handoff \_17](c:/yk-memo/handoffs/flowchart-web/archive/2026/2026-06-24_17_magic-link-google-oauth-session-end.md)                                                                                                                 | dev 完了                          | 本番 Supabase 分離 · Microsoft はバックログ                                                                                          |
 
 ---
 
@@ -156,14 +157,14 @@
 
 ## 未決論点（1行）
 
-| 論点                                         | 出所                                                                               | 備考                                                |
-| -------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------- |
-| OAuth（Google/Azure）整備 · Email 無効化     | [相談\_2026-05-30 §4](../01_要求定義/相談_2026-05-30_Web版ブラッシュアップ方針.md) | 後回し可                                            |
-| Excel 1ファイル=1社内番号 · シートレイアウト | ADR-014 · DB-2 草案                                                                | 試作は後回し                                        |
-| `legacy_key` NULL 化タイミング               | ADR-014                                                                            | 移行完了後                                          |
-| `admin` ロール · 管理 UI（M-3）              | ADR-014                                                                            | M-1 Runbook 先行                                    |
-| ADR-010 比較後の一本化                       | ADR-010                                                                            | Mermaid 版は比較用                                  |
-| オンライン同時編集 · 競合                    | ADR-013 · ADR-015                                                                  | **編集は共同可**（015）· 競合解決（ロック等）は未決 |
+| 論点                                                            | 出所                                                                                                                                            | 備考                                                                        |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| OAuth（Microsoft）· 本番 Supabase 分離 · Email 無効化（分離後） | [相談\_2026-05-30 §4](../01_要求定義/相談_2026-05-30_Web版ブラッシュアップ方針.md) · [HANDOFF §6](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md) | Google OAuth（dev）は #17 完了 · Microsoft · 専用本番 Supabase はバックログ |
+| Excel 1ファイル=1社内番号 · シートレイアウト                    | ADR-014 · DB-2 草案                                                                                                                             | 試作は後回し                                                                |
+| `legacy_key` NULL 化タイミング                                  | ADR-014                                                                                                                                         | 移行完了後                                                                  |
+| `admin` ロール · 管理 UI（M-3）                                 | ADR-014                                                                                                                                         | M-1 Runbook 先行                                                            |
+| ADR-010 比較後の一本化                                          | ADR-010                                                                                                                                         | Mermaid 版は比較用                                                          |
+| オンライン同時編集 · 競合                                       | ADR-013 · ADR-015                                                                                                                               | **編集は共同可**（015）· 競合解決（ロック等）は未決                         |
 
 ---
 

@@ -36,7 +36,9 @@ def template_xlsx() -> Path:
 def a0001_master_xlsx() -> Path:
     path = resolve_device_workbook(A0001_DEVICE_DIR)
     if not path.is_file():
-        pytest.skip("A0001 装置 xlsx 未生成 — npm run excel:a0001:build")
+        pytest.skip(
+            "A0001 装置 xlsx 未生成 — npm run excel:a0001:build（初回）または手元の xlsx を配置"
+        )
     return path
 
 

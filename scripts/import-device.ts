@@ -51,7 +51,7 @@ function resolveImportPath(internalCode: string): string {
 
   if (match.length === 0) {
     throw new Error(
-      `${code}_* の import.json が見つかりません。npm run excel:a0001:build 等を先に実行してください。`
+      `${code}_* の import.json が見つかりません。npm run excel:a0001:normalize（手書き後）または excel:a0001:build（初回）等で生成してください。`
     );
   }
   if (match.length > 1) {

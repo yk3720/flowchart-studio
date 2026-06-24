@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-web`                                                             |
 | **Product Spec 正本** | 本リポ `specs/`（コードと同居 · SDD）                                       |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-23（specs 移行 · doc-sync）                                         |
+| **更新**              | 2026-06-24（doc-sync · 次タスク同期）                                       |
 
 ---
 
@@ -25,7 +25,7 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-web/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-web/2026-06-24_17_magic-link-google-oauth-session-end.md
+@c:/yk-memo/handoffs/flowchart-web/2026-06-24_18_doc-sync-contradiction-cleanup-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
 続きから。§4 の1件だけ。一個ずつ。終わったら止めて報告。
 ```
@@ -59,7 +59,7 @@
 | §4           | handoffs 最新                               | 毎セッション                       |
 | 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）           | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md) — Magic Link / PKCE
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-web/HANDOFF.md) — U0 **動作001** 本文（§4 · 1個ずつ）
 
 ---
 

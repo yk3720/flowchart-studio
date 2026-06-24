@@ -19,8 +19,9 @@
 
 1. **1 動作の確認** — `_scratch/` に 10 列表を置き、Web 表タブ → **Excel ファイル…** → **再生成**
    - 試行用 xlsx 再生成: リポジトリルートで `npm run excel:a0001:scratch` → `_scratch/取出.xlsx`
-2. **装置一式** — `A0001_塗布装置.xlsx` を実構成に更新 → 正規化 → **import.json を取込…**
-   - 装置 xlsx + import.json 再生成: リポジトリルートで `npm run excel:a0001:build`
+2. **装置一式** — `A0001_塗布装置.xlsx` を手書き更新 → 正規化 → **import.json を取込…**
+   - **手書き後:** リポジトリルートで `npm run excel:a0001:normalize` のみ（`import.json` 再生成）
+   - **初回スキャフォールド / xlsx 全再生成:** `npm run excel:a0001:build`（**手編集を上書きする** — 手書き後は使わない）
    - Supabase 実取込: `npm run seed:a0001`（要 `SUPABASE_SERVICE_ROLE_KEY` または生成 SQL を SQL Editor で Run）
 
 置き場所の共通ルール: [`../README.md`](../README.md)
