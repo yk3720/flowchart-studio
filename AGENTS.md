@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-studio`                                                          |
 | **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-24（docs 00\_目次統一）                                             |
+| **更新**              | 2026-06-24（四リポ横断 doc-sync）                                           |
 
 ---
 
@@ -25,9 +25,9 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-studio/2026-06-24_24_docs-toc-consolidation-session-end.md
+@c:/yk-memo/handoffs/flowchart-studio/2026-06-24_26_cross-workspace-doc-sync-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
-続きから。§4 の1件だけ。yk-memo 個人テーマフォルダのリンク棚卸しから。一個ずつ。終わったら止めて報告。
+続きから。§4 の1件だけ。U0 動作001 本文から。一個ずつ。終わったら止めて報告。
 ```
 
 > セッション MD が更新されたら、2行目を HANDOFF の「最新セッション」に差し替える。
@@ -51,15 +51,15 @@
 
 ## 文書種
 
-| 種別         | 正本                                       | いつ書く                           |
-| ------------ | ------------------------------------------ | ---------------------------------- |
-| decision-log | `docs/05_開発ガイドライン/decision-log.md` | 合意 · ADR · セッション終了時に1行 |
-| grill-me     | `docs/01_要求定義/grill-me_*` · `相談_*`   | 方針深掘り後                       |
-| ADR          | `docs/03_技術仕様/意思決定記録(ADR).md`    | 採用決定時                         |
-| §4           | handoffs 最新                              | 毎セッション                       |
-| 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）          | 実装隣接                           |
+| 種別         | 正本                                             | いつ書く                           |
+| ------------ | ------------------------------------------------ | ---------------------------------- |
+| decision-log | `docs/05_開発ガイドライン/decision-log.md`       | 合意 · ADR · セッション終了時に1行 |
+| grill-me     | `docs/archive/01_要求定義/grill-me_*` · `相談_*` | 方針深掘り後                       |
+| ADR          | `docs/03_技術仕様/意思決定記録(ADR).md`          | 採用決定時                         |
+| §4           | handoffs 最新                                    | 毎セッション                       |
+| 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）                | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **yk-memo 中身の整理**（§4 · 1論点ずつ）
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **U0 動作001 本文**（§4 · 1論点ずつ）
 
 ---
 

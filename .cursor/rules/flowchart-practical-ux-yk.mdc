@@ -1,5 +1,5 @@
 ﻿---
-description: flowchart-web 実用版 UX（3ペイン・ツールバー・警告）— REACTFLOW_RULES §5.6
+description: flowchart-studio 実用版 UX（3ペイン・ツールバー・警告）— REACTFLOW_RULES §5.6
 globs: "**/*.{ts,tsx}"
 alwaysApply: false
 ---

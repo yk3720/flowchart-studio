@@ -1,5 +1,5 @@
 ﻿---
-description: flowchart-web UI整理 — 非表示ではなく機能削除でコードを保つ
+description: flowchart-studio UI整理 — 非表示ではなく機能削除でコードを保つ
 globs: "**/*.{ts,tsx}"
 alwaysApply: false
 ---
