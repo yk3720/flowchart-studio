@@ -14,6 +14,51 @@ export type FlowDocumentResult =
 
 export type SaveFlowResult = { ok: true } | { ok: false; error: string };
 
+export type FlowDocumentsBatchResult =
+  | { ok: true; documents: Record<string, ModuleSnapshot> }
+  | { ok: false; error: string };
+
+export async function loadFlowDocumentsBatch(
+  moduleIds: string[]
+): Promise<FlowDocumentsBatchResult> {
+  const validIds = [...new Set(moduleIds.filter(isModuleUuid))];
+  if (validIds.length === 0) {
+    return { ok: true, documents: {} };
+  }
+  if (isAuthDisabled()) {
+    return { ok: false, error: "???????" };
+  }
+
+  try {
+    await requireViewerOrEditor();
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("flow_documents")
+      .select("module_id, payload")
+      .in("module_id", validIds);
+
+    if (error) {
+      return { ok: false, error: error.message };
+    }
+
+    const documents: Record<string, ModuleSnapshot> = {};
+    for (const row of data ?? []) {
+      const moduleId = row.module_id as string;
+      const parsed = moduleSnapshotSchema.safeParse(row.payload);
+      if (parsed.success) {
+        documents[moduleId] = parsed.data as ModuleSnapshot;
+      }
+    }
+
+    return { ok: true, documents };
+  } catch (e) {
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : String(e),
+    };
+  }
+}
+
 export async function loadFlowDocument(
   moduleUuid: string
 ): Promise<FlowDocumentResult> {

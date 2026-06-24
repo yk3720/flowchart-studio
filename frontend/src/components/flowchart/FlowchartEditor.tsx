@@ -46,6 +46,7 @@ import { isModuleContentDirty } from "@/lib/flowchart/model/moduleContentDirty";
 import { cn } from "@/lib/utils";
 import { captureFlowPng } from "./exportPng";
 import { captureFlowSvg } from "./exportSvg";
+import { Home } from "lucide-react";
 import { ConfirmReplaceDialog } from "./ConfirmReplaceDialog";
 import { EditorMoreMenu } from "./EditorMoreMenu";
 import { FlowCanvas, type FlowCanvasHandle } from "./FlowCanvas";
@@ -83,6 +84,7 @@ import {
   fcModuleLoadingOverlay,
   fcPreviewChrome,
   fcZoomBtn,
+  fcZoomPercent,
 } from "./flowchartUiClasses";
 import { FlowColorLegend } from "./FlowColorLegend";
 import { CsvPastePanel } from "./CsvPastePanel";
@@ -291,6 +293,7 @@ export const FlowchartEditor = forwardRef<
       : "準備完了"
   );
   const [samplePreviewActive, setSamplePreviewActive] = useState(false);
+  const [zoomPercent, setZoomPercent] = useState(100);
   const canvasRef = useRef<FlowCanvasHandle>(null);
   const tableEditorRef = useRef<FlowTableEditorHandle>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -688,7 +691,7 @@ export const FlowchartEditor = forwardRef<
       setStatus("PNG: 先に再生成してプレビューを表示してください");
       return;
     }
-    canvasRef.current?.fitView();
+    canvasRef.current?.fitViewFull();
     await new Promise((r) => setTimeout(r, 300));
     const el = canvasRef.current?.getExportElement();
     if (!el) {
@@ -716,7 +719,7 @@ export const FlowchartEditor = forwardRef<
       setStatus("SVG: 先に再生成してプレビューを表示してください");
       return;
     }
-    canvasRef.current?.fitView();
+    canvasRef.current?.fitViewFull();
     await new Promise((r) => setTimeout(r, 300));
     const el = canvasRef.current?.getExportElement();
     if (!el) return;
@@ -1056,6 +1059,13 @@ export const FlowchartEditor = forwardRef<
               >
                 −
               </button>
+              <span
+                className={fcZoomPercent}
+                aria-live="polite"
+                data-testid="flow-zoom-percent"
+              >
+                {zoomPercent}%
+              </span>
               <button
                 type="button"
                 aria-label="拡大"
@@ -1063,6 +1073,15 @@ export const FlowchartEditor = forwardRef<
                 onClick={() => canvasRef.current?.zoomIn()}
               >
                 +
+              </button>
+              <button
+                type="button"
+                aria-label="ホーム位置に戻す"
+                className={fcZoomBtn}
+                data-testid="flow-zoom-home"
+                onClick={() => canvasRef.current?.fitView()}
+              >
+                <Home className="size-4" aria-hidden />
               </button>
             </div>
           </div>
@@ -1079,6 +1098,7 @@ export const FlowchartEditor = forwardRef<
               nodes={nodes}
               edges={edges}
               fillContainer={fullBleed}
+              onViewportZoomChange={setZoomPercent}
             />
             {isStale && (
               <div className={fcStaleOverlay}>

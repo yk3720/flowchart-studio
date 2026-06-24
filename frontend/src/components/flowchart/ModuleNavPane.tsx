@@ -92,7 +92,7 @@ function ModuleButton({
           title={`${module.label} を削除`}
           aria-label={`${module.label} を削除`}
         >
-          <Trash2 className="size-3.5" aria-hidden />
+          <Trash2 className="size-4" aria-hidden />
         </button>
       ) : null}
     </div>
@@ -145,7 +145,7 @@ function UnitSection({
             title={`${unit.label} を削除`}
             aria-label={`${unit.label} を削除`}
           >
-            <Trash2 className="size-3.5" aria-hidden />
+            <Trash2 className="size-4" aria-hidden />
           </button>
         ) : null}
       </div>
@@ -303,7 +303,7 @@ export function ModuleNavPane({
               "flex w-full items-center justify-center gap-1.5"
             )}
           >
-            <Trash2 className="size-3.5" aria-hidden />
+            <Trash2 className="size-4" aria-hidden />
             装置を削除…
           </button>
         ) : null}

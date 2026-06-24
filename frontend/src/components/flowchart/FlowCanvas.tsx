@@ -5,8 +5,10 @@ import {
   ReactFlow,
   ReactFlowProvider,
   useReactFlow,
+  useStore,
   type Edge,
   type Node,
+  type Viewport,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import {
@@ -18,6 +20,11 @@ import {
   type KeyboardEvent,
 } from "react";
 import type { FlowNodeData } from "@/lib/flowchart/graph/toReactFlow";
+import {
+  computeHomeViewport,
+  FC_HOME_VIEW,
+  zoomToPercent,
+} from "@/lib/flowchart/visual/flowHomeViewport";
 import { flowPreviewAriaLabel } from "@/lib/flowchart/visual/flowPreviewA11y";
 import { cn } from "@/lib/utils";
 import {
@@ -29,9 +36,13 @@ import {
 import { flowEdgeTypes, flowNodeTypes } from "./flowTypes";
 
 export type FlowCanvasHandle = {
+  /** ホーム位置（上段・横フィット）へ戻す */
   fitView: () => void;
+  /** PNG/SVG — 全体が収まる従来のセンター fit */
+  fitViewFull: () => void;
   zoomIn: () => void;
   zoomOut: () => void;
+  getZoomPercent: () => number;
   getExportElement: () => HTMLElement | null;
 };
 
@@ -40,41 +51,68 @@ type FlowCanvasProps = {
   edges: Edge[];
   /** workspace プレビュー列: 縦いっぱい・左ボーダーのみ */
   fillContainer?: boolean;
+  onViewportZoomChange?: (percent: number) => void;
 };
 
 const PAN_STEP = 50;
 
 function FlowCanvasInner(
-  { nodes, edges, fillContainer = false }: FlowCanvasProps,
+  {
+    nodes,
+    edges,
+    fillContainer = false,
+    onViewportZoomChange,
+  }: FlowCanvasProps,
   ref: React.Ref<FlowCanvasHandle>
 ) {
   const { fitView, getViewport, setViewport, zoomIn, zoomOut } = useReactFlow();
+  const width = useStore((s) => s.width);
+  const height = useStore((s) => s.height);
   const nodeCount = nodes.length;
   const edgeCount = edges.length;
   const previewLabel = flowPreviewAriaLabel(nodeCount, edgeCount);
 
+  const applyHomeViewport = useCallback(
+    (animated = true) => {
+      const viewport = computeHomeViewport(nodes, width, height);
+      if (!viewport) return;
+      void setViewport(viewport, {
+        duration: animated ? FC_HOME_VIEW.animateMs : 0,
+      });
+      onViewportZoomChange?.(zoomToPercent(viewport.zoom));
+    },
+    [nodes, width, height, setViewport, onViewportZoomChange]
+  );
+
+  const handleViewportChange = useCallback(
+    (viewport: Viewport) => {
+      onViewportZoomChange?.(zoomToPercent(viewport.zoom));
+    },
+    [onViewportZoomChange]
+  );
+
   useImperativeHandle(
     ref,
     () => ({
-      fitView: () => {
+      fitView: () => applyHomeViewport(true),
+      fitViewFull: () => {
         void fitView(fcFitViewOptions(nodeCount));
       },
       zoomIn: () => zoomIn(),
       zoomOut: () => zoomOut(),
+      getZoomPercent: () => zoomToPercent(getViewport().zoom),
       getExportElement: () =>
         document.querySelector("[data-flowchart-export-root]"),
     }),
-    [fitView, nodeCount, zoomIn, zoomOut]
+    [applyHomeViewport, fitView, nodeCount, zoomIn, zoomOut, getViewport]
   );
 
   useEffect(() => {
-    if (nodes.length > 0) {
-      const t = window.setTimeout(() => {
-        void fitView(fcFitViewOptions(nodes.length));
-      }, 50);
+    if (nodes.length > 0 && width > 0 && height > 0) {
+      const t = window.setTimeout(() => applyHomeViewport(true), 50);
       return () => window.clearTimeout(t);
     }
-  }, [nodes, edges, fitView]);
+  }, [nodes, edges, width, height, applyHomeViewport]);
 
   const defaultEdgeOptions = useMemo(
     () => ({
@@ -126,14 +164,14 @@ function FlowCanvasInner(
         case "0":
           if (e.ctrlKey || e.metaKey) {
             e.preventDefault();
-            void fitView(fcFitViewOptions(nodeCount));
+            applyHomeViewport(true);
           }
           break;
         default:
           break;
       }
     },
-    [fitView, getViewport, nodeCount, setViewport, zoomIn, zoomOut]
+    [applyHomeViewport, getViewport, setViewport, zoomIn, zoomOut]
   );
 
   return (
@@ -155,13 +193,13 @@ function FlowCanvasInner(
           nodeTypes={flowNodeTypes}
           edgeTypes={flowEdgeTypes}
           defaultEdgeOptions={defaultEdgeOptions}
-          fitView
           nodesDraggable={false}
           nodesConnectable={false}
           elementsSelectable={false}
           edgesReconnectable={false}
           panOnDrag
           zoomOnScroll
+          onViewportChange={handleViewportChange}
           proOptions={{ hideAttribution: true }}
         >
           <Background gap={16} size={1} color="var(--flow-border)" />

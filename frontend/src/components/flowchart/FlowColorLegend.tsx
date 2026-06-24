@@ -17,7 +17,7 @@ export function FlowColorLegend() {
           title={title}
         >
           <span
-            className="inline-block h-3 w-3 shrink-0 border-2"
+            className="inline-block h-4 w-4 shrink-0 border-2 sm:h-5 sm:w-5"
             style={{
               backgroundColor: fill,
               borderColor: FLOW_NODE_FRAME_STROKE,

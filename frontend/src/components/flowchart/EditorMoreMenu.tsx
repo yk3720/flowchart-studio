@@ -76,7 +76,10 @@ function MenuItem({
       title={disabled ? title : undefined}
       aria-disabled={disabled ? true : undefined}
       onClick={onClick}
-      className={cn(destructive ? fcMenuItemDanger : fcMenuItem, "flex gap-0")}
+      className={cn(
+        destructive ? fcMenuItemDanger : fcMenuItem,
+        "justify-start"
+      )}
     >
       {children}
     </button>

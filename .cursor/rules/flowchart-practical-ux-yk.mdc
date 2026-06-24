@@ -20,7 +20,7 @@ alwaysApply: false
 | 表（10列） | 段·列·Text1–3·**色**（最右列 · 狭いペインでは**表エリア横スクロール**）· **部分貼り付け**（セル選択 → Ctrl+V · 起点から右・下 · 行不足時は行追加） | 色列を 9 列 UI に畳む · 部分貼り付けで全表置換（それは CsvPastePanel） |
 | ツールバー | 再生成/表保存/表読込を常時 · 他はその他メニュー（**始め方 / サンプル（例） / 出力 / 装置取込 / 下書き** · `MenuSection`） | ヘッダーにボタン乱立 |
 | レイアウト D | workspace: ツールバーは**表ペイン** · プレビュー列は縦 full-bleed（`fillContainer`） | 全幅ヘッダーがプレビュー上に載る |
-| 見た目 | `DEFAULT_LAYOUT` · `flowColors` 固定 · **操作 chrome は `fcBtn*` / `fcTable*`（`flowchartUiClasses.ts`）** · 枠太さは `VISUAL_DESIGN_RULES` §2（2px）· 斜め図形は SVG stroke · 表 ID バッジはプレビューのみ | テーマ/サイズ preset 復活 · `clip-path`+border · chrome に Tailwind 色直書き · export にデバッグ UI |
+| 見た目 | `DEFAULT_LAYOUT` · `flowColors` 固定 · **操作 chrome は `fcBtn*` / `fcTable*` / `fcTextUi`（`flowchartUiClasses.ts`）** · 枠太さは `VISUAL_DESIGN_RULES` §2（2px）· 斜め図形は SVG stroke · 表 ID バッジはプレビューのみ | テーマ/サイズ preset 復活 · `clip-path`+border · chrome に Tailwind 色直書き · export にデバッグ UI · **`text-[10px]` 以下** |
 | 警告 | `WARNING_BANNER_HINT` · 平易な直し方 | 警告で生成停止 |
 | ノード文字 | `FlowShapeNode` **`flex-col`** · `measureHeights` | Text1–3 を横並び |
 
@@ -34,7 +34,9 @@ alwaysApply: false
 | `backend/src/lib/flowchart/actions/import/importEquipmentBundle.ts` | import.json → RPC `import_equipment_bundle` · **E2E:** `PLAYWRIGHT_E2E=1` + `IMPORT_E2E_STUB=1` 時のみ RPC スキップ（`playwright.config` · 本番・通常 dev 無効） |
 | `python/` | 入力用 xlsx → import.json（**正規化 SSOT · pytest**）· **xlsx は Git 非追跡** |
 | `python/testdata/devices/README.md` | **作者 Excel 置き場 SSOT** · `{社内番号}_{装置名}/` · 現行 `A0001_塗布装置/` |
-| `frontend/src/components/flowchart/flowchartUiClasses.ts` | 操作 UI class 正本（`fcBtn*` · `fcTable*` · `fcColorLegend*` · バナー） |
+| `frontend/src/components/flowchart/flowchartUiClasses.ts` | 操作 UI class 正本（`fcBtn*` · `fcTable*` · `fcTextUi` · ズーム） |
+| `lib/flowchart/visual/flowHomeViewport.ts` | プレビュー ホーム位置 · Vitest |
+| `frontend/src/lib/moduleDraftLoader.ts` | 装置プリフェッチ · warm cache |
 | `frontend/src/components/flowchart/FlowTableEditor.tsx` | 10 列表編集 · **`fcTable*`** · **部分貼り付け**（`onPasteCapture` · `focusCellRef`） |
 | `lib/flowchart/table/pasteTableCells.ts` | 表内部分貼り付け — `parseClipboardGrid` · `applyPartialPaste`（ヘッダー判定なし） |
 | `lib/flowchart/table/parseCsv.ts` | **全表**貼り付け — `parseCsvPaste`（6 列以上 · 1 行目ヘッダー判定）· `CsvPastePanel` 用 |

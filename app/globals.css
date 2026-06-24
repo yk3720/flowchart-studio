@@ -170,6 +170,10 @@
   --a11y-target-min: 24px;
   --a11y-focus-outline-width: 3px;
   --a11y-focus-outline-offset: 2px;
+  /* 文字サイズ — WCAG 2.2 は最小 px 未規定。実務: UI 14px · 補助 12px（design-system §C） */
+  --flow-font-ui: 0.875rem;
+  --flow-font-hint: 0.75rem;
+  --flow-control-size: 2rem;
 }
 
 .dark {

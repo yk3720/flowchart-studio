@@ -170,6 +170,11 @@ export function findDevice(
   return devices.find((d) => d.id === deviceId) ?? null;
 }
 
+/** 装置配下の全動作（ユニット順） */
+export function collectDeviceModules(device: Device): FlowModule[] {
+  return device.units.flatMap((unit) => unit.modules);
+}
+
 export function findModule(
   device: Device,
   moduleId: string

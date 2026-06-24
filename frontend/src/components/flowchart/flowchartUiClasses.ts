@@ -23,12 +23,25 @@ export const fcFocusRing =
 export const fcTargetMin =
   "inline-flex min-h-6 min-w-6 items-center justify-center";
 
+/** 操作 UI 本文 — 14px（WCAG 実務推奨 · ボタン・表・メニュー） */
+export const fcTextUi = "text-[length:var(--flow-font-ui)] leading-normal";
+
+/** 補助ラベル — 12px 下限（キャプション・セクション説明のみ） */
+export const fcTextHint = "text-[length:var(--flow-font-hint)] leading-snug";
+
+/** ズーム等の正方形コントロール — 32px */
+export const fcControlSquare = cn(
+  fcFocusRing,
+  "inline-flex size-[var(--flow-control-size)] shrink-0 items-center justify-center"
+);
+
 /* ── ボタン ── */
 
 export const fcBtn = cn(
   fcFocusRing,
   fcTargetMin,
-  "rounded-md px-3 py-1.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+  fcTextUi,
+  "min-h-[var(--flow-control-size)] rounded-md px-3 py-1.5 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40"
 );
 
 export const fcBtnPrimary = cn(
@@ -61,17 +74,19 @@ export const fcBtnDangerOutline = cn(
 /** CSV 貼り付けパネル内の小さめボタン */
 export const fcBtnCompactPrimary = cn(
   fcBtn,
-  "bg-flow-accent px-2.5 py-1 text-xs text-white hover:bg-flow-accent-hover disabled:opacity-40"
+  "bg-flow-accent px-2.5 py-1 text-white hover:bg-flow-accent-hover disabled:opacity-40"
 );
 
 export const fcBtnCompactSecondary = cn(
   fcFocusRing,
   fcTargetMin,
-  "cursor-pointer rounded-md border border-flow-border-input bg-flow-surface px-2.5 py-1 text-xs font-medium text-flow-text-body hover:bg-flow-surface-subtle"
+  fcTextUi,
+  "min-h-[var(--flow-control-size)] cursor-pointer rounded-md border border-flow-border-input bg-flow-surface px-2.5 py-1 font-medium text-flow-text-body hover:bg-flow-surface-subtle"
 );
 
 export const fcBtnCompactWarning = cn(
-  "rounded-md bg-flow-warning px-2.5 py-1 text-xs font-medium text-white hover:bg-flow-warning-emphasis"
+  fcTextUi,
+  "min-h-[var(--flow-control-size)] rounded-md bg-flow-warning px-2.5 py-1 font-medium text-white hover:bg-flow-warning-emphasis"
 );
 
 /* ── ダイアログ ── */
@@ -266,35 +281,42 @@ export const fcNavDeleteBtn = cn(
 
 export const fcNavChevron = "size-4 shrink-0 text-flow-text-muted";
 
-export const fcNavLabel = "text-xs font-medium text-flow-text-muted";
+export const fcNavLabel = cn(fcTextHint, "font-medium text-flow-text-muted");
 
 /* ── その他メニュー ── */
 
 export const fcMenuDropdown = cn(
-  "absolute right-0 top-full z-30 mt-1 min-w-[16rem] rounded-md border border-flow-border bg-flow-surface py-1 shadow-lg"
+  "absolute right-0 top-full z-30 mt-1 min-w-[16rem] rounded-md border border-flow-border bg-flow-surface py-1 text-left shadow-lg"
 );
 
 export const fcMenuItem = cn(
   fcFocusRing,
   fcTargetMin,
-  "flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-flow-text-body hover:bg-flow-surface-subtle"
+  fcTextUi,
+  "flex w-full items-center justify-start gap-2 px-3 py-2 text-left text-flow-text-body hover:bg-flow-surface-subtle"
 );
 
 export const fcMenuItemDanger = cn(
   fcFocusRing,
   fcTargetMin,
-  "flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-flow-danger-text hover:bg-flow-danger-muted"
+  fcTextUi,
+  "flex w-full items-center justify-start gap-2 px-3 py-2 text-left text-flow-danger-text hover:bg-flow-danger-muted"
 );
 
-export const fcMenuSectionTitle =
-  "px-3 pb-0.5 pt-1.5 text-xs font-semibold text-flow-text-muted";
+export const fcMenuSectionTitle = cn(
+  fcTextUi,
+  "px-3 pb-0.5 pt-1.5 text-left font-semibold text-flow-text-muted"
+);
 
-export const fcMenuSectionHint =
-  "px-3 pb-1 text-xs leading-snug text-flow-text-muted";
+export const fcMenuSectionHint = cn(
+  fcTextHint,
+  "px-3 pb-1 text-left text-flow-text-muted"
+);
 
 export const fcMenuDivider = "my-1 border-t border-flow-border";
 
-export const fcMenuChevron = "size-4 text-flow-text-muted transition-transform";
+export const fcMenuChevron =
+  "size-5 shrink-0 text-flow-text-muted transition-transform";
 
 /* ── ペイン・セクション ── */
 
@@ -341,7 +363,10 @@ export const fcPastePanel = cn(
   "rounded-md border border-dashed border-flow-border-strong bg-flow-surface-muted/80 p-2"
 );
 
-export const fcPastePanelTitle = "mb-1 text-xs font-medium text-flow-text-body";
+export const fcPastePanelTitle = cn(
+  fcTextUi,
+  "mb-1 font-medium text-flow-text-body"
+);
 
 export const fcPasteTextarea = cn(
   "w-full resize-y rounded border border-flow-border-strong p-2 font-mono text-xs"
@@ -354,7 +379,8 @@ export const fcStatusDraftHint = "ml-2 text-xs text-flow-text-muted";
 /* ── 表エディタ ── */
 
 export const fcTableHelpDetails = cn(
-  "rounded-md border border-flow-border bg-flow-surface-muted/90 px-2 py-1 text-xs text-flow-text-muted"
+  fcTextHint,
+  "rounded-md border border-flow-border bg-flow-surface-muted/90 px-2 py-1 text-flow-text-muted"
 );
 
 export const fcTableHelpSummary = cn(
@@ -365,16 +391,17 @@ export const fcTableHelpSummary = cn(
 export const fcTableAddRowBtn = cn(
   fcFocusRing,
   fcTargetMin,
-  "rounded-md border border-flow-border-strong px-2.5 py-1 text-xs font-medium hover:bg-flow-surface-muted"
+  fcTextUi,
+  "min-h-[var(--flow-control-size)] rounded-md border border-flow-border-strong px-2.5 py-1 font-medium hover:bg-flow-surface-muted"
 );
 
-export const fcTableMeta = "text-xs text-flow-text-muted";
+export const fcTableMeta = cn(fcTextHint, "text-flow-text-muted");
 
 export const fcTableScroll = cn(
   "min-h-0 flex-1 overflow-auto scroll-pt-10 rounded-md border border-flow-border-strong"
 );
 
-export const fcTable = "w-full min-w-[640px] border-collapse text-xs";
+export const fcTable = cn(fcTextUi, "w-full min-w-[640px] border-collapse");
 
 export const fcTableHead = "sticky top-0 z-10 bg-flow-surface-subtle";
 
@@ -407,7 +434,8 @@ export const fcTableCellIndex = cn(
 
 export const fcTableCellInput = cn(
   fcFocusRing,
-  "scroll-mt-10 w-full rounded border-0 bg-transparent px-1.5 py-1 text-xs focus:bg-flow-surface disabled:cursor-default disabled:opacity-90"
+  fcTextUi,
+  "scroll-mt-10 w-full rounded border-0 bg-transparent px-1.5 py-1 focus:bg-flow-surface disabled:cursor-default disabled:opacity-90"
 );
 
 export const fcTableCellInputMono = cn(fcTableCellInput, "font-mono");
@@ -415,13 +443,15 @@ export const fcTableCellInputMono = cn(fcTableCellInput, "font-mono");
 export const fcTableDeleteBtn = cn(
   fcFocusRing,
   fcTargetMin,
-  "rounded px-1 text-xs text-flow-danger hover:bg-flow-danger-muted disabled:cursor-not-allowed disabled:opacity-30"
+  fcTextHint,
+  "rounded px-1 text-flow-danger hover:bg-flow-danger-muted disabled:cursor-not-allowed disabled:opacity-30"
 );
 
 /* ── プレビュー凡例（chrome 帯に inline 表示） ── */
 
 export const fcColorLegend = cn(
-  "flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border border-flow-border bg-flow-surface/95 px-2.5 py-1.5 text-[10px] text-flow-text-body shadow-sm"
+  fcTextHint,
+  "flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border border-flow-border bg-flow-surface/95 px-2.5 py-1.5 text-flow-text-body shadow-sm"
 );
 
 /** @deprecated キャンバス内 absolute 配置は廃止。fcPreviewChrome 内に inline 配置 */
@@ -438,15 +468,24 @@ export const fcPreviewChrome = cn(
 );
 
 export const fcZoomBtn = cn(
-  fcFocusRing,
-  fcTargetMin,
-  "rounded border border-flow-border-strong px-2 py-1 text-xs font-medium text-flow-text-body hover:bg-flow-surface-muted"
+  fcControlSquare,
+  "rounded border border-flow-border-strong text-base font-medium text-flow-text-body hover:bg-flow-surface-muted"
 );
 
+export const fcZoomPercent = cn(
+  fcTextUi,
+  "flex h-[var(--flow-control-size)] min-w-12 shrink-0 items-center justify-center tabular-nums text-flow-text-body"
+);
+
+export type FcFitViewMode = "full";
+
+/** PNG/SVG エクスポート — 全体が収まるセンター fit */
 export function fcFitViewOptions(nodeCount: number): FitViewOptions {
+  const maxZoom = 1.25;
+  const duration = 200;
   const padding =
     nodeCount <= 5
       ? { top: 0.1, bottom: 0.16, left: 0.15, right: 0.15 }
       : { top: 0.1, bottom: 0.18, left: 0.15, right: 0.15 };
-  return { padding, duration: 200, maxZoom: 1.25 };
+  return { padding, duration, maxZoom };
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  collectDeviceModules,
   DEMO_DEVICE_PRESS_A,
   DEMO_DEVICE_PRESS_B,
   excludeModulesFromDevices,
@@ -37,6 +38,12 @@ describe("moduleHierarchy", () => {
     expect(keys).toContain("DEMO-002:b-supply-feed");
     expect(keys).toContain("press-02:b-supply-feed");
     expect(keys).not.toContain("b-supply-feed");
+  });
+
+  it("collectDeviceModules flattens all units", () => {
+    const modules = collectDeviceModules(DEMO_DEVICE_PRESS_A);
+    expect(modules).toHaveLength(5);
+    expect(modules[0]!.label).toBe("供給動作");
   });
 
   it("DEMO_DEVICE_PRESS_A has expected module count", () => {

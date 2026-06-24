@@ -19,6 +19,7 @@ import {
 import {
   loadModuleDraft,
   persistModuleDraft,
+  prefetchDeviceModuleDrafts,
 } from "@/client/moduleDraftLoader";
 import type { ModuleSnapshot } from "@/lib/flowchart/browser/moduleDraftRepository";
 import type { Device } from "@/lib/flowchart/equipment/moduleHierarchy";
@@ -70,6 +71,8 @@ export function FlowchartWorkspace({
   const editorRef = useRef<FlowchartEditorHandle>(null);
   /** モジュール読込の世代 — 古い loadModule 完了を無視する */
   const loadGenerationRef = useRef(0);
+  /** 装置プリフェッチの世代 — 装置切替で古い一括読込を無効化 */
+  const prefetchGenerationRef = useRef(0);
   /** ユーザーがサンプル等で上書きしたら true — 遅延 loadModule の適用を拒否 */
   const userContentOverrideRef = useRef(false);
   const [selectedDeviceId, setSelectedDeviceId] = useState(
@@ -229,6 +232,18 @@ export function FlowchartWorkspace({
     setLoadKey((k) => k + 1);
   }, []);
 
+  const prefetchDevice = useCallback(async (targetDevice: Device) => {
+    const generation = ++prefetchGenerationRef.current;
+    await prefetchDeviceModuleDrafts(targetDevice, {
+      isCancelled: () => generation !== prefetchGenerationRef.current,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!device) return;
+    void prefetchDevice(device);
+  }, [device?.id, prefetchDevice]);
+
   const handleSelectModule = useCallback(
     (moduleId: string) => {
       persistCurrentModule();
@@ -251,6 +266,7 @@ export function FlowchartWorkspace({
       persistCurrentModule();
       userContentOverrideRef.current = false;
       loadGenerationRef.current += 1;
+      prefetchGenerationRef.current += 1;
       setLoadingModule(false);
       setSelectedDeviceId(deviceId);
       setSelectedModuleId(null);

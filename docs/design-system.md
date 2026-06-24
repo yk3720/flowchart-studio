@@ -77,18 +77,33 @@
 
 定義: [`flowchartUiClasses.ts`](../frontend/src/components/flowchart/flowchartUiClasses.ts)
 
-| 名前                                                     | 用途                          |
-| -------------------------------------------------------- | ----------------------------- |
-| `fcBtnPrimary`                                           | 主操作（再生成など）          |
-| `fcBtnSecondary`                                         | 副操作                        |
-| `fcBtnAccent`                                            | 強調枠付き                    |
-| `fcBtnCancel`                                            | キャンセル                    |
-| `fcBtnDanger` / `fcBtnDangerOutline`                     | 削除・危険操作                |
-| `fcStatusBanner`                                         | 取込・保存バナー              |
-| `fcNavSelect` / `fcNavModuleBtn` + `fcNavModuleBtnState` | 左ナビ                        |
-| `FC_WORKSPACE_MAIN_GRID`                                 | 表ペイン 2fr : プレビュー 3fr |
+| 名前                                                     | 用途                                                         |
+| -------------------------------------------------------- | ------------------------------------------------------------ |
+| `fcBtnPrimary`                                           | 主操作（再生成など）                                         |
+| `fcBtnSecondary`                                         | 副操作                                                       |
+| `fcBtnAccent`                                            | 強調枠付き                                                   |
+| `fcBtnCancel`                                            | キャンセル                                                   |
+| `fcBtnDanger` / `fcBtnDangerOutline`                     | 削除・危険操作                                               |
+| `fcStatusBanner`                                         | 取込・保存バナー                                             |
+| `fcNavSelect` / `fcNavModuleBtn` + `fcNavModuleBtnState` | 左ナビ                                                       |
+| `FC_WORKSPACE_MAIN_GRID`                                 | 表ペイン 2fr : プレビュー 3fr                                |
+| `fcTextUi` / `fcTextHint`                                | 操作 UI 14px / 補助 12px（`globals.css` の `--flow-font-*`） |
+| `fcZoomBtn` / `fcZoomPercent` / `fcControlSquare`        | ズーム列 32px 正方形 · 倍率表示                              |
+| `flowHomeViewport.ts`                                    | プレビュー初期位置（上段揃え）· ホームボタン                 |
 
 **既知の技術的負債:** `FlowShapeNode` · `LabeledEdge` のノードラベル色はキャンバス層（`flowColors` 参照）。操作 chrome は Phase 1–2 で `flow-*` 化済み。
+
+### 操作 UI の文字サイズ（2026-06）
+
+WCAG 2.2 は最小フォント px を規定しない（[SC 1.4.4 200% 拡大](https://www.w3.org/WAI/WCAG22/Understanding/resize-text)）。本ツールの実務下限:
+
+| トークン（`globals.css`） | 既定 | 使う場所                                         |
+| ------------------------- | ---- | ------------------------------------------------ |
+| `--flow-font-ui`          | 14px | ボタン · 表 · メニュー                           |
+| `--flow-font-hint`        | 12px | 凡例 · 行数 · セクション説明（**これ未満禁止**） |
+| `--flow-control-size`     | 32px | ツールバー · ズームコントロールの一辺            |
+
+新規 chrome は `text-xs`（12px 未満になりうる）を直書きせず `fcTextUi` / `fcTextHint` を使う。
 
 ---
 

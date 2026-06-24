@@ -65,6 +65,22 @@ role 保護: `002_fix_profiles_role_protection.sql` を続けて実行。
 
 初回ログイン時に `user_id` が自動で紐づきます。
 
+### 3-1. 試用用共有アカウント（開発プロジェクトのみ）
+
+試用期に複数人へ URL + パスワードを配る運用。アプリ側の変更は不要。
+
+1. **Authentication → Users → Add user** — 例: `dev-guest@flowchart-studio.local` · パスワード · **Auto Confirm User** ON
+2. **Table Editor → `profiles`** — 同じメール · `role` = `editor` または `admin`
+3. ログイン: `https://flowchart-studio-dun.vercel.app/login` → **パスワードでログイン**
+
+| 注意                                     |                                                               |
+| ---------------------------------------- | ------------------------------------------------------------- |
+| Auth と profiles のメールは **完全一致** | typo すると `/login/no-access`                                |
+| 全員同一 `user_id`                       | 編集者表示は共有 · 試用終了後はユーザー削除 or パスワード変更 |
+| 本番 Supabase 分離後                     | 共有パスワードは **flowchart-dev のみ**（本番は OAuth 想定）  |
+
+アカウント自己登録・パスワードリセット UI は **未実装**（バックログ）。
+
 ## 4. 環境変数
 
 `.env.local`（git に含めない）:
