@@ -33,13 +33,13 @@
 └─────────────────────────────────────────────────────────┘
 ```
 
-| レイヤ              | 正本                                                                                                                                   | 触るタイミング                                   |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **A. 作者向け意味** | [フローチャート記述ルール.md](../specs/03_技術仕様/フローチャート記述ルール.md) · [列の意味.md](../specs/03_技術仕様/列の意味.md)      | 図形・色の**意味**を変えるとき（先に仕様）       |
-| **B. キャンバス**   | [`lib/flowchart/flowColors.ts`](../lib/flowchart/flowColors.ts) · [`FlowColorLegend.tsx`](../components/flowchart/FlowColorLegend.tsx) | ノード色・矢印色・枠太さ・凡例                   |
-| **C. 操作 UI**      | [`components/flowchart/flowchartUiClasses.ts`](../components/flowchart/flowchartUiClasses.ts)                                          | ボタン・ナビ・バナー・ワークスペース比率         |
-| **D. shadcn 基盤**  | [`app/globals.css`](../app/globals.css) · [`components/ui/`](../components/ui/)                                                        | ログイン・admin 等（**フロー編集 chrome は C**） |
-| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md)                                                              | 枠・ストロークの太さ方針                         |
+| レイヤ              | 正本                                                                                                                                            | 触るタイミング                                   |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| **A. 作者向け意味** | [フローチャート記述ルール.md](../docs/03_技術仕様/フローチャート記述ルール.md) · [列の意味.md](../docs/03_技術仕様/列の意味.md)                 | 図形・色の**意味**を変えるとき（先に仕様）       |
+| **B. キャンバス**   | [`lib/flowchart/flowColors.ts`](../lib/flowchart/flowColors.ts) · [`FlowColorLegend.tsx`](../frontend/components/flowchart/FlowColorLegend.tsx) | ノード色・矢印色・枠太さ・凡例                   |
+| **C. 操作 UI**      | [`frontend/components/flowchart/flowchartUiClasses.ts`](../frontend/components/flowchart/flowchartUiClasses.ts)                                 | ボタン・ナビ・バナー・ワークスペース比率         |
+| **D. shadcn 基盤**  | [`app/globals.css`](../app/globals.css) · [`components/ui/`](../components/ui/)                                                                 | ログイン・admin 等（**フロー編集 chrome は C**） |
+| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md)                                                                       | 枠・ストロークの太さ方針                         |
 
 ### なぜ 1 ファイルに統合しないか
 
@@ -56,14 +56,14 @@
 
 | 変えたいもの                   | 更新順                        | 主なファイル                                                                                     |
 | ------------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------ |
-| 表「色」列の意味（黄・橙・青） | 仕様 → コード → 凡例          | `specs/03_技術仕様/フローチャート記述ルール.md` → `flowColors.ts` → `FlowColorLegend`            |
+| 表「色」列の意味（黄・橙・青） | 仕様 → コード → 凡例          | `docs/03_技術仕様/フローチャート記述ルール.md` → `flowColors.ts` → `FlowColorLegend`             |
 | ノード枠・菱形の太さ           | 横断ルール確認 → コード → E2E | `VISUAL_DESIGN_RULES` → `flowColors.ts` → `e2e/`                                                 |
 | 矢印・Yes/No ラベル色          | コード                        | `flowColors.ts` · `edgeLabelPlacement.ts`                                                        |
 | 再生成ボタン・その他メニュー   | class SSOT                    | `flowchartUiClasses.ts`（新規はここに追加）                                                      |
 | 左ナビ・装置 select            | class SSOT + コンポーネント   | `flowchartUiClasses.ts` · `ModuleNavPane.tsx`                                                    |
 | 表 : プレビュー比率            | レイアウト定数                | `FC_WORKSPACE_MAIN_GRID` · [REACTFLOW §5.6-2a](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md) |
 | ログイン画面                   | shadcn                        | `globals.css` · `components/ui/` · `LoginForm.tsx`                                               |
-| 10 列表の列ヘルプ              | 列定義                        | `lib/flowchart/tableColumns.ts` · `specs/03_技術仕様/列の意味.md`                                |
+| 10 列表の列ヘルプ              | 列定義                        | `lib/flowchart/tableColumns.ts` · `docs/03_技術仕様/列の意味.md`                                 |
 
 **禁止（手戻りの元）**
 
@@ -75,7 +75,7 @@
 
 ## 4. 操作 UI の部品一覧（class SSOT）
 
-定義: [`flowchartUiClasses.ts`](../components/flowchart/flowchartUiClasses.ts)
+定義: [`flowchartUiClasses.ts`](../frontend/components/flowchart/flowchartUiClasses.ts)
 
 | 名前                                                     | 用途                          |
 | -------------------------------------------------------- | ----------------------------- |
@@ -123,7 +123,7 @@
 1. UI を触る前に **本ファイルでレイヤーを確認**
 2. フロー編集画面のボタン → `flowchartUiClasses.ts` に追加してから使う
 3. キャンバス色 → `flowColors.ts` のみ（chrome に波及させない）
-4. 意味の変更 → `specs/03_技術仕様/フローチャート記述ルール.md` 先
+4. 意味の変更 → `docs/03_技術仕様/フローチャート記述ルール.md` 先
 5. 枠太さ → [VISUAL_DESIGN_RULES](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md) §2
 6. 実装詳細 → [REACTFLOW_RULES §5.6](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md) · [flowchart-practical-ux-yk.mdc](../.cursor/rules/flowchart-practical-ux-yk.mdc)
 
@@ -165,8 +165,8 @@
 | [LOCAL_DEV.md](./LOCAL_DEV.md)                                                          | ローカル確認                               |
 | [flowchart-practical-ux-yk.mdc](../.cursor/rules/flowchart-practical-ux-yk.mdc)         | エージェント L0                            |
 | [USABILITY_HEURISTICS_RULES.md](c:/yk-skill/rule/10_meta/USABILITY_HEURISTICS_RULES.md) | ニールセン10原則 · UI/UX レビュー（No 20） |
-| [testdata/devices/README.md](../tools/excel_normalize/testdata/devices/README.md)       | 作者 Excel 置き場                          |
+| [testdata/devices/README.md](../python/testdata/devices/README.md)                      | 作者 Excel 置き場                          |
 
 ---
 
-*入口 SSOT: 本ファイル · キャンバス: `flowColors.ts` · 操作 UI: `flowchartUiClasses.ts` · 意味: `specs/03*技術仕様/フローチャート記述ルール.md`\_
+*入口 SSOT: 本ファイル · キャンバス: `flowColors.ts` · 操作 UI: `flowchartUiClasses.ts` · 意味: `docs/03*技術仕様/フローチャート記述ルール.md`\_

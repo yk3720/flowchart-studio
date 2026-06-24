@@ -17,10 +17,10 @@
 
 ファイルパス:
 
-- `supabase/migrations/003_db2_schema.sql`
-- `supabase/migrations/004_flow_documents_module_fk.sql`
-- `supabase/migrations/005_import_equipment_bundle.sql`（Excel `import.json` 一括取込 · 任意だが Web 取込に必須）
-- `supabase/migrations/verify_db2.sql`（検証のみ）
+- `database/migrations/003_db2_schema.sql`
+- `database/migrations/004_flow_documents_module_fk.sql`
+- `database/migrations/005_import_equipment_bundle.sql`（Excel `import.json` 一括取込 · 任意だが Web 取込に必須）
+- `database/migrations/verify_db2.sql`（検証のみ）
 
 ---
 
@@ -130,7 +130,7 @@ select proname from pg_proc where proname = 'import_equipment_bundle';
 ```powershell
 cd c:\yk-application\flowchart-studio
 npm run excel:normalize
-# → tools/excel_normalize/testdata/import-z00001.json
+# → python/testdata/import-z00001.json
 ```
 
 **005 未適用時:** Server Action が `import_equipment_bundle` RPC 不在で失敗。
@@ -154,7 +154,7 @@ npm run excel:normalize
 **開発 Supabase のみ。** 前提: 004 適用済み（`admin_delete_equipment` 存在）。
 
 1. [SQL Editor](https://supabase.com/dashboard/project/jnywuetpkbzjdmcqghoh/sql/new) → New query
-2. **`scripts/supabase/apply_006_admin_dev.sql` の全文** を貼り付け → **Run**
+2. **`database/sql/apply_006_admin_dev.sql` の全文** を貼り付け → **Run**
 3. 末尾の検証で `ykoba56@gmail.com` が `role = admin` · RPC が 2 行であること
 
 個別適用する場合は `006_admin_role_and_rpc.sql` のみ Run し、profiles は手動:
@@ -172,7 +172,7 @@ update public.profiles set role = 'admin' where lower(email) = lower('ykoba56@gm
 **開発 Supabase のみ。** 前提: 008 適用済み。
 
 1. [SQL Editor](https://supabase.com/dashboard/project/jnywuetpkbzjdmcqghoh/sql/new) → New query
-2. **`supabase/migrations/010_device_delete_by_owner.sql` の全文** を貼り付け → **Run**
+2. **`database/migrations/010_device_delete_by_owner.sql` の全文** を貼り付け → **Run**
 3. 検証:
 
 ```sql
@@ -188,7 +188,7 @@ select proname from pg_proc where proname = 'rpc_delete_equipment';
 
 **開発 Supabase のみ。** 前提: 010 適用済み（未適用なら先に §8）。
 
-1. SQL Editor → **`supabase/migrations/011_flow_reset_by_creator.sql` の全文** → **Run**
+1. SQL Editor → **`database/migrations/011_flow_reset_by_creator.sql` の全文** → **Run**
 2. 検証:
 
 ```sql
@@ -206,7 +206,7 @@ where table_schema = 'public' and table_name = 'flow_documents' and column_name 
 
 **開発 Supabase のみ。** 前提: 011 適用済み · grill 2026-06-14（運用前統合）。
 
-1. SQL Editor → **`supabase/migrations/012_merge_equipment_codes_into_devices.sql` の全文** → **Run**
+1. SQL Editor → **`database/migrations/012_merge_equipment_codes_into_devices.sql` の全文** → **Run**
 2. 検証:
 
 ```sql
@@ -227,7 +227,7 @@ select count(*) from public.devices;
 
 **開発 Supabase のみ。** 前提: 012 適用済み。
 
-1. SQL Editor → **`supabase/migrations/013_module_delete_by_owner.sql` の全文** → **Run**
+1. SQL Editor → **`database/migrations/013_module_delete_by_owner.sql` の全文** → **Run**
 2. 検証:
 
 ```sql
@@ -304,5 +304,5 @@ select proname from pg_proc where proname = 'rpc_delete_module';
 ## 6. 参照
 
 - [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
-- [DB-2\_スキーマ草案.md](../specs/03_技術仕様/DB-2_スキーマ草案.md)
+- [DB-2\_スキーマ草案.md](../docs/03_技術仕様/DB-2_スキーマ草案.md)
 - ADR-014 · handoffs `2026-05-31_10_db2-schema-design-session-end.md` §4

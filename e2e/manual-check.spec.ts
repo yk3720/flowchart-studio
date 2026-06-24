@@ -17,7 +17,7 @@ import { analyzeA11y, assertAxeGate } from "./helpers/a11y";
 
 const FIXTURE_SIMPLE_YES = path.join(
   process.cwd(),
-  "samples",
+  "frontend/src/samples",
   "sample-simple-yes.json"
 );
 

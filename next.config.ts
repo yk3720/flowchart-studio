@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-import { assertProductionSupabaseEnv } from "./lib/supabase/env";
+import { assertProductionSupabaseEnv } from "./backend/src/lib/supabase/env";
 
 assertProductionSupabaseEnv();
 

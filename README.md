@@ -1,80 +1,44 @@
-# flowchart-studio
+﻿# flowchart-studio
 
 表データからフローチャートを自動生成する Web アプリ（**React Flow 描画** · `yk-application` 独立リポジトリ）。
 
-**旧名:** `flowchart-web` → `flowchart-web-reactflow`（2026-05-23）→ **`flowchart-studio`**（2026-06-23 · [ADR-010](<./specs/03_技術仕様/意思決定記録(ADR).md>)）
+**旧名:** `flowchart-web` → `flowchart-web-reactflow`（2026-05-23）→ **`flowchart-studio`**（2026-06-23 · [ADR-010](<./docs/03_技術仕様/意思決定記録(ADR).md>)）
 
-## Product Spec（正本）
+## ドキュメント（正本）
 
-[`specs/`](./specs/) — 要求定義〜開発ガイドライン（コードリポに同居 · SDD）。索引: [`specs/README.md`](./specs/README.md)
+[`docs/`](./docs/) — 要求定義〜開発ガイドライン · 運用手順。索引: [`docs/README.md`](./docs/README.md)
 
 **エージェント憲法:** [`AGENTS.md`](./AGENTS.md) · **セッション:** [`handoffs/flowchart-studio`](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md)
-
-本アプリは **表 JSON → React Flow**（Level・行順ベースのレイアウト）。スタック rule: [`REACTFLOW_RULES.md`](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md)
 
 ## 起動（ダブルクリック）
 
 `フローチャートを開く.bat` をダブルクリック → **外部ブラウザ**で http://localhost:3000/login（終了は窓で Ctrl+C）
 
-> **Cursor 利用時:** チャットの localhost リンクはクリックしない。Settings → Tools & MCP → **Show Localhost Links in Browser → OFF** 推奨。詳細: [docs/LOCAL_DEV.md](./docs/LOCAL_DEV.md)
-
 ## コマンド
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000/login — 外部ブラウザに貼り付け
+npm run dev
 npm run build
-npm run start    # 本番同等（PC が重いとき）
-npm run test     # lib/flowchart
-npm run test:e2e # Playwright（Cursor 内部ブラウザ設定と無関係）
+npm run test
+npm run test:e2e
 ```
 
-ローカル確認の正本: [docs/LOCAL_DEV.md](./docs/LOCAL_DEV.md)
+ローカル確認: [docs/LOCAL_DEV.md](./docs/LOCAL_DEV.md)
 
-## MVP（Phase 1）機能
+## ディレクトリ（四層）
 
-- [x] 表 JSON 編集（内部）+ 表 UI + 再生成（自動レイアウト）
-- [x] 5 種ノード（端子・処理・判断・入出力・手動入力）
-- [x] Yes/No ラベル付きエッジ
-- [x] JSON をダウンロード / 表を読込（JSON）
-- [x] 画像を保存（PNG）
-- [x] 「プレビューは古い」表示
-- [x] P0 UX: stale 時 PNG ブロック、表編集→再生成、エラー時プレビュー維持、閲覧専用表示
+構成 SSOT: [`docs/04_リポジトリ構造/リポジトリ構造.md`](./docs/04_リポジトリ構造/リポジトリ構造.md)
 
-## ディレクトリ
+| 層                 | パス                                                            | 内容                             |
+| ------------------ | --------------------------------------------------------------- | -------------------------------- |
+| **フロントエンド** | `app/` · `frontend/src/`                                        | ページ · UI · デモ JSON          |
+| **バックエンド**   | `backend/src/lib/` · `app/**/route.ts`                          | Server Actions · 認証 · Supabase |
+| **データベース**   | `database/migrations/` · `database/sql/` · `database/src/seed/` | DDL · SQL · seed                 |
+| **Python**         | `python/src/excel_normalize/` · `python/testdata/`              | Excel 正規化                     |
+| **共有**           | `lib/flowchart/`                                                | ドメイン純粋関数                 |
+| **仕様**           | `docs/`                                                         | 要求定義〜ADR · Runbook          |
+| **E2E**            | `e2e/`                                                          | Playwright                       |
 
-構成 SSOT: [`specs/04_リポジトリ構造/リポジトリ構造.md`](./specs/04_リポジトリ構造/リポジトリ構造.md)
-
-| パス                     | 内容                                             |
-| ------------------------ | ------------------------------------------------ |
-| `specs/`                 | Product Spec（何を作るか）                       |
-| `docs/`                  | 運用（LOCAL_DEV · Runbook · design-system 索引） |
-| `samples/`               | アプリ用サンプル JSON                            |
-| `scripts/`               | seed · Supabase SQL · `dev/open.bat`             |
-| `tools/excel_normalize/` | Excel 取込パイプライン（`testdata/`）            |
-| `lib/flowchart/`         | ドメイン層（React 非依存）                       |
-| `components/flowchart/`  | UI（client）                                     |
-| `e2e/`                   | Playwright                                       |
-
-列の意味: [`specs/03_技術仕様/列の意味.md`](./specs/03_技術仕様/列の意味.md)  
-スタイル・UI の正本索引: [docs/design-system.md](./docs/design-system.md)
-
-## DB-1（ADR-013 · Supabase）
-
-- [x] Supabase Auth — **開発（`flowchart-dev` · 現行 Vercel `-dun` も接続）:** Email Magic Link · パスワード · Google OAuth
-- [x] Supabase Auth — **専用本番 Supabase 分離後の想定:** Google / Microsoft（Email 無効）
-- [x] `profiles` 許可リスト · editor / viewer
-- [x] `flow_documents` クラウド保存（Server Actions）
-- [x] オフライン閲覧キャッシュ（IndexedDB · 開いたフロー + ピン）
-- セットアップ: [docs/runbooks/SUPABASE_SETUP.md](./docs/runbooks/SUPABASE_SETUP.md)
-
-## 実用版（2026-05-20）
-
-- [x] 表 UI・CSV 貼り付け・列ヘルプ
-- [x] localStorage 下書き（自動保存・起動復元）
-- [x] 雛形2種 · PNG / SVG 出力
-- [x] エラー行ハイライト・ジャンプ・警告表示
-- [x] 表 UI のみ（テーマ/サイズ/JSON タブは削除 · レイアウト・色は固定）
-
-スタイル・UI 索引: [docs/design-system.md](./docs/design-system.md)  
-開発時スタイル見本: `http://localhost:3000/dev/style`（本番 404）
+列の意味: [`docs/03_技術仕様/列の意味.md`](./docs/03_技術仕様/列の意味.md)  
+スタイル索引: [docs/design-system.md](./docs/design-system.md)

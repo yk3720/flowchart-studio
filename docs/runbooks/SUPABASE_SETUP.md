@@ -1,4 +1,4 @@
-# Supabase セットアップ（ADR-013 DB-1）
+﻿# Supabase セットアップ（ADR-013 DB-1）
 
 ## 1. プロジェクト
 
@@ -41,7 +41,7 @@
 
 ### DB-1
 
-SQL Editor で `supabase/migrations/001_db1_schema.sql` を実行。  
+SQL Editor で `database/migrations/001_db1_schema.sql` を実行。  
 role 保護: `002_fix_profiles_role_protection.sql` を続けて実行。
 
 ### DB-2（003 → 004）

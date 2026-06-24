@@ -1,13 +1,13 @@
-# AGENTS.md — flowchart-studio
+﻿# AGENTS.md — flowchart-studio
 
 エージェント向け憲法。**境界 · SSOT · 再開手順**を1か所に集約する（500行未満 · 毎セッション Read 可）。
 
 | 項目                  | 値                                                                          |
 | --------------------- | --------------------------------------------------------------------------- |
 | **handoffs slug**     | `flowchart-studio`                                                          |
-| **Product Spec 正本** | 本リポ `specs/`（コードと同居 · SDD）                                       |
+| **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-24（repo-layout v2 · 系統別整理）                                   |
+| **更新**              | 2026-06-24（四層レイアウト v3.2 · python/ 層）                              |
 
 ---
 
@@ -25,25 +25,25 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-studio/2026-06-24_20_repo-layout-v2-session-end.md
+@c:/yk-memo/handoffs/flowchart-studio/2026-06-24_21_four-layer-layout-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
-続きから。§4 の1件だけ。一個ずつ。終わったら止めて報告。
+続きから。§4 の1件だけ。フォルダの中身を協議から。一個ずつ。終わったら止めて報告。
 ```
 
 > セッション MD が更新されたら、2行目を HANDOFF の「最新セッション」に差し替える。
 
-**仕様疑問時のみ追加 Read:** `specs/03_技術仕様/データモデル.md` · `specs/03_技術仕様/意思決定記録(ADR).md` · `specs/05_開発ガイドライン/decision-log.md`
+**仕様疑問時のみ追加 Read:** `docs/03_技術仕様/データモデル.md` · `docs/03_技術仕様/意思決定記録(ADR).md` · `docs/05_開発ガイドライン/decision-log.md`
 
 ---
 
 ## 引き継ぎ終了時（毎回 · `handoff-session-work`）
 
-| #   | 更新するファイル                                                                     |
-| --- | ------------------------------------------------------------------------------------ |
-| 1   | `handoffs/flowchart-studio/` — 新規セッション MD · HANDOFF「最新セッション」· §6     |
-| 2   | 本ファイル — 再開ブロック2行目の `@`                                                 |
-| 3   | `c:/yk-memo/.../新チャット依頼.md` — コピペ2行目（本ファイルと同じセッション MD）    |
-| 4   | `specs/05_開発ガイドライン/decision-log.md` — タイムライン **1行**（本文コピー禁止） |
+| #   | 更新するファイル                                                                    |
+| --- | ----------------------------------------------------------------------------------- |
+| 1   | `handoffs/flowchart-studio/` — 新規セッション MD · HANDOFF「最新セッション」· §6    |
+| 2   | 本ファイル — 再開ブロック2行目の `@`                                                |
+| 3   | `c:/yk-memo/.../新チャット依頼.md` — コピペ2行目（本ファイルと同じセッション MD）   |
+| 4   | `docs/05_開発ガイドライン/decision-log.md` — タイムライン **1行**（本文コピー禁止） |
 
 **更新しない:** handoffs 以外への §4 書き戻し
 
@@ -51,28 +51,34 @@
 
 ## 文書種
 
-| 種別         | 正本                                        | いつ書く                           |
-| ------------ | ------------------------------------------- | ---------------------------------- |
-| decision-log | `specs/05_開発ガイドライン/decision-log.md` | 合意 · ADR · セッション終了時に1行 |
-| grill-me     | `specs/01_要求定義/grill-me_*` · `相談_*`   | 方針深掘り後                       |
-| ADR          | `specs/03_技術仕様/意思決定記録(ADR).md`    | 採用決定時                         |
-| §4           | handoffs 最新                               | 毎セッション                       |
-| 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）           | 実装隣接                           |
+| 種別         | 正本                                       | いつ書く                           |
+| ------------ | ------------------------------------------ | ---------------------------------- |
+| decision-log | `docs/05_開発ガイドライン/decision-log.md` | 合意 · ADR · セッション終了時に1行 |
+| grill-me     | `docs/01_要求定義/grill-me_*` · `相談_*`   | 方針深掘り後                       |
+| ADR          | `docs/03_技術仕様/意思決定記録(ADR).md`    | 採用決定時                         |
+| §4           | handoffs 最新                              | 毎セッション                       |
+| 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）          | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — U0 **動作001** 本文（§4 · 1個ずつ）
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **フォルダ中身の協議**（§4 · 1論点ずつ）
 
 ---
 
 ## コード · ドキュメント配置
 
-| 用途                      | パス                                                |
-| ------------------------- | --------------------------------------------------- |
-| **本リポ（実装 + 仕様）** | `c:/yk-application/flowchart-studio/`               |
-| **Product Spec**          | `specs/`                                            |
-| **運用 · セットアップ**   | `docs/` · `docs/runbooks/`                          |
-| **サンプル JSON**         | `samples/`                                          |
-| **自動化**                | `scripts/seed/` · `scripts/supabase/`               |
-| **起動 bat**              | `フローチャートを開く.bat` → `scripts/dev/open.bat` |
+| 層                 | パス                                                                   |
+| ------------------ | ---------------------------------------------------------------------- |
+| **フロントエンド** | `app/` · `frontend/src/components/`                                    |
+| **バックエンド**   | `backend/src/lib/` · `app/**/route.ts`                                 |
+| **データベース**   | `database/migrations/` · `database/sql/` · `database/src/seed/`        |
+| **Python**         | `python/src/excel_normalize/` · `python/testdata/` · `python/scripts/` |
+| **共有**           | `lib/flowchart/`                                                       |
+| **仕様 · 運用**    | `docs/`                                                                |
+
+| 用途              | パス                                                |
+| ----------------- | --------------------------------------------------- |
+| **本リポ**        | `c:/yk-application/flowchart-studio/`               |
+| **サンプル JSON** | `frontend/src/samples/`                             |
+| **起動 bat**      | `フローチャートを開く.bat` → `scripts/dev/open.bat` |
 
 ```powershell
 cd c:\yk-application\flowchart-studio
@@ -99,25 +105,25 @@ npm run test:e2e
 | 表 → IR → 格子レイアウト → React Flow     | Excel COM · Office Add-in          |
 | JSON / CSV / Excel 取込 · 表 UI · PNG/SVG | 図解管理 WS との統合               |
 | 1 セッション = §4 の **1 件**             | 完成チェックリスト全項目の一括実装 |
-| 変更前に ADR → specs → コードの順         | dagre でノード位置決定             |
+| 変更前に ADR → docs → コードの順          | dagre でノード位置決定             |
 
 ---
 
 ## SSOT マップ
 
-| ドメイン                     | 正本                                                              |
-| ---------------------------- | ----------------------------------------------------------------- |
-| **セッション進捗 · 次の1件** | `c:/yk-memo/handoffs/flowchart-studio/`                           |
-| **講座提出**                 | `yk-memo/.../00_テーマ/選定表_記入稿.md`                          |
-| 概要 · 境界                  | `specs/01_要求定義/プロジェクト概要.md`                           |
-| MVP                          | `specs/01_要求定義/MVP定義.md`                                    |
-| 完成の定義                   | `specs/01_要求定義/完成チェックリスト.md`                         |
-| 現状 · ロードマップ          | `specs/02_機能設計/現状とロードマップ.md`                         |
-| データモデル                 | `specs/03_技術仕様/データモデル.md`                               |
-| 図形・色                     | `specs/03_技術仕様/フローチャート記述ルール.md`                   |
-| 開発経緯                     | `specs/05_開発ガイドライン/decision-log.md`                       |
-| ADR                          | `specs/03_技術仕様/意思決定記録(ADR).md`                          |
-| 列ヘルプ（実装同期）         | `specs/03_技術仕様/列の意味.md` · `lib/flowchart/tableColumns.ts` |
+| ドメイン                     | 正本                                                             |
+| ---------------------------- | ---------------------------------------------------------------- |
+| **セッション進捗 · 次の1件** | `c:/yk-memo/handoffs/flowchart-studio/`                          |
+| **講座提出**                 | `yk-memo/.../00_テーマ/選定表_記入稿.md`                         |
+| 概要 · 境界                  | `docs/01_要求定義/プロジェクト概要.md`                           |
+| MVP                          | `docs/01_要求定義/MVP定義.md`                                    |
+| 完成の定義                   | `docs/01_要求定義/完成チェックリスト.md`                         |
+| 現状 · ロードマップ          | `docs/02_機能設計/現状とロードマップ.md`                         |
+| データモデル                 | `docs/03_技術仕様/データモデル.md`                               |
+| 図形・色                     | `docs/03_技術仕様/フローチャート記述ルール.md`                   |
+| 開発経緯                     | `docs/05_開発ガイドライン/decision-log.md`                       |
+| ADR                          | `docs/03_技術仕様/意思決定記録(ADR).md`                          |
+| 列ヘルプ（実装同期）         | `docs/03_技術仕様/列の意味.md` · `lib/flowchart/tableColumns.ts` |
 
 ---
 
@@ -143,6 +149,6 @@ npm run test:e2e
 
 ## 関連
 
-- [specs/README.md](./specs/README.md) — Product Spec 索引
+- [docs/README.md](./docs/README.md) — Product Spec 索引
 - [README.md](./README.md) — 実装 · 起動
 - [APP_PROJECT_RULES.md](c:/yk-skill/rule/10_meta/APP_PROJECT_RULES.md)

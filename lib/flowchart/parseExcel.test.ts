@@ -1,4 +1,4 @@
-import * as fs from "node:fs";
+﻿import * as fs from "node:fs";
 import * as path from "node:path";
 import * as XLSX from "xlsx";
 import { describe, expect, it } from "vitest";
@@ -10,7 +10,7 @@ import {
 
 const A0001_SCRATCH_XLSX = path.join(
   process.cwd(),
-  "tools/excel_normalize/testdata/devices/A0001_塗布装置/_scratch/取出.xlsx"
+  "python/testdata/devices/A0001_塗布装置/_scratch/取出.xlsx"
 );
 
 function buildWorkbookBuffer(

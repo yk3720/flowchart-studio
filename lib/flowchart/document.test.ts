@@ -4,7 +4,10 @@ import { describe, expect, it } from "vitest";
 
 import { parseFlowchartDocument } from "./document";
 
-const SAMPLE_CURRY = join(process.cwd(), "samples/sample-curry.json");
+const SAMPLE_CURRY = join(
+  process.cwd(),
+  "frontend/src/samples/sample-curry.json"
+);
 
 describe("parseFlowchartDocument", () => {
   it("parses a valid fixture document", () => {

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -8,10 +8,7 @@ import {
 } from "./importBundleSchema";
 import { prepareImportBundleForRpc } from "./prepareImportBundle";
 
-const FIXTURE_JSON = join(
-  process.cwd(),
-  "tools/excel_normalize/testdata/import-z00001.json"
-);
+const FIXTURE_JSON = join(process.cwd(), "python/testdata/import-z00001.json");
 
 describe("importBundleSchema", () => {
   it("parses fixture import.json", () => {

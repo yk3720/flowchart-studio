@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+﻿import { expect, test } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -10,12 +10,12 @@ import {
 
 const IMPORT_FIXTURE = path.join(
   process.cwd(),
-  "tools/excel_normalize/testdata/import-z00001.json"
+  "python/testdata/import-z00001.json"
 );
 
 const A0001_IMPORT = path.join(
   process.cwd(),
-  "tools/excel_normalize/testdata/devices/A0001_塗布装置/import.json"
+  "python/testdata/devices/A0001_塗布装置/import.json"
 );
 
 test.describe("import.json 装置一括取込", () => {

@@ -1,4 +1,4 @@
-/** フローチャート描画の固定色（テーマ切替なし）
+﻿/** フローチャート描画の固定色（テーマ切替なし）
  *  枠太さ SSOT: VISUAL_DESIGN_RULES §2 · RULE_INDEX No 19
  *  ノード背景: 表「色」列（10列目）→ colorHint → FLOW_NODE_FILL_BY_HINT */
 export const FLOW_EDGE_STROKE = "#2563eb";
@@ -29,7 +29,7 @@ const COLOR_CELL_TO_HINT: Record<string, ColorHint> = {
   青: "blue",
 };
 
-/** 凡例表示用 — SSOT: specs/03_技術仕様/フローチャート記述ルール.md §3 */
+/** 凡例表示用 — SSOT: docs/03_技術仕様/フローチャート記述ルール.md §3 */
 export const COLOR_HINT_LEGEND_ITEMS: {
   hint: ColorHint;
   label: string;

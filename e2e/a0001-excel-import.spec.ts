@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+﻿import { expect, test } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -6,7 +6,7 @@ import { headerRegenerate, openPreviewWithSample } from "./helpers/flowchart";
 
 const A0001_SCRATCH_XLSX = path.join(
   process.cwd(),
-  "tools/excel_normalize/testdata/devices/A0001_塗布装置/_scratch/取出.xlsx"
+  "python/testdata/devices/A0001_塗布装置/_scratch/取出.xlsx"
 );
 
 function excelFileInput(page: import("@playwright/test").Page) {
