@@ -2,7 +2,7 @@
 
 **目次:** [00\_目次.md](./00_目次.md)
 
-**更新:** 2026-06-25（A0001 供給部 作者文言 · 段階取込）  
+**更新:** 2026-06-25（ADR-016 PR-B 実装済 · 3ペインリサイズ · ナビ左揃え）  
 **役割:** 開発経緯の **入口**。本ファイルは **リンクと1行要約のみ** — 確定事項の正本は ADR、実行の正本は handoffs §4。
 
 ---
@@ -49,10 +49,10 @@
 
 ## 戦略 vs 戦術（ズレても正常）
 
-| 軸               | 正本                                                          | 現状（2026-06-25）                                   |
-| ---------------- | ------------------------------------------------------------- | ---------------------------------------------------- |
-| **戦略優先**     | [要求定義書.md](../01_要求定義/要求定義書.md) §4              | UX · **作る操作の手間削減** 最優先                   |
-| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | **ADR-016 PR-B**（3ペインリサイズ · ナビ左揃え）— §4 |
+| 軸               | 正本                                                          | 現状（2026-06-25）                                                              |
+| ---------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **戦略優先**     | [要求定義書.md](../01_要求定義/要求定義書.md) §4              | UX · **作る操作の手間削減** 最優先                                              |
+| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | **ADR-016 PR-B 完了**。次: A0001 供給部 M004〜 Web 目視 / ナビ N8 E2E — §4 参照 |
 
 **開発ログイン（2026-06-24）:** Magic Link は `/auth/confirm` + token_hash テンプレ · OAuth は `/auth/callback` · パスワードは Server Action — **開発 Supabase（`flowchart-dev`）で3方式共存**。Vercel 本番 URL（`-dun`）は現状この dev プロジェクトに接続。**専用本番 Supabase 分離後**は Email 無効 · Google/Azure のみ（`SUPABASE_RULES` §6）。
 
@@ -151,7 +151,8 @@
 | 2026-06-25      | 運用       | frontend 最適化（xlsx 遅延 · FlowPreviewPane · Zod サンプル）                                                                     | `FlowPreviewPane.tsx` · `flowSamples.ts` · `REACT_RULES` §3-1                                                                                                                                                                             | 完了                              | 次: chrome 実装 §4                                                                                                                   |
 | 2026-06-25      | UX         | chrome 縦レイアウト実装（認証/ステータス表列限定 · 凡例削除 · ズーム右上 overlay）                                                | `FlowchartWorkspace.tsx` · `FlowchartEditor.tsx` · `FlowPreviewPane.tsx` · `flowchartUiClasses.ts`                                                                                                                                        | 完了                              | `typecheck` · `test` 123/123 通過                                                                                                    |
 | 2026-06-25      | 作者データ | A0001 供給部 作者文言 — 旧 ﾕﾆｯﾄ0/動作001「供給実行」廃止 · M000〜M006 は Excel 正本の Text 列で確定 · M007〜M009 はプレースホルダ | [Excel取込 §11](../03_技術仕様/Excel取込.md) · [handoff \_36 §4](c:/yk-memo/handoffs/flowchart-studio/2026-06-25_36_preview-chrome-vertical-session-end.md)                                                                               | 作者確認済                        | Web 表示確認（M003 等）· DB 手動整理済                                                                                               |
-| 2026-06-25      | ADR        | 10列 v2（色を種別の隣）· 3ペインリサイズ · ヘッダー短縮 — 方式A一括 · **ナビ配色はニュートラル維持（深い青案却下）**              | [ADR-016](<../03_技術仕様/意思決定記録(ADR).md#adr-016-10-列順-v2--3-ペインリサイズ2026-06-25>) · [ワークスペースレイアウト方針.md](../02_機能設計/ワークスペースレイアウト方針.md)                                                       | PR-A 実装済 · PR-B 未着手         |
+| 2026-06-25      | ADR        | 10列 v2（色を種別の隣）· 3ペインリサイズ · ヘッダー短縮 — 方式A一括 · **ナビ配色はニュートラル維持（深い青案却下）**              | [ADR-016](<../03_技術仕様/意思決定記録(ADR).md#adr-016-10-列順-v2--3-ペインリサイズ2026-06-25>) · [ワークスペースレイアウト方針.md](../02_機能設計/ワークスペースレイアウト方針.md)                                                       | **PR-A · PR-B 実装済**            |
+| 2026-06-25      | 実装       | ADR-016 PR-B — 3ペインリサイズ（react-resizable-panels v4）· ナビ左揃え · `useIsDesktop` · `useDefaultLayout`                     | [ワークスペースレイアウト方針.md](../02_機能設計/ワークスペースレイアウト方針.md) · [REACTFLOW_RULES §5.6-10](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md)                                                                           | 完了 · typecheck · test 125/125   |
 | 2026-06-25      | 作者データ | U0 動作001 — `a0001_v03.py` に M001 作者本文（4行）· 暫定「供給実行」廃止                                                         | `python/src/excel_normalize/a0001_v03.py` · [handoff \_41 §4](c:/yk-memo/handoffs/flowchart-studio/2026-06-25_41_u0-action001-body-session-end.md)                                                                                        | 完了                              | pytest · import.json 整合 · Playwright 取込                                                                                          |
 | 2026-06-25      | 作者データ | Excel 段階取込 — U{n} 未作成スキップ · `excel:inspect` · 旧 `動作000` テーブル名マップ                                            | [Excel取込 §11](../03_技術仕様/Excel取込.md) · `python/scripts/inspect_device.py`                                                                                                                                                         | 完了                              | `npm run excel:inspect -- A0001`                                                                                                     |
 
@@ -159,19 +160,19 @@
 
 ## ADR 索引（クイック参照）
 
-| ADR     | タイトル（短）                 | 状態                                     |
-| ------- | ------------------------------ | ---------------------------------------- |
-| 001–006 | MVP · バリデーション · RF 派生 | Accepted · 実装済                        |
-| 007     | MZ0000 参照廃止                | Accepted                                 |
-| 008     | P0 UX（再生成契約）            | Accepted                                 |
-| 009     | 実用版 UX 一括                 | Accepted                                 |
-| 010     | RF / Mermaid 比較 · リネーム   | Accepted                                 |
-| 011     | 3 ペイン · 装置 Nav            | Accepted                                 |
-| 012     | 9 列（段+列）· 10列色          | Accepted · layoutGrid tier 実装済        |
-| 013     | Supabase DB-1                  | Accepted · 実装済                        |
-| 014     | 装置階層 DB-2                  | Accepted · dev/本番適用済                |
-| 015     | フロー共同編集 RLS             | Accepted · 本番適用済（`016`）           |
-| 016     | 10列 v2 · 3ペインリサイズ      | Accepted · **PR-A 実装済** · PR-B 未着手 |
+| ADR     | タイトル（短）                 | 状態                              |
+| ------- | ------------------------------ | --------------------------------- |
+| 001–006 | MVP · バリデーション · RF 派生 | Accepted · 実装済                 |
+| 007     | MZ0000 参照廃止                | Accepted                          |
+| 008     | P0 UX（再生成契約）            | Accepted                          |
+| 009     | 実用版 UX 一括                 | Accepted                          |
+| 010     | RF / Mermaid 比較 · リネーム   | Accepted                          |
+| 011     | 3 ペイン · 装置 Nav            | Accepted                          |
+| 012     | 9 列（段+列）· 10列色          | Accepted · layoutGrid tier 実装済 |
+| 013     | Supabase DB-1                  | Accepted · 実装済                 |
+| 014     | 装置階層 DB-2                  | Accepted · dev/本番適用済         |
+| 015     | フロー共同編集 RLS             | Accepted · 本番適用済（`016`）    |
+| 016     | 10列 v2 · 3ペインリサイズ      | Accepted · **PR-A · PR-B 実装済** |
 
 全文: [意思決定記録(ADR).md](<../03_技術仕様/意思決定記録(ADR).md>)
 

@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@/components/*": ["./frontend/src/components/*"],
+      "@/hooks/*": ["./frontend/src/hooks/*"],
       "@/samples/*": ["./frontend/src/samples/*"],
       "@/lib/auth/*": ["./backend/src/lib/auth/*"],
       "@/lib/supabase/*": ["./backend/src/lib/supabase/*"],

@@ -237,7 +237,7 @@ export const fcNavUnitRow = cn(
 export const fcNavUnitToggle = cn(
   fcFocusRing,
   fcTargetMin,
-  "flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-sm font-semibold text-flow-text-body hover:bg-flow-surface-muted/60"
+  "justify-start flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-sm font-semibold text-flow-text-body hover:bg-flow-surface-muted/60"
 );
 
 /** 動作リスト — ユニットラベル開始 + 約1文字分のインデント */
@@ -247,7 +247,7 @@ export const fcNavModuleList =
 export const fcNavModuleBtn = cn(
   fcFocusRing,
   fcTargetMin,
-  "min-w-0 flex-1 rounded-md px-2 py-1.5 text-left text-sm transition-colors"
+  "justify-start min-w-0 flex-1 rounded-md px-2 py-1.5 text-left text-sm transition-colors"
 );
 
 export function fcNavModuleBtnState(selected: boolean): string {
@@ -334,6 +334,14 @@ export const fcMenuChevron =
   "size-5 shrink-0 text-flow-text-muted transition-transform";
 
 /* ── ペイン・セクション ── */
+
+/** ペインリサイズハンドル — Separator 外枠 */
+export const fcPaneResizeHandle =
+  "group flex w-1.5 shrink-0 cursor-col-resize items-center justify-center bg-transparent transition-colors hover:bg-flow-surface-muted/60";
+
+/** ペインリサイズハンドル — 中央バー（視覚インジケーター） */
+export const fcPaneResizeHandleBar =
+  "h-8 w-0.5 rounded-full bg-flow-border group-hover:bg-flow-accent transition-colors";
 
 export const fcPaneHeader = "shrink-0 border-b border-flow-border px-4 py-2";
 

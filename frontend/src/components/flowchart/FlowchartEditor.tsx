@@ -41,6 +41,12 @@ import {
 } from "@/lib/flowchart/model/validationMeta";
 import { isModuleContentDirty } from "@/lib/flowchart/model/moduleContentDirty";
 import { cn } from "@/lib/utils";
+import {
+  Group,
+  Panel,
+  Separator,
+  useDefaultLayout,
+} from "react-resizable-panels";
 import { captureFlowPng } from "./exportPng";
 import { captureFlowSvg } from "./exportSvg";
 import { FlowPreviewPane } from "./FlowPreviewPane";
@@ -66,6 +72,8 @@ import {
   fcMobileTabGroup,
   fcMobileTabIdle,
   fcPaneHeader,
+  fcPaneResizeHandle,
+  fcPaneResizeHandleBar,
   fcSectionTitle,
   fcStaleRing,
   fcStatusDraftHint,
@@ -163,6 +171,8 @@ export type FlowchartEditorProps = {
   moduleLoading?: boolean;
   /** 表列の最上部に挿入するスロット（認証バー・ステータスバナー） */
   tableTopSlot?: React.ReactNode;
+  /** デスクトップ幅: workspaceMode で内部 PanelGroup レイアウトを有効化 */
+  isDesktop?: boolean;
 };
 
 const EMPTY_MODULE_MESSAGE = "モジュールを選択してください";
@@ -267,7 +277,12 @@ export const FlowchartEditor = forwardRef<
     resetFlow,
     moduleLoading = false,
     tableTopSlot,
+    isDesktop = false,
   } = props;
+
+  const innerLayout = useDefaultLayout({
+    id: "flowchart-studio:workspace-inner-v1",
+  });
 
   const skipSnapshotHydrationRef = useRef(false);
   const userTouchedRef = useRef(false);
@@ -1093,6 +1108,87 @@ export const FlowchartEditor = forwardRef<
         onCancel={() => setPendingConfirm(null)}
       />
     ) : null;
+
+  if (workspaceMode && isDesktop) {
+    return (
+      <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
+        {replaceConfirmDialog}
+        <Group
+          id="workspace-inner"
+          orientation="horizontal"
+          className="min-h-0 min-w-0 flex-1"
+          defaultLayout={innerLayout.defaultLayout}
+          onLayoutChanged={innerLayout.onLayoutChanged}
+        >
+          <Panel
+            id="table"
+            className={cn("flex min-h-0 min-w-0 flex-col", fcBorderR)}
+            defaultSize="40%"
+            minSize="400px"
+          >
+            {tableTopSlot}
+            <header className={fcPaneHeader}>
+              <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h1 className="text-base font-semibold tracking-tight">
+                      Flowchart Studio
+                    </h1>
+                    <span className={fcBadgeAccent}>実用版</span>
+                  </div>
+                  {contextLabel ? (
+                    <p className={cn("text-sm", fcStatusText)}>
+                      <span className="font-medium text-flow-text-body">
+                        {contextLabel}
+                      </span>
+                    </p>
+                  ) : null}
+                  {previewModeHint ? (
+                    <p className={fcEmptyHint}>{previewModeHint}</p>
+                  ) : null}
+                </div>
+                {statusLine}
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                {toolbarButtons}
+              </div>
+            </header>
+            {errorBanner}
+            {warningBanner}
+            <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
+              <h2 className={cn("shrink-0", fcSectionTitle)}>表</h2>
+              {tablePaneBody}
+            </div>
+          </Panel>
+          <Separator id="table-canvas-sep" className={fcPaneResizeHandle}>
+            <div className={fcPaneResizeHandleBar} />
+          </Separator>
+          <Panel
+            id="canvas"
+            className="flex min-h-0 min-w-0 flex-col"
+            defaultSize="60%"
+            minSize="280px"
+          >
+            <h2 className="sr-only">プレビュー</h2>
+            <div className="flex min-h-0 flex-1 flex-col">
+              {renderPreviewCanvas(true)}
+            </div>
+          </Panel>
+        </Group>
+        {moduleLoading ? (
+          <div
+            className={fcModuleLoadingOverlay}
+            data-testid="module-loading-overlay"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            モジュールを読み込み中…
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 
   if (workspaceMode) {
     return (

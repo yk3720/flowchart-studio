@@ -2,6 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Group,
+  Panel,
+  Separator,
+  useDefaultLayout,
+  usePanelRef,
+} from "react-resizable-panels";
 
 import { AppAuthBar } from "@/components/auth/AppAuthBar";
 import { canEditFlowchart } from "@/lib/auth/roles";
@@ -36,11 +43,14 @@ import {
 } from "@/lib/flowchart/browser/offlineFlowCache";
 import { getStarterFlowSnapshot } from "@/lib/flowchart/equipment/starterFlowSnapshot";
 
+import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { FlowAlertDialog } from "./FlowAlertDialog";
 import { FlowchartEditor, type FlowchartEditorHandle } from "./FlowchartEditor";
 import { ModuleNavPane } from "./ModuleNavPane";
 import {
   fcDialogBody,
+  fcPaneResizeHandle,
+  fcPaneResizeHandleBar,
   fcStatusBanner,
   fcWorkspaceLoading,
   fcWorkspaceShell,
@@ -108,6 +118,12 @@ export function FlowchartWorkspace({
   const [optimisticRemovedModuleIds, setOptimisticRemovedModuleIds] = useState(
     () => new Set<string>()
   );
+
+  const isDesktop = useIsDesktop();
+  const navPanelRef = usePanelRef();
+  const outerLayout = useDefaultLayout({
+    id: "flowchart-studio:workspace-outer-v1",
+  });
 
   const isEditor = canEditFlowchart(role);
   const isOffline = typeof navigator !== "undefined" && !navigator.onLine;
@@ -462,6 +478,19 @@ export function FlowchartWorkspace({
     setFlowResetConfirmOpen(true);
   }, []);
 
+  const handleToggleNavCollapsed = useCallback(() => {
+    if (isDesktop && navPanelRef.current) {
+      const panel = navPanelRef.current;
+      if (panel.isCollapsed()) {
+        panel.expand();
+      } else {
+        panel.collapse();
+      }
+      return;
+    }
+    setNavCollapsed((v) => !v);
+  }, [isDesktop, navPanelRef]);
+
   const pinOfflineProps = useMemo(
     () =>
       selectedModuleId ? { pinned, onToggle: handleTogglePinClick } : undefined,
@@ -525,50 +554,97 @@ export function FlowchartWorkspace({
     </>
   );
 
+  const navPaneProps = {
+    devices: visibleDevices,
+    selectedDeviceId: activeDeviceId,
+    device,
+    selectedModuleId,
+    expandedUnitIds,
+    collapsed: navCollapsed,
+    onToggleCollapsed: handleToggleNavCollapsed,
+    onSelectDevice: handleSelectDevice,
+    onToggleUnit: handleToggleUnit,
+    onToggleAllUnits: handleToggleAllUnits,
+    onSelectModule: handleSelectModule,
+    onRequestDeleteUnit: setUnitDeleteTargetId,
+    onRequestDeleteModule: setModuleDeleteTargetId,
+    onRequestDeleteDevice:
+      device.canDelete && device.internalCode
+        ? () => setDeviceDeleteConfirmOpen(true)
+        : undefined,
+  } as const;
+
+  const editorKey = selectedModuleId
+    ? `${selectedModuleId}-${loadKey}`
+    : `${activeDeviceId}:__none__`;
+
+  const editorProps = {
+    contextLabel,
+    moduleId: selectedModuleId,
+    initialSnapshot,
+    workspaceMode: true,
+    readOnly: !isEditor,
+    onSnapshotPersist: persistCurrentModule,
+    onInvalidatePendingModuleLoad: invalidatePendingModuleLoad,
+    pinOffline: pinOfflineProps,
+    importBundle: importBundleProps,
+    resetFlow: resetFlowProps,
+    moduleLoading: loadingModule && Boolean(selectedModuleId),
+    tableTopSlot,
+  } as const;
+
   return (
     <div className={fcWorkspaceShell}>
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <ModuleNavPane
-          devices={visibleDevices}
-          selectedDeviceId={activeDeviceId}
-          device={device}
-          selectedModuleId={selectedModuleId}
-          expandedUnitIds={expandedUnitIds}
-          collapsed={navCollapsed}
-          onToggleCollapsed={() => setNavCollapsed((v) => !v)}
-          onSelectDevice={handleSelectDevice}
-          onToggleUnit={handleToggleUnit}
-          onToggleAllUnits={handleToggleAllUnits}
-          onSelectModule={handleSelectModule}
-          onRequestDeleteUnit={setUnitDeleteTargetId}
-          onRequestDeleteModule={setModuleDeleteTargetId}
-          onRequestDeleteDevice={
-            device.canDelete && device.internalCode
-              ? () => setDeviceDeleteConfirmOpen(true)
-              : undefined
-          }
-        />
-        <FlowchartEditor
-          key={
-            selectedModuleId
-              ? `${selectedModuleId}-${loadKey}`
-              : `${activeDeviceId}:__none__`
-          }
-          ref={editorRef}
-          contextLabel={contextLabel}
-          moduleId={selectedModuleId}
-          initialSnapshot={initialSnapshot}
-          workspaceMode
-          readOnly={!isEditor}
-          onSnapshotPersist={persistCurrentModule}
-          onInvalidatePendingModuleLoad={invalidatePendingModuleLoad}
-          pinOffline={pinOfflineProps}
-          importBundle={importBundleProps}
-          resetFlow={resetFlowProps}
-          moduleLoading={loadingModule && Boolean(selectedModuleId)}
-          tableTopSlot={tableTopSlot}
-        />
-      </div>
+      {isDesktop ? (
+        <Group
+          id="workspace-outer"
+          orientation="horizontal"
+          className="min-h-0 flex-1"
+          defaultLayout={outerLayout.defaultLayout}
+          onLayoutChanged={outerLayout.onLayoutChanged}
+        >
+          <Panel
+            id="nav"
+            className="flex min-h-0 flex-col"
+            panelRef={navPanelRef}
+            defaultSize="18%"
+            minSize="160px"
+            maxSize="28%"
+            collapsible
+            collapsedSize="48px"
+            onResize={() => {
+              setNavCollapsed(navPanelRef.current?.isCollapsed() ?? false);
+            }}
+          >
+            <ModuleNavPane {...navPaneProps} />
+          </Panel>
+          <Separator id="nav-sep" className={fcPaneResizeHandle}>
+            <div className={fcPaneResizeHandleBar} />
+          </Separator>
+          <Panel
+            id="editor"
+            className="flex min-h-0 min-w-0 flex-col"
+            defaultSize="82%"
+          >
+            <FlowchartEditor
+              key={editorKey}
+              ref={editorRef}
+              {...editorProps}
+              isDesktop
+            />
+          </Panel>
+        </Group>
+      ) : (
+        <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+          <ModuleNavPane {...navPaneProps} />
+          <FlowchartEditor
+            key={editorKey}
+            ref={editorRef}
+            {...editorProps}
+            isDesktop={false}
+          />
+        </div>
+      )}
 
       {deviceDeleteConfirmOpen && device ? (
         <FlowAlertDialog
