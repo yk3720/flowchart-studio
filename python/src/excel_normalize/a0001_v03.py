@@ -30,8 +30,15 @@ def module_id(uin_id: int, index: int) -> int:
     return uin_id * 100 + index
 
 
+# U0 手書き済み Text1（動作002〜はモジュール名プレースホルダ）
+FLOW_TEXT_OVERRIDES: dict[str, str] = {
+    "動作000": "ワーク取出",
+    "動作001": "供給実行",
+}
+
+
 def flow_rows_for_module(module_name: str) -> list[list[str]]:
-    middle = module_name if module_name != "動作000" else "ワーク取出"
+    middle = FLOW_TEXT_OVERRIDES.get(module_name, module_name)
     return [
         ["10", "端子", "20", "", "1", "0", "開始", "", "", ""],
         ["20", "処理", "30", "", "2", "0", middle, "", "", ""],

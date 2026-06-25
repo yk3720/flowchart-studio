@@ -49,10 +49,10 @@
 
 ## 戦略 vs 戦術（ズレても正常）
 
-| 軸               | 正本                                                          | 現状（2026-06-24）                 |
-| ---------------- | ------------------------------------------------------------- | ---------------------------------- |
-| **戦略優先**     | [要求定義書.md](../01_要求定義/要求定義書.md) §4              | UX · **作る操作の手間削減** 最優先 |
-| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | **U0 動作001 本文**（§4）          |
+| 軸               | 正本                                                          | 現状（2026-06-24）                   |
+| ---------------- | ------------------------------------------------------------- | ------------------------------------ |
+| **戦略優先**     | [要求定義書.md](../01_要求定義/要求定義書.md) §4              | UX · **作る操作の手間削減** 最優先   |
+| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | **プレビュー chrome 表列移動**（§4） |
 
 **開発ログイン（2026-06-24）:** Magic Link は `/auth/confirm` + token_hash テンプレ · OAuth は `/auth/callback` · パスワードは Server Action — **開発 Supabase（`flowchart-dev`）で3方式共存**。Vercel 本番 URL（`-dun`）は現状この dev プロジェクトに接続。**専用本番 Supabase 分離後**は Email 無効 · Google/Azure のみ（`SUPABASE_RULES` §6）。
 
@@ -145,6 +145,7 @@
 | 2026-06-25      | grill-me | 作者データ `data/devices/` · Git 方針 · Web→Excel TSV コピー計画                | [grill-me_2026-06-25](../01_要求定義/grill-me_2026-06-25_作者データ置き場.md) · [Excel取込 §3](../03_技術仕様/Excel取込.md)                                                                                                               | 合意                              | 次: `data/` 移行 §4                                                                                                                  |
 | 2026-06-25      | 運用     | 作者データ `python/testdata/devices/` → `data/devices/` 移行 · `DEVICES_ROOT`   | [構成詳細 §data](../04_リポジトリ構造/構成詳細.md) · `lib/paths/devicesRoot.ts`                                                                                                                                                           | 完了                              | 次: Web TSV コピー §4                                                                                                                |
 | 2026-06-25      | 運用     | Web TSV コピー 2 ボタン（表をコピー · 列フォーマットをコピー）実装              | `lib/flowchart/table/copyTableUtils.ts` · `FlowTableEditor`                                                                                                                                                                               | 完了                              | 次: U0 動作001 §4                                                                                                                    |
+| 2026-06-25      | UX       | プレビュー上部 chrome 方針（認証/ステータス表列 · 凡例廃止 · ズーム右上）       | [プレビュー上部chrome方針.md](../02_機能設計/プレビュー上部chrome方針.md) · [handoff \_31](c:/yk-memo/handoffs/flowchart-studio/2026-06-25_31_preview-vertical-chrome-session-end.md)                                                     | 合意                              | 次: §4 表列移動                                                                                                                      |
 
 ---
 

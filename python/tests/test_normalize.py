@@ -89,6 +89,13 @@ def test_a0001_master_normalizes(a0001_master_xlsx: Path) -> None:
     )
     assert flow000["payload"]["table"][1][6] == "ワーク取出"
 
+    flow001 = next(
+        f
+        for f in bundle["flows"]
+        if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作001"
+    )
+    assert flow001["payload"]["table"][1][6] == "供給実行"
+
 
 def test_a0001_v03_builds_in_memory(tmp_path: Path) -> None:
     from openpyxl import load_workbook
@@ -100,6 +107,13 @@ def test_a0001_v03_builds_in_memory(tmp_path: Path) -> None:
     bundle = normalize_workbook(path).bundle
     assert len(bundle["units"]) == 10
     assert len(bundle["flows"]) == 100
+
+    flow001 = next(
+        f
+        for f in bundle["flows"]
+        if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作001"
+    )
+    assert flow001["payload"]["table"][1][6] == "供給実行"
 
     wb = load_workbook(path, data_only=False)
     ws = wb["構成"]
