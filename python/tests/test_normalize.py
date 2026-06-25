@@ -52,7 +52,7 @@ def test_normalize_produces_bundle(input_xlsx: Path) -> None:
     assert len(bundle["flows"]) == 4
 
     for flow in bundle["flows"]:
-        assert flow["payload"]["schema"] == "table-10col-v1"
+        assert flow["payload"]["schema"] == "table-10col-v2"
         assert len(flow["payload"]["table"]) >= 1
         assert len(flow["payload"]["table"][0]) == 10
 
@@ -87,14 +87,14 @@ def test_a0001_master_normalizes(a0001_master_xlsx: Path) -> None:
         for f in bundle["flows"]
         if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作000"
     )
-    assert flow000["payload"]["table"][1][6] == "ワーク取出"
+    assert flow000["payload"]["table"][1][7] == "ワーク取出"  # v2: Text1=index7
 
     flow001 = next(
         f
         for f in bundle["flows"]
         if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作001"
     )
-    assert flow001["payload"]["table"][1][6] == "供給実行"
+    assert flow001["payload"]["table"][1][7] == "供給実行"  # v2: Text1=index7
 
 
 def test_a0001_v03_builds_in_memory(tmp_path: Path) -> None:
@@ -113,7 +113,7 @@ def test_a0001_v03_builds_in_memory(tmp_path: Path) -> None:
         for f in bundle["flows"]
         if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作001"
     )
-    assert flow001["payload"]["table"][1][6] == "供給実行"
+    assert flow001["payload"]["table"][1][7] == "供給実行"  # v2: Text1=index7
 
     wb = load_workbook(path, data_only=False)
     ws = wb["構成"]
