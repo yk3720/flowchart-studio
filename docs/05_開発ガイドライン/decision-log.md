@@ -2,7 +2,7 @@
 
 **目次:** [00\_目次.md](./00_目次.md)
 
-**更新:** 2026-06-24（docs 整理 · archive 分離）  
+**更新:** 2026-06-25（grill-me · author-data SSOT）  
 **役割:** 開発経緯の **入口**。本ファイルは **リンクと1行要約のみ** — 確定事項の正本は ADR、実行の正本は handoffs §4。
 
 ---
@@ -141,7 +141,8 @@
 | 2026-06-24      | 運用     | フォルダ中身協議 · E2E 43/43 · docs 整理                                        | [構成詳細.md](../04_リポジトリ構造/構成詳細.md) · [handoff \_22](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_22_folder-e2e-docs-session-end.md)                                                                          | 完了                              | → doc-sync-rules §4                                                                                                                  |
 | 2026-06-24      | handoff  | yk-skill 横断ルール doc-sync（四層パス · docs 正本 · slug）                     | [REACTFLOW_RULES](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md) · [handoff \_23](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_23_doc-sync-rules-session-end.md)                                                       | 完了                              | 次: yk-memo 整理 §4                                                                                                                  |
 | 2026-06-24      | 運用     | 四リポ横断 doc-sync（slug · パス · localStorage · HANDOFF）                     | [handoff \_26](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_26_cross-workspace-doc-sync-session-end.md)                                                                                                                   | 完了                              | archive                                                                                                                              |
-| 2026-06-24      | handoff  | 試用 auth · 装置プリフェッチ · ホーム表示 · chrome 文字/コントロール統一        | [handoff \_27](c:/yk-memo/handoffs/flowchart-studio/2026-06-24_27_dev-auth-prefetch-viewport-ux-session-end.md)                                                                                                                           | 完了                              | 次: U0 動作001 §4                                                                                                                    |
+| 2026-06-24      | handoff  | 試用 auth · 装置プリフェッチ · ホーム表示 · chrome 文字/コントロール統一        | [handoff \_27](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-06-24_27_dev-auth-prefetch-viewport-ux-session-end.md)                                                                                                              | 完了                              | archive                                                                                                                              |
+| 2026-06-25      | grill-me | 作者データ `data/devices/` · Git 方針 · Web→Excel TSV コピー計画                | [grill-me_2026-06-25](../01_要求定義/grill-me_2026-06-25_作者データ置き場.md) · [Excel取込 §3](../03_技術仕様/Excel取込.md)                                                                                                               | 合意                              | 次: `data/` 移行 §4                                                                                                                  |
 
 ---
 

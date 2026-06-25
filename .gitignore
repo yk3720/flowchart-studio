@@ -45,3 +45,8 @@ python/.mypy_cache/
 python/.ruff_cache/
 python/**/*.xlsx
 python/**/~$*
+
+# 作者 Excel（data/ · Git 外 — 移行後）
+data/**/*.xlsx
+data/**/*.xls
+data/**/~$*

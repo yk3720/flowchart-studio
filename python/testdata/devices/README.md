@@ -1,8 +1,11 @@
-﻿# 装置ごとの作者 Excel（置き場所 SSOT）
+﻿# 装置ごとの作者 Excel（移行前 · レガシーパス）
+
+> **SSOT（移行先）:** [`../../data/devices/README.md`](../../data/devices/README.md)  
+> **コード参照:** まだ `python/testdata/devices/` — 次セッションで `data/devices/` へ移行。
 
 **正本の詳細:** [`../README.md` §作者 Excel の置き場所](../README.md#作者-excel-の置き場所)
 
-## ルート
+## ルート（移行前）
 
 `c:/yk-application/flowchart-studio/python/testdata/devices/`
 

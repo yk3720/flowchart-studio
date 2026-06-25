@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-studio`                                                          |
 | **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-24（四リポ横断 doc-sync）                                           |
+| **更新**              | 2026-06-25（作者データ `data/devices/` SSOT）                               |
 
 ---
 
@@ -25,9 +25,9 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-studio/2026-06-24_26_cross-workspace-doc-sync-session-end.md
+@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_28_author-data-layout-grill-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
-続きから。§4 の1件だけ。U0 動作001 本文から。一個ずつ。終わったら止めて報告。
+続きから。§4 の1件だけ。data/ 移行から。一個ずつ。終わったら止めて報告。
 ```
 
 > セッション MD が更新されたら、2行目を HANDOFF の「最新セッション」に差し替える。
@@ -65,14 +65,15 @@
 
 ## コード · ドキュメント配置
 
-| 層                 | パス                                                                   |
-| ------------------ | ---------------------------------------------------------------------- |
-| **フロントエンド** | `app/` · `frontend/src/components/`                                    |
-| **バックエンド**   | `backend/src/lib/` · `app/**/route.ts`                                 |
-| **データベース**   | `database/migrations/` · `database/sql/` · `database/src/seed/`        |
-| **Python**         | `python/src/excel_normalize/` · `python/testdata/` · `python/scripts/` |
-| **共有**           | `lib/flowchart/`                                                       |
-| **仕様 · 運用**    | `docs/`                                                                |
+| 層                 | パス                                                                            |
+| ------------------ | ------------------------------------------------------------------------------- |
+| **フロントエンド** | `app/` · `frontend/src/components/`                                             |
+| **バックエンド**   | `backend/src/lib/` · `app/**/route.ts`                                          |
+| **データベース**   | `database/migrations/` · `database/sql/` · `database/src/seed/`                 |
+| **Python**         | `python/src/excel_normalize/` · `python/testdata/fixtures/` · `python/scripts/` |
+| **作者データ**     | `data/devices/`（xlsx Git 外 · import.json Git 内）                             |
+| **共有**           | `lib/flowchart/`                                                                |
+| **仕様 · 運用**    | `docs/`                                                                         |
 
 | 用途              | パス                                                |
 | ----------------- | --------------------------------------------------- |
@@ -123,6 +124,7 @@ npm run test:e2e
 | ユビキタス言語               | `docs/06_ユビキタス言語/00_目次.md`                                          |
 | データモデル                 | `docs/03_技術仕様/データモデル.md`                                           |
 | 図形・色 · 列（作者向け）    | `docs/03_技術仕様/作者ガイド.md` · `lib/flowchart/table/tableColumns.ts`     |
+| 作者 Excel · import.json     | `docs/03_技術仕様/Excel取込.md` · `data/devices/README.md`                   |
 | ADR                          | `docs/03_技術仕様/意思決定記録(ADR).md`                                      |
 
 ---
