@@ -17,9 +17,13 @@ import {
   parseClipboardGrid,
   parsePasteCellValue,
 } from "@/lib/flowchart/table/pasteTableCells";
+import {
+  columnFormatTsv,
+  tableToTsv,
+} from "@/lib/flowchart/table/copyTableUtils";
 import type { FlowTableRow } from "@/lib/flowchart/model/types";
 import { cn } from "@/lib/utils";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import {
   fcTableAddRowBtn,
   fcTableCell,
@@ -98,6 +102,21 @@ export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
       updateTable([...table, createEmptyRow(colCount, id)]);
     };
 
+    const [copiedTable, setCopiedTable] = useState(false);
+    const [copiedFormat, setCopiedFormat] = useState(false);
+
+    const handleCopyTable = async () => {
+      await navigator.clipboard.writeText(tableToTsv(table));
+      setCopiedTable(true);
+      setTimeout(() => setCopiedTable(false), 1500);
+    };
+
+    const handleCopyFormat = async () => {
+      await navigator.clipboard.writeText(columnFormatTsv());
+      setCopiedFormat(true);
+      setTimeout(() => setCopiedFormat(false), 1500);
+    };
+
     const deleteRow = (rowIndex: number) => {
       if (table.length <= 1) return;
       updateTable(table.filter((_, i) => i !== rowIndex));
@@ -155,9 +174,29 @@ export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
 
         <div className="flex flex-wrap items-center gap-2">
           {!readOnly ? (
-            <button type="button" onClick={addRow} className={fcTableAddRowBtn}>
-              行を追加
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={addRow}
+                className={fcTableAddRowBtn}
+              >
+                行を追加
+              </button>
+              <button
+                type="button"
+                onClick={handleCopyTable}
+                className={fcTableAddRowBtn}
+              >
+                {copiedTable ? "コピーしました" : "表をコピー"}
+              </button>
+              <button
+                type="button"
+                onClick={handleCopyFormat}
+                className={fcTableAddRowBtn}
+              >
+                {copiedFormat ? "コピーしました" : "列フォーマットをコピー"}
+              </button>
+            </>
           ) : null}
           <span className={fcTableMeta}>
             {table.length} 行 · {colCount} 列
