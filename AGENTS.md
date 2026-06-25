@@ -2,12 +2,12 @@
 
 エージェント向け憲法。**境界 · SSOT · 再開手順**を1か所に集約する（500行未満 · 毎セッション Read 可）。
 
-| 項目                  | 値                                                                            |
-| --------------------- | ----------------------------------------------------------------------------- |
-| **handoffs slug**     | `flowchart-studio`                                                            |
-| **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                          |
-| **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/`   |
-| **更新**              | 2026-06-25（プレビュー上部 chrome 方針合意 · 次: §4 認証/ステータス表列移動） |
+| 項目                  | 値                                                                          |
+| --------------------- | --------------------------------------------------------------------------- |
+| **handoffs slug**     | `flowchart-studio`                                                          |
+| **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
+| **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
+| **更新**              | 2026-06-25（表ペインUX方針合意 · 次: §4 実装）                              |
 
 ---
 
@@ -25,9 +25,9 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_31_preview-vertical-chrome-session-end.md
+@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_34_table-pane-ux-docs-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
-@c:/yk-application/flowchart-studio/docs/02_機能設計/プレビュー上部chrome方針.md
+@c:/yk-application/flowchart-studio/docs/02_機能設計/表ペインUX方針.md
 続きから。§4 の1件だけ。コードの書き換えから。一個ずつ。終わったら止めて報告。
 ```
 
@@ -60,7 +60,7 @@
 | §4           | handoffs 最新                                    | 毎セッション                       |
 | 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）                | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **プレビュー chrome 表列移動**（§4 · 1論点ずつ）
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **表ペイン UX 実装**（§4 · [表ペインUX方針.md](./docs/02_機能設計/表ペインUX方針.md)）
 
 ---
 
