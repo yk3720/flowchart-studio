@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-studio`                                                          |
 | **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-25（`data/devices/` 移行完了 · 次: Web TSV コピー）                 |
+| **更新**              | 2026-06-25（Web TSV コピー 2 ボタン完了 · 次: U0 動作001）                  |
 
 ---
 
@@ -25,7 +25,7 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_29_data-devices-migration-session-end.md
+@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_30_tsv-copy-buttons-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
 続きから。§4 の1件だけ。コードの書き換えから。一個ずつ。終わったら止めて報告。
 ```
@@ -59,7 +59,7 @@
 | §4           | handoffs 最新                                    | 毎セッション                       |
 | 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）                | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **Web TSV コピー 2 ボタン**（§4 · 1論点ずつ）
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **U0 動作001 本文**（§4 · 1論点ずつ）
 
 ---
 
