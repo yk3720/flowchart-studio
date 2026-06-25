@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import { parseCsvPaste } from "@/lib/flowchart/table/parseCsv";
-import { parseExcelBuffer } from "@/lib/flowchart/table/parseExcel";
 import type { FlowTableRow } from "@/lib/flowchart/model/types";
 import {
   fcBtnCompactPrimary,
@@ -51,6 +50,8 @@ export function CsvPastePanel({ onApply }: Props) {
     }
     try {
       const buffer = await file.arrayBuffer();
+      const { parseExcelBuffer } =
+        await import("@/lib/flowchart/table/parseExcel");
       const { table, errors, sheetName } = parseExcelBuffer(buffer);
       if (errors.length > 0) {
         setMessage(errors.join(" / "));

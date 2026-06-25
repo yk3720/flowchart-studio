@@ -21,6 +21,7 @@ import type { FlowTableRow } from "@/lib/flowchart/model/types";
 import { cn } from "@/lib/utils";
 import {
   forwardRef,
+  memo,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -74,8 +75,8 @@ function cellToString(value: unknown): string {
   return String(value);
 }
 
-export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
-  function FlowTableEditor(
+export const FlowTableEditor = memo(
+  forwardRef<FlowTableEditorHandle, Props>(function FlowTableEditor(
     { table, onChange, errorRowIndices, readOnly, tableSchema, csvPane },
     ref
   ) {
@@ -349,5 +350,5 @@ export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
         <FlowTableDockScrollbar dockRef={dockRef} innerRef={innerRef} />
       </div>
     );
-  }
+  })
 );

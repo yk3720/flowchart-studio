@@ -13,6 +13,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import {
   forwardRef,
+  memo,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -209,7 +210,7 @@ function FlowCanvasInner(
   );
 }
 
-const FlowCanvasWithRef = forwardRef(FlowCanvasInner);
+const FlowCanvasWithRef = memo(forwardRef(FlowCanvasInner));
 
 export function FlowCanvas(
   props: FlowCanvasProps & { canvasRef?: React.Ref<FlowCanvasHandle> }

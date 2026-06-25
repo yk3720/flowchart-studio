@@ -1,5 +1,3 @@
-import { toPng } from "html-to-image";
-
 import { shouldIncludeInFlowExport } from "./exportImageFilter";
 
 export async function captureFlowPng(
@@ -11,6 +9,7 @@ export async function captureFlowPng(
   ) as HTMLElement | null;
   const target = viewport ?? element;
 
+  const { toPng } = await import("html-to-image");
   const png = await toPng(target, {
     cacheBust: true,
     pixelRatio: 2,

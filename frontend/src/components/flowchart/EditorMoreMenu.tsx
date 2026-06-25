@@ -38,8 +38,8 @@ type EditorMoreMenuProps = {
   clearDraftDisabled: boolean;
   clearDraftTitle: string;
   pinOffline?: { pinned: boolean; onToggle: () => void };
-  starters: SampleOption[];
-  samples: SampleOption[];
+  starters: readonly SampleOption[];
+  samples: readonly SampleOption[];
   onApplyStarter: (key: string) => void;
   onPreviewSample: (key: string) => void;
   onExportPng: () => void;

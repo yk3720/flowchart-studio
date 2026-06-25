@@ -451,6 +451,42 @@ export function FlowchartWorkspace({
     }
   }, [moduleInfo, pinned]);
 
+  const handleTogglePinClick = useCallback(() => {
+    void handleTogglePin();
+  }, [handleTogglePin]);
+
+  const openFlowResetConfirm = useCallback(() => {
+    setFlowResetConfirmOpen(true);
+  }, []);
+
+  const pinOfflineProps = useMemo(
+    () =>
+      selectedModuleId ? { pinned, onToggle: handleTogglePinClick } : undefined,
+    [selectedModuleId, pinned, handleTogglePinClick]
+  );
+
+  const importBundleProps = useMemo(
+    () =>
+      isEditor
+        ? {
+            disabled: Boolean(authDisabled),
+            disabledTitle: authDisabled
+              ? "クラウド未設定のため取込できません"
+              : undefined,
+            onSelectFile: handleImportBundleFile,
+          }
+        : undefined,
+    [isEditor, authDisabled, handleImportBundleFile]
+  );
+
+  const resetFlowProps = useMemo(
+    () =>
+      isEditor && moduleInfo?.module.canReset
+        ? { onRequestReset: openFlowResetConfirm }
+        : undefined,
+    [isEditor, moduleInfo?.module.canReset, openFlowResetConfirm]
+  );
+
   const contextLabel = moduleInfo
     ? `${moduleInfo.unit.label} · ${moduleInfo.module.label}`
     : undefined;
@@ -517,27 +553,9 @@ export function FlowchartWorkspace({
           readOnly={!isEditor}
           onSnapshotPersist={persistCurrentModule}
           onInvalidatePendingModuleLoad={invalidatePendingModuleLoad}
-          pinOffline={
-            selectedModuleId
-              ? { pinned, onToggle: () => void handleTogglePin() }
-              : undefined
-          }
-          importBundle={
-            isEditor
-              ? {
-                  disabled: Boolean(authDisabled),
-                  disabledTitle: authDisabled
-                    ? "クラウド未設定のため取込できません"
-                    : undefined,
-                  onSelectFile: (file) => void handleImportBundleFile(file),
-                }
-              : undefined
-          }
-          resetFlow={
-            isEditor && moduleInfo?.module.canReset
-              ? { onRequestReset: () => setFlowResetConfirmOpen(true) }
-              : undefined
-          }
+          pinOffline={pinOfflineProps}
+          importBundle={importBundleProps}
+          resetFlow={resetFlowProps}
           moduleLoading={loadingModule && Boolean(selectedModuleId)}
         />
       </div>

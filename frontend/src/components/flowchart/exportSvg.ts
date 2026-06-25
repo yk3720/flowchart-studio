@@ -1,5 +1,3 @@
-import { toSvg } from "html-to-image";
-
 import { shouldIncludeInFlowExport } from "./exportImageFilter";
 
 export async function captureFlowSvg(
@@ -11,6 +9,7 @@ export async function captureFlowSvg(
   ) as HTMLElement | null;
   const target = viewport ?? element;
 
+  const { toSvg } = await import("html-to-image");
   const svg = await toSvg(target, {
     cacheBust: true,
     filter: shouldIncludeInFlowExport,

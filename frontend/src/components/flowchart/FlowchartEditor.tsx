@@ -11,14 +11,7 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import sampleCurry from "@/samples/sample-curry.json";
-import sampleMorning from "@/samples/sample-morning.json";
-import sampleAtm from "@/samples/sample-atm.json";
-import sampleBasic from "@/samples/sample-basic.json";
-import sampleSimpleYes from "@/samples/sample-simple-yes.json";
-import templateLinear from "@/samples/template-linear.json";
-import templateStarter from "@/samples/template-starter.json";
-import sampleM002NineCol from "@/samples/sample-m002-9col.json";
+import { FLOW_SAMPLES } from "@/client/flowSamples";
 import {
   downloadJson,
   normalizeFlowchartDocument,
@@ -50,10 +43,10 @@ import { isModuleContentDirty } from "@/lib/flowchart/model/moduleContentDirty";
 import { cn } from "@/lib/utils";
 import { captureFlowPng } from "./exportPng";
 import { captureFlowSvg } from "./exportSvg";
-import { Home } from "lucide-react";
+import { FlowPreviewPane } from "./FlowPreviewPane";
 import { ConfirmReplaceDialog } from "./ConfirmReplaceDialog";
 import { EditorMoreMenu } from "./EditorMoreMenu";
-import { FlowCanvas, type FlowCanvasHandle } from "./FlowCanvas";
+import { type FlowCanvasHandle } from "./FlowCanvas";
 import {
   FC_WORKSPACE_MAIN_GRID,
   fcBadgeAccent,
@@ -69,16 +62,12 @@ import {
   fcEmptyStateMd,
   fcErrorBanner,
   fcErrorBannerLink,
-  fcLink,
   fcMobileTabActive,
   fcMobileTabGroup,
   fcMobileTabIdle,
   fcPaneHeader,
   fcSectionTitle,
-  fcStaleCallout,
-  fcStaleOverlay,
   fcStaleRing,
-  fcStaleRingInset,
   fcStatusDraftHint,
   fcStatusStaleLabel,
   fcStatusText,
@@ -86,26 +75,13 @@ import {
   fcWarningBannerHint,
   fcWarningBannerLink,
   fcModuleLoadingOverlay,
-  fcPreviewChrome,
   fcTableHelpDetails,
   fcTableHelpSummary,
-  fcZoomBtn,
-  fcZoomPercent,
 } from "./flowchartUiClasses";
-import { FlowColorLegend } from "./FlowColorLegend";
 import { CsvPastePanel } from "./CsvPastePanel";
 import { FlowTableEditor, type FlowTableEditorHandle } from "./FlowTableEditor";
 
-const SAMPLES: Record<string, FlowchartDocument> = {
-  curry: sampleCurry as FlowchartDocument,
-  morning: sampleMorning as FlowchartDocument,
-  atm: sampleAtm as FlowchartDocument,
-  basic: sampleBasic as FlowchartDocument,
-  simpleYes: sampleSimpleYes as FlowchartDocument,
-  templateStarter: templateStarter as FlowchartDocument,
-  templateLinear: templateLinear as FlowchartDocument,
-  m002NineCol: sampleM002NineCol as FlowchartDocument,
-};
+const SAMPLES = FLOW_SAMPLES;
 
 const STARTER_OPTIONS = [
   { key: "templateStarter", label: "雛形: はじめから" },
@@ -196,50 +172,79 @@ const EMPTY_SAMPLE_HINT =
   "または「その他」→「雛形・例」から表と図を表示できます";
 const EMPTY_TABLE_MESSAGE = "Excel から取込むか、表を入力してください";
 
+function rfFromDocument(doc: FlowchartDocument): {
+  nodes: Node<FlowNodeData>[];
+  edges: Edge[];
+} {
+  const result = generateFlowchart(doc.table, doc.layout);
+  if (!result.ok) {
+    return { nodes: [], edges: [] };
+  }
+  return toReactFlow(result.placed, result.edges);
+}
+
 function resolveInitialState(props: FlowchartEditorProps): {
   doc: FlowchartDocument;
   jsonText: string;
   committedJson: string;
   nodes: Node<FlowNodeData>[];
   edges: Edge[];
+  initialStatus?: string;
 } {
   const snap = props.initialSnapshot;
   if (snap) {
     const raw = snap.committedJson || snap.jsonText;
-    const { doc: parsed } = parseFlowchartDocument(raw);
-    const doc = normalizeFlowchartDocument(
-      parsed ?? (SAMPLES.templateStarter as FlowchartDocument)
-    );
-    const text = serializeDocument(doc);
+    const { doc: parsed, errors } = parseFlowchartDocument(raw);
+    if (errors.length > 0 || !parsed) {
+      const fallback = SAMPLES.templateStarter;
+      const text = serializeDocument(fallback);
+      const rf =
+        snap.nodes.length > 0
+          ? { nodes: snap.nodes, edges: snap.edges }
+          : rfFromDocument(fallback);
+      return {
+        doc: fallback,
+        jsonText: snap.jsonText || text,
+        committedJson: snap.committedJson || text,
+        nodes: rf.nodes,
+        edges: rf.edges,
+        initialStatus: `保存データの形式エラー — ${errors.join(" / ") || "雛形を表示しています"}`,
+      };
+    }
+    const doc = normalizeFlowchartDocument(parsed);
+    const rf =
+      snap.nodes.length > 0
+        ? { nodes: snap.nodes, edges: snap.edges }
+        : rfFromDocument(doc);
     return {
       doc,
-      jsonText: text,
-      committedJson: text,
-      nodes: [],
-      edges: [],
+      jsonText: snap.jsonText,
+      committedJson: snap.committedJson,
+      nodes: rf.nodes,
+      edges: rf.edges,
     };
   }
   if (props.workspaceMode && props.moduleId) {
-    const starter = normalizeFlowchartDocument(
-      SAMPLES.templateStarter as FlowchartDocument
-    );
+    const starter = SAMPLES.templateStarter;
     const text = serializeDocument(starter);
+    const rf = rfFromDocument(starter);
     return {
       doc: starter,
       jsonText: text,
       committedJson: "",
-      nodes: [],
-      edges: [],
+      nodes: rf.nodes,
+      edges: rf.edges,
     };
   }
-  const basic = normalizeFlowchartDocument(SAMPLES.curry as FlowchartDocument);
+  const basic = SAMPLES.curry;
   const text = serializeDocument(basic);
+  const rf = rfFromDocument(basic);
   return {
     doc: basic,
     jsonText: text,
     committedJson: text,
-    nodes: [],
-    edges: [],
+    nodes: rf.nodes,
+    edges: rf.edges,
   };
 }
 
@@ -294,12 +299,12 @@ export const FlowchartEditor = forwardRef<
   const [nodes, setNodes] = useState<Node<FlowNodeData>[]>(initial.nodes);
   const [edges, setEdges] = useState<Edge[]>(initial.edges);
   const [status, setStatus] = useState(
-    workspaceMode && moduleId && !initialSnapshot
-      ? "表を入力するかサンプルを読み込んでください"
-      : "準備完了"
+    initial.initialStatus ??
+      (workspaceMode && moduleId && !initialSnapshot
+        ? "表を入力するかサンプルを読み込んでください"
+        : "準備完了")
   );
   const [samplePreviewActive, setSamplePreviewActive] = useState(false);
-  const [zoomPercent, setZoomPercent] = useState(100);
   const canvasRef = useRef<FlowCanvasHandle>(null);
   const tableEditorRef = useRef<FlowTableEditorHandle>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -422,9 +427,6 @@ export const FlowchartEditor = forwardRef<
     if (workspaceMode) {
       if (moduleId && initialSnapshot && !skipSnapshotHydrationRef.current) {
         refreshWarnings(initial.doc.table);
-        if (initial.jsonText) {
-          runGenerate(initial.jsonText, { persist: false });
-        }
       }
       return;
     }
@@ -437,10 +439,8 @@ export const FlowchartEditor = forwardRef<
         refreshWarnings(parsed.table);
         runGenerate(draft);
         setStatus("下書きを復元しました");
-        return;
       }
     }
-    runGenerate(serializeDocument(SAMPLES.curry));
   }, [
     runGenerate,
     refreshWarnings,
@@ -634,18 +634,21 @@ export const FlowchartEditor = forwardRef<
     executeImportText,
   ]);
 
-  const handleTableChange = (table: FlowchartDocument["table"]) => {
-    if (readOnly) return;
-    userTouchedRef.current = true;
-    notifyUserContentOverride();
-    const next: FlowchartDocument = {
-      ...doc,
-      table,
-      createdAt: new Date().toISOString(),
-    };
-    syncJsonFromDoc(next);
-    refreshWarnings(table);
-  };
+  const handleTableChange = useCallback(
+    (table: FlowchartDocument["table"]) => {
+      if (readOnly) return;
+      userTouchedRef.current = true;
+      notifyUserContentOverride();
+      const next: FlowchartDocument = {
+        ...doc,
+        table,
+        createdAt: new Date().toISOString(),
+      };
+      syncJsonFromDoc(next);
+      refreshWarnings(table);
+    },
+    [readOnly, notifyUserContentOverride, doc, syncJsonFromDoc, refreshWarnings]
+  );
 
   const handleCsvApply = (table: FlowchartDocument["table"]) => {
     if (readOnly) return;
@@ -846,8 +849,8 @@ export const FlowchartEditor = forwardRef<
             : "ブラウザに保存した下書きを削除"
         }
         pinOffline={pinOffline}
-        starters={[...STARTER_OPTIONS]}
-        samples={[...DEMO_SAMPLE_OPTIONS]}
+        starters={STARTER_OPTIONS}
+        samples={DEMO_SAMPLE_OPTIONS}
         onApplyStarter={handleApplyStarter}
         onPreviewSample={handlePreviewSample}
         onExportPng={() => void handleExportPng()}
@@ -1030,6 +1033,10 @@ export const FlowchartEditor = forwardRef<
     </>
   );
 
+  const triggerRegenerateFromOverlay = useCallback(() => {
+    headerRegenerateRef.current?.click();
+  }, []);
+
   const renderPreviewCanvas = (fullBleed: boolean) => {
     if (!showEditorPanes) {
       return (
@@ -1044,83 +1051,15 @@ export const FlowchartEditor = forwardRef<
     }
     if (hasPreview) {
       return (
-        <div
-          className={
-            fullBleed
-              ? "flex min-h-0 flex-1 flex-col lg:min-h-0"
-              : "flex flex-1 flex-col"
-          }
-        >
-          {/* プレビュー chrome 帯: 凡例 + ズームボタン */}
-          <div className={fcPreviewChrome}>
-            {showColorLegend ? <FlowColorLegend /> : <span />}
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                aria-label="縮小"
-                className={fcZoomBtn}
-                onClick={() => canvasRef.current?.zoomOut()}
-              >
-                −
-              </button>
-              <span
-                className={fcZoomPercent}
-                aria-live="polite"
-                data-testid="flow-zoom-percent"
-              >
-                {zoomPercent}%
-              </span>
-              <button
-                type="button"
-                aria-label="拡大"
-                className={fcZoomBtn}
-                onClick={() => canvasRef.current?.zoomIn()}
-              >
-                +
-              </button>
-              <button
-                type="button"
-                aria-label="ホーム位置に戻す"
-                className={fcZoomBtn}
-                data-testid="flow-zoom-home"
-                onClick={() => canvasRef.current?.fitView()}
-              >
-                <Home className="size-4" aria-hidden />
-              </button>
-            </div>
-          </div>
-          {/* キャンバス本体 */}
-          <div
-            className={cn(
-              "relative flex-1",
-              fullBleed ? "min-h-[280px] lg:min-h-0" : "min-h-[420px]",
-              isStale && (fullBleed ? fcStaleRingInset : fcStaleRing)
-            )}
-          >
-            <FlowCanvas
-              canvasRef={canvasRef}
-              nodes={nodes}
-              edges={edges}
-              fillContainer={fullBleed}
-              onViewportZoomChange={setZoomPercent}
-            />
-            {isStale && (
-              <div className={fcStaleOverlay}>
-                <p className={fcStaleCallout}>
-                  入力が変更されています。{" "}
-                  <button
-                    type="button"
-                    onClick={() => headerRegenerateRef.current?.click()}
-                    className={fcLink}
-                  >
-                    再生成
-                  </button>
-                  でプレビューを更新してください。
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
+        <FlowPreviewPane
+          canvasRef={canvasRef}
+          nodes={nodes}
+          edges={edges}
+          isStale={isStale}
+          fullBleed={fullBleed}
+          showColorLegend={showColorLegend}
+          onRegenerate={triggerRegenerateFromOverlay}
+        />
       );
     }
     return (

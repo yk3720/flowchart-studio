@@ -52,6 +52,23 @@ export function useTableColumnSizing(colCount: number, tableSchema?: string) {
     startWidth: number;
   } | null>(null);
 
+  const dragListenersRef = useRef<{
+    onMouseMove: (ev: MouseEvent) => void;
+    onMouseUp: () => void;
+  } | null>(null);
+
+  useEffect(() => {
+    return () => {
+      const listeners = dragListenersRef.current;
+      if (!listeners) return;
+      document.removeEventListener("mousemove", listeners.onMouseMove);
+      document.removeEventListener("mouseup", listeners.onMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+      dragRef.current = null;
+    };
+  }, []);
+
   const startResize = useCallback((colIdx: number, e: React.MouseEvent) => {
     e.preventDefault();
     dragRef.current = {
@@ -76,12 +93,14 @@ export function useTableColumnSizing(colCount: number, tableSchema?: string) {
 
     const onMouseUp = () => {
       dragRef.current = null;
+      dragListenersRef.current = null;
       document.body.style.cursor = "";
       document.body.style.userSelect = "";
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
     };
 
+    dragListenersRef.current = { onMouseMove, onMouseUp };
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
   }, []);
