@@ -94,7 +94,9 @@ def test_a0001_master_normalizes(a0001_master_xlsx: Path) -> None:
         for f in bundle["flows"]
         if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作001"
     )
-    assert flow001["payload"]["table"][1][7] == "供給実行"  # v2: Text1=index7
+    assert len(flow001["payload"]["table"]) == 4
+    assert flow001["payload"]["table"][1][9] == "P01_下降"  # v2: Text3=index9
+    assert flow001["payload"]["table"][2][9] == "P02_SUS取出"
 
 
 def test_a0001_v03_builds_in_memory(tmp_path: Path) -> None:
@@ -113,7 +115,8 @@ def test_a0001_v03_builds_in_memory(tmp_path: Path) -> None:
         for f in bundle["flows"]
         if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作001"
     )
-    assert flow001["payload"]["table"][1][7] == "供給実行"  # v2: Text1=index7
+    assert len(flow001["payload"]["table"]) == 4
+    assert flow001["payload"]["table"][1][8] == "RC008_供給ﾏｶﾞｼﾞﾝz"  # v2: Text2=index8
 
     wb = load_workbook(path, data_only=False)
     ws = wb["構成"]

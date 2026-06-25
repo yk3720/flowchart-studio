@@ -30,14 +30,47 @@ def module_id(uin_id: int, index: int) -> int:
     return uin_id * 100 + index
 
 
-# U0 手書き済み Text1（動作002〜はモジュール名プレースホルダ）
+# U0 手書き済み（動作002〜はモジュール名プレースホルダ）
 FLOW_TEXT_OVERRIDES: dict[str, str] = {
     "動作000": "ワーク取出",
-    "動作001": "供給実行",
+}
+
+# 動作001 ≡ 供給部 M001（作者 Excel 正本 · v2 列順）
+FLOW_ROWS_OVERRIDES: dict[str, list[list[str]]] = {
+    "動作001": [
+        [
+            "1",
+            "端子",
+            "",
+            "2",
+            "",
+            "1",
+            "0",
+            "MR41500",
+            "供給ﾏｶﾞｼﾞﾝ_SUS板取出位置_開始",
+            "",
+        ],
+        ["2", "処理", "", "3", "", "2", "0", "MR41600", "RC008_供給ﾏｶﾞｼﾞﾝz", "P01_下降"],
+        [
+            "3",
+            "処理",
+            "",
+            "4",
+            "",
+            "3",
+            "0",
+            "MR41602",
+            "RC001_供給ﾏｶﾞｼﾞﾝy",
+            "P02_SUS取出",
+        ],
+        ["4", "端子", "", "", "", "", "", "MR41501", "供給ﾏｶﾞｼﾞﾝ_SUS板取出位置_終了", ""],
+    ],
 }
 
 
 def flow_rows_for_module(module_name: str) -> list[list[str]]:
+    if module_name in FLOW_ROWS_OVERRIDES:
+        return FLOW_ROWS_OVERRIDES[module_name]
     middle = FLOW_TEXT_OVERRIDES.get(module_name, module_name)
     return [
         ["10", "端子", "", "20", "", "1", "0", "開始", "", ""],

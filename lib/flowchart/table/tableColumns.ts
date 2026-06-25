@@ -265,7 +265,7 @@ export function getColumnCount(table: FlowTableRow[], schema?: string): number {
 
 export function getHeaders(colCount: number, schema?: string): string[] {
   if (colCount >= TEN_COL_WIDTH || usesTenColumnSchema(schema)) {
-    const base = isTenColV2Schema(schema)
+    const base: string[] = isTenColV2Schema(schema)
       ? [...TABLE_HEADERS_10_V2]
       : [...TABLE_HEADERS_10];
     while (base.length < colCount) base.push(`列${base.length + 1}`);

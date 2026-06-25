@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-studio`                                                          |
 | **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-25（プレビュー chrome 完了 · 次: U0 動作001）                       |
+| **更新**              | 2026-06-25（U0 動作001 完了 · 次: ADR-016 PR-B）                            |
 
 ---
 
@@ -25,10 +25,9 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_36_preview-chrome-vertical-session-end.md
+@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_41_u0-action001-body-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
-@c:/yk-application/flowchart-studio/data/devices/README.md
-続きから。§4 の1件だけ。U0 動作001 の表示確認から。一個ずつ。終わったら止めて報告。
+続きから。§4 の1件だけ。ADR-016 PR-B から。一個ずつ。終わったら止めて報告。
 ```
 
 > セッション MD が更新されたら、2行目を HANDOFF の「最新セッション」に差し替える。
@@ -60,7 +59,7 @@
 | §4           | handoffs 最新                                    | 毎セッション                       |
 | 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）                | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **U0 動作001 表示確認 · 作者文言**（§4 · [data/devices/README.md](./data/devices/README.md)）
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **ADR-016 PR-B**（3ペインリサイズ · ナビ左揃え · §4）
 
 ---
 
