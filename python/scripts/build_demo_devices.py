@@ -12,10 +12,8 @@ from excel_normalize.device_workbook import (
     UnitSpec,
     build_device_workbook,
 )
+from excel_normalize.devices_root import DEVICES_DIR
 from excel_normalize.normalize import normalize_workbook
-
-ROOT = Path(__file__).resolve().parents[1]
-DEVICES_DIR = ROOT / "testdata" / "devices"
 
 DEMO_DEVICES: tuple[DeviceSpec, ...] = (
     DeviceSpec(

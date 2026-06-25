@@ -16,9 +16,10 @@ import { join, resolve } from "node:path";
 import { parseImportBundleJson } from "@/lib/flowchart/import/importBundleSchema";
 import { prepareImportBundleForRpc } from "@/lib/flowchart/import/prepareImportBundle";
 import type { RpcImportBundle } from "@/lib/flowchart/import/importBundleSchema";
+import { DEVICES_ROOT } from "@/lib/paths/devicesRoot";
 
 const ROOT = resolve(import.meta.dirname, "../../..");
-const DEVICES_DIR = join(ROOT, "python/testdata/devices");
+const DEVICES_DIR = DEVICES_ROOT;
 const FN_SQL = join(ROOT, "database/sql/seed/seed_equipment_bundle_fn.sql");
 const GENERATED_SQL = join(ROOT, "database/sql/seed/seed_device_run.sql");
 

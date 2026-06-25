@@ -15,7 +15,7 @@ const IMPORT_FIXTURE = path.join(
 
 const A0001_IMPORT = path.join(
   process.cwd(),
-  "python/testdata/devices/A0001_塗布装置/import.json"
+  "data/devices/A0001_塗布装置/import.json"
 );
 
 test.describe("import.json 装置一括取込", () => {

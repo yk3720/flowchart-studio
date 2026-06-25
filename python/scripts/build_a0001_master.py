@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 from excel_normalize.a0001_v03 import build_a0001_v03_workbook
 from excel_normalize.device_paths import device_workbook_path
+from excel_normalize.devices_root import DEVICES_DIR
 from excel_normalize.normalize import normalize_workbook
 
-ROOT = Path(__file__).resolve().parents[1]
-DEVICE_DIR = ROOT / "testdata" / "devices" / "A0001_塗布装置"
+DEVICE_DIR = DEVICES_DIR / "A0001_塗布装置"
 IMPORT_JSON = DEVICE_DIR / "import.json"
 
 

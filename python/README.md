@@ -6,20 +6,19 @@
 
 ## 作者 Excel の置き場所
 
-**決定:** 2026-06-25 — 装置ごとの手書き xlsx · import.json は **`data/devices/`**（Python 層外）。**移行前**は `python/testdata/devices/` を参照。
+**決定:** 2026-06-25 — 装置ごとの手書き xlsx · import.json は **`data/devices/`**（Python 層外）。
 
 **Git（2026-06-21）:** 作者用 **`.xlsx` / `.xls` はコミットしない**（`.gitignore`）。リポジトリに載せるのは **`import.json`** と Python コード。テンプレ・pytest 用 xlsx は `npm run excel:template` / `excel:fixture` でローカルまたは CI 生成。
 
-| 種別                     | パス（リポジトリルートから）                                                    |
-| ------------------------ | ------------------------------------------------------------------------------- |
-| **装置ルート（正）**     | `data/devices/{社内番号}_{装置名}/`                                             |
-| **装置ルート（移行前）** | `python/testdata/devices/{社内番号}_{装置名}/`                                  |
-| **装置一式の正本**       | 上記 / `{社内番号}_{装置名}.xlsx`（フォルダ名と同名）                           |
-| **正規化出力**           | 上記 / `import.json`                                                            |
-| **1 動作の試行**         | 上記 / `_scratch/{動作名}.xlsx`（1 シート · 10 列 · Web 表タブの Excel 取込用） |
-| **旧版退避**             | 上記 / `archive/`                                                               |
-| **空テンプレ**           | `python/templates/入力用テンプレ_v0.2.xlsx`（v0.2 小規模用 · 生成 · Git 外）    |
-| **共有フィクスチャ**     | `python/testdata/fixtures/`（Z00001 等 · import.json · 生成 xlsx）              |
+| 種別                 | パス（リポジトリルートから）                                                    |
+| -------------------- | ------------------------------------------------------------------------------- |
+| **装置ルート**       | `data/devices/{社内番号}_{装置名}/`                                             |
+| **装置一式の正本**   | 上記 / `{社内番号}_{装置名}.xlsx`（フォルダ名と同名）                           |
+| **正規化出力**       | 上記 / `import.json`                                                            |
+| **1 動作の試行**     | 上記 / `_scratch/{動作名}.xlsx`（1 シート · 10 列 · Web 表タブの Excel 取込用） |
+| **旧版退避**         | 上記 / `archive/`                                                               |
+| **空テンプレ**       | `python/templates/入力用テンプレ_v0.2.xlsx`（v0.2 小規模用 · 生成 · Git 外）    |
+| **共有フィクスチャ** | `python/testdata/fixtures/`（Z00001 等 · import.json · 生成 xlsx）              |
 
 ### v0.3（大規模装置 · A0001 で採用）
 
@@ -38,7 +37,7 @@
 
 > **移行期:** 旧名 `マスター.xlsx` も `normalize_device.py` / pytest が読み取れます。新規作成・全再生成は `{フォルダ名}.xlsx` のみ。
 
-**現在の実装置（手書き作業）:** `A0001_塗布装置/` — 一覧は [`data/devices/README.md`](../data/devices/README.md)（移行前は [`testdata/devices/README.md`](testdata/devices/README.md)）
+**現在の実装置（手書き作業）:** `A0001_塗布装置/` — 一覧は [`data/devices/README.md`](../data/devices/README.md)
 
 ```text
 c:/yk-application/flowchart-studio/data/devices/A0001_塗布装置/   ← 移行先
@@ -93,7 +92,7 @@ python scripts/scaffold_device.py Z00002 プレス機D --import-json
 # または: npm run excel:new-device -- Z00002 プレス機D
 ```
 
-`testdata/devices/Z00002_プレス機D/Z00002_プレス機D.xlsx` と `archive/` ができます。
+`data/devices/Z00002_プレス機D/Z00002_プレス機D.xlsx` と `archive/` ができます。
 
 ## 作者向けテンプレ v0.1（旧 · 供給 + 収納）
 

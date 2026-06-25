@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from openpyxl import Workbook
 
 from excel_normalize.constants import FLOW_HEADERS
+from excel_normalize.devices_root import DEVICES_DIR
 
-ROOT = Path(__file__).resolve().parents[1]
-DEVICE_DIR = ROOT / "testdata" / "devices" / "A0001_塗布装置"
+DEVICE_DIR = DEVICES_DIR / "A0001_塗布装置"
 SCRATCH_DIR = DEVICE_DIR / "_scratch"
 
 # import.json「供給ユニット / 取出」と同一（table-10col-v1）

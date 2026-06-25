@@ -61,12 +61,11 @@ Supabase → 左ナビ + フロー表
 
 **作者データの置き場（パス SSOT · 2026-06-25）**
 
-| 項目                     | 内容                                                                                                |
-| ------------------------ | --------------------------------------------------------------------------------------------------- |
-| **正（移行先）**         | `c:/yk-application/flowchart-studio/data/devices/{社内番号}_{装置名}/`                              |
-| **移行前（現行コード）** | `python/testdata/devices/` — **次セッションで移行**                                                 |
-| **一覧 README**          | [`data/devices/README.md`](c:/yk-application/flowchart-studio/data/devices/README.md)               |
-| **grill-me 記録**        | [`grill-me_2026-06-25_作者データ置き場.md`](../01_要求定義/grill-me_2026-06-25_作者データ置き場.md) |
+| 項目              | 内容                                                                                                |
+| ----------------- | --------------------------------------------------------------------------------------------------- |
+| **正**            | `c:/yk-application/flowchart-studio/data/devices/{社内番号}_{装置名}/`                              |
+| **一覧 README**   | [`data/devices/README.md`](c:/yk-application/flowchart-studio/data/devices/README.md)               |
+| **grill-me 記録** | [`grill-me_2026-06-25_作者データ置き場.md`](../01_要求定義/grill-me_2026-06-25_作者データ置き場.md) |
 
 **フォルダ内ルール**
 

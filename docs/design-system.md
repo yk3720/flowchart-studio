@@ -180,7 +180,7 @@ WCAG 2.2 は最小フォント px を規定しない（[SC 1.4.4 200% 拡大](ht
 | [LOCAL_DEV.md](./LOCAL_DEV.md)                                                          | ローカル確認                               |
 | [flowchart-practical-ux-yk.mdc](../.cursor/rules/flowchart-practical-ux-yk.mdc)         | エージェント L0                            |
 | [USABILITY_HEURISTICS_RULES.md](c:/yk-skill/rule/10_meta/USABILITY_HEURISTICS_RULES.md) | ニールセン10原則 · UI/UX レビュー（No 20） |
-| [testdata/devices/README.md](../python/testdata/devices/README.md)                      | 作者 Excel 置き場                          |
+| [data/devices/README.md](../data/devices/README.md)                                     | 作者 Excel 置き場                          |
 
 ---
 

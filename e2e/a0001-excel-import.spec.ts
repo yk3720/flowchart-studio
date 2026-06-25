@@ -6,7 +6,7 @@ import { headerRegenerate, openPreviewWithSample } from "./helpers/flowchart";
 
 const A0001_SCRATCH_XLSX = path.join(
   process.cwd(),
-  "python/testdata/devices/A0001_塗布装置/_scratch/取出.xlsx"
+  "data/devices/A0001_塗布装置/_scratch/取出.xlsx"
 );
 
 function excelFileInput(page: import("@playwright/test").Page) {
