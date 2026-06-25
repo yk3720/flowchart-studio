@@ -470,11 +470,17 @@ export const fcColorLegendFloating = cn(
   "pointer-events-none absolute bottom-2 left-2 z-10"
 );
 
-/* ── プレビュー列 chrome（凡例・ズームボタン帯） ── */
+/* ── プレビュー列 chrome（凡例・ズームボタン帯 — スタンドアロン専用） ── */
 
 export const fcPreviewChrome = cn(
   fcBorderB,
   "flex shrink-0 items-center justify-between gap-2 px-3 py-1.5"
+);
+
+/** ワークスペース用ズームオーバーレイ: キャンバス右上 absolute */
+export const fcZoomOverlay = cn(
+  "pointer-events-none absolute top-2 right-2 z-10",
+  "flex items-center gap-1 rounded-md border border-flow-border bg-flow-surface/85 px-1.5 py-1 shadow-sm"
 );
 
 export const fcZoomBtn = cn(

@@ -16,6 +16,7 @@ import {
   fcStaleRing,
   fcStaleRingInset,
   fcZoomBtn,
+  fcZoomOverlay,
   fcZoomPercent,
 } from "./flowchartUiClasses";
 
@@ -50,43 +51,45 @@ export const FlowPreviewPane = memo(function FlowPreviewPane({
           : "flex flex-1 flex-col"
       }
     >
-      <div className={fcPreviewChrome}>
-        {showColorLegend ? <FlowColorLegend /> : <span />}
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            aria-label="縮小"
-            className={fcZoomBtn}
-            onClick={() => canvasRef.current?.zoomOut()}
-          >
-            −
-          </button>
-          <span
-            className={fcZoomPercent}
-            aria-live="polite"
-            data-testid="flow-zoom-percent"
-          >
-            {zoomPercent}%
-          </span>
-          <button
-            type="button"
-            aria-label="拡大"
-            className={fcZoomBtn}
-            onClick={() => canvasRef.current?.zoomIn()}
-          >
-            +
-          </button>
-          <button
-            type="button"
-            aria-label="ホーム位置に戻す"
-            className={fcZoomBtn}
-            data-testid="flow-zoom-home"
-            onClick={() => canvasRef.current?.fitView()}
-          >
-            <Home className="size-4" aria-hidden />
-          </button>
+      {!fullBleed && (
+        <div className={fcPreviewChrome}>
+          {showColorLegend ? <FlowColorLegend /> : <span />}
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              aria-label="縮小"
+              className={fcZoomBtn}
+              onClick={() => canvasRef.current?.zoomOut()}
+            >
+              −
+            </button>
+            <span
+              className={fcZoomPercent}
+              aria-live="polite"
+              data-testid="flow-zoom-percent"
+            >
+              {zoomPercent}%
+            </span>
+            <button
+              type="button"
+              aria-label="拡大"
+              className={fcZoomBtn}
+              onClick={() => canvasRef.current?.zoomIn()}
+            >
+              +
+            </button>
+            <button
+              type="button"
+              aria-label="ホーム位置に戻す"
+              className={fcZoomBtn}
+              data-testid="flow-zoom-home"
+              onClick={() => canvasRef.current?.fitView()}
+            >
+              <Home className="size-4" aria-hidden />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
       <div
         className={cn(
           "relative flex-1",
@@ -116,6 +119,42 @@ export const FlowPreviewPane = memo(function FlowPreviewPane({
             </p>
           </div>
         ) : null}
+        {fullBleed && (
+          <div className={fcZoomOverlay}>
+            <button
+              type="button"
+              aria-label="縮小"
+              className={cn(fcZoomBtn, "pointer-events-auto")}
+              onClick={() => canvasRef.current?.zoomOut()}
+            >
+              −
+            </button>
+            <span
+              className={fcZoomPercent}
+              aria-live="polite"
+              data-testid="flow-zoom-percent"
+            >
+              {zoomPercent}%
+            </span>
+            <button
+              type="button"
+              aria-label="拡大"
+              className={cn(fcZoomBtn, "pointer-events-auto")}
+              onClick={() => canvasRef.current?.zoomIn()}
+            >
+              +
+            </button>
+            <button
+              type="button"
+              aria-label="ホーム位置に戻す"
+              className={cn(fcZoomBtn, "pointer-events-auto")}
+              data-testid="flow-zoom-home"
+              onClick={() => canvasRef.current?.fitView()}
+            >
+              <Home className="size-4" aria-hidden />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

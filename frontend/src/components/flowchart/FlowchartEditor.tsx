@@ -161,6 +161,8 @@ export type FlowchartEditorProps = {
   };
   /** ワークスペース: モジュール読込中は表・プレビューを覆う */
   moduleLoading?: boolean;
+  /** 表列の最上部に挿入するスロット（認証バー・ステータスバナー） */
+  tableTopSlot?: React.ReactNode;
 };
 
 const EMPTY_MODULE_MESSAGE = "モジュールを選択してください";
@@ -264,6 +266,7 @@ export const FlowchartEditor = forwardRef<
     importBundle,
     resetFlow,
     moduleLoading = false,
+    tableTopSlot,
   } = props;
 
   const skipSnapshotHydrationRef = useRef(false);
@@ -1057,7 +1060,7 @@ export const FlowchartEditor = forwardRef<
           edges={edges}
           isStale={isStale}
           fullBleed={fullBleed}
-          showColorLegend={showColorLegend}
+          showColorLegend={!workspaceMode && showColorLegend}
           onRegenerate={triggerRegenerateFromOverlay}
         />
       );
@@ -1104,6 +1107,7 @@ export const FlowchartEditor = forwardRef<
               flex: paneView !== "canvas",
             })}
           >
+            {tableTopSlot}
             <header className={fcPaneHeader}>
               <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
                 <div className="flex min-w-0 flex-col gap-0.5">

@@ -508,8 +508,8 @@ export function FlowchartWorkspace({
     return <div className={fcWorkspaceLoading}>装置データがありません</div>;
   }
 
-  return (
-    <div className={fcWorkspaceShell}>
+  const tableTopSlot = (
+    <>
       <AppAuthBar email={email} role={role} showDevBanner={authDisabled} />
       {statusBanner ? (
         <p
@@ -519,6 +519,11 @@ export function FlowchartWorkspace({
           {statusBanner}
         </p>
       ) : null}
+    </>
+  );
+
+  return (
+    <div className={fcWorkspaceShell}>
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
         <ModuleNavPane
           devices={visibleDevices}
@@ -557,6 +562,7 @@ export function FlowchartWorkspace({
           importBundle={importBundleProps}
           resetFlow={resetFlowProps}
           moduleLoading={loadingModule && Boolean(selectedModuleId)}
+          tableTopSlot={tableTopSlot}
         />
       </div>
 
