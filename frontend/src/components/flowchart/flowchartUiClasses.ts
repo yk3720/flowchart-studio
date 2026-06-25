@@ -263,11 +263,11 @@ export const fcNavToggleAllBtn = cn(
 );
 
 export const fcNavAside = cn(
-  "flex w-full shrink-0 flex-col border-r border-flow-border bg-flow-surface-muted lg:w-[min(20%,240px)] lg:min-w-[180px]"
+  "flex h-full min-h-0 w-full flex-col bg-flow-surface-muted"
 );
 
 export const fcNavAsideCollapsed = cn(
-  "flex w-12 shrink-0 flex-col items-center border-r border-flow-border bg-flow-surface-muted py-3"
+  "flex h-full min-h-0 w-full flex-col items-center bg-flow-surface-muted py-3"
 );
 
 export const fcNavHeader = cn(

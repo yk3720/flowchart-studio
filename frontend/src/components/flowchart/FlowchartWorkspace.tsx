@@ -7,6 +7,7 @@ import {
   Panel,
   Separator,
   useDefaultLayout,
+  useGroupRef,
   usePanelRef,
 } from "react-resizable-panels";
 
@@ -47,6 +48,11 @@ import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { FlowAlertDialog } from "./FlowAlertDialog";
 import { FlowchartEditor, type FlowchartEditorHandle } from "./FlowchartEditor";
 import { ModuleNavPane } from "./ModuleNavPane";
+import {
+  resetWorkspacePaneLayouts,
+  WORKSPACE_OUTER_LAYOUT_ID,
+  getWorkspaceLayoutStorage,
+} from "./workspacePaneLayout";
 import {
   fcDialogBody,
   fcPaneResizeHandle,
@@ -121,9 +127,16 @@ export function FlowchartWorkspace({
 
   const isDesktop = useIsDesktop();
   const navPanelRef = usePanelRef();
+  const outerGroupRef = useGroupRef();
+  const innerGroupRef = useGroupRef();
   const outerLayout = useDefaultLayout({
-    id: "flowchart-studio:workspace-outer-v1",
+    id: WORKSPACE_OUTER_LAYOUT_ID,
+    storage: getWorkspaceLayoutStorage(),
   });
+
+  const handleResetPaneWidths = useCallback(() => {
+    resetWorkspacePaneLayouts(outerGroupRef.current, innerGroupRef.current);
+  }, [outerGroupRef, innerGroupRef]);
 
   const isEditor = canEditFlowchart(role);
   const isOffline = typeof navigator !== "undefined" && !navigator.onLine;
@@ -600,6 +613,7 @@ export function FlowchartWorkspace({
           id="workspace-outer"
           orientation="horizontal"
           className="min-h-0 flex-1"
+          groupRef={outerGroupRef}
           defaultLayout={outerLayout.defaultLayout}
           onLayoutChanged={outerLayout.onLayoutChanged}
         >
@@ -631,6 +645,8 @@ export function FlowchartWorkspace({
               ref={editorRef}
               {...editorProps}
               isDesktop
+              innerGroupRef={innerGroupRef}
+              onResetPaneWidths={handleResetPaneWidths}
             />
           </Panel>
         </Group>

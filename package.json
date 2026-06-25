@@ -16,6 +16,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test e2e --reporter=line",
     "test:e2e:labels": "playwright test e2e/edge-label-placement.spec.ts --reporter=line",
+    "test:e2e:ux": "playwright test e2e/table-pane-ux.spec.ts e2e/workspace-pane-resize.spec.ts --reporter=line",
     "excel:template": "python python/scripts/build_template.py",
     "excel:new-device": "python python/scripts/scaffold_device.py",
     "excel:fixture": "python python/scripts/build_fixture.py",

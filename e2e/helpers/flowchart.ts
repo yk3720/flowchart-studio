@@ -13,7 +13,18 @@ export function moduleNavButton(page: Page, label: string) {
     .getByRole("button", { name: label, exact: true });
 }
 
+/** ユニット折りたたみ時は動作ボタンが DOM に出ない — 未展開なら一括展開 */
+export async function ensureUnitsExpanded(page: Page) {
+  const toggleAll = page.getByTestId("toggle-all-units");
+  if (!(await toggleAll.isVisible())) return;
+  const label = await toggleAll.getAttribute("aria-label");
+  if (label?.includes("すべてのユニットを展開")) {
+    await toggleAll.click();
+  }
+}
+
 export async function selectModule(page: Page, label: string) {
+  await ensureUnitsExpanded(page);
   await moduleNavButton(page, label).click();
 }
 

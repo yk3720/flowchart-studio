@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-studio`                                                          |
 | **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-25（UX改善パック §D 合意 · 次: 実装）                               |
+| **更新**              | 2026-06-25（UX改善パック §D〜§E 実装済）                                    |
 
 ---
 
@@ -25,9 +25,9 @@
 
 ```text
 @c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_44_ux-improvement-pack-docs-session-end.md
+@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_45_ux-improvement-pack-impl-session-end.md
 @c:/yk-application/flowchart-studio/AGENTS.md
-続きから。§4 の UX改善パック実装だけ。一つずつ順番に進めてください。
+続きから。§4 の A0001 供給部 M004〜 Web 目視だけ。一つずつ順番に進めてください。
 ```
 
 > セッション MD が更新されたら、2行目を HANDOFF の「最新セッション」に差し替える。
@@ -61,7 +61,7 @@
 | §4           | handoffs 最新                                    | 毎セッション                       |
 | 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）                | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **UX改善パック**（表縦優先 · 警告 details · T4 ペイン幅 · ナビ余白 · 比率 v2 · [表ペインUX方針 §D](docs/02_機能設計/表ペインUX方針.md)）
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **A0001 供給部 M004〜 Web 目視**（HANDOFF #14）
 
 ---
 

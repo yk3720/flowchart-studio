@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
+  type RefObject,
 } from "react";
 import { FLOW_SAMPLES } from "@/client/flowSamples";
 import {
@@ -46,6 +47,7 @@ import {
   Panel,
   Separator,
   useDefaultLayout,
+  type GroupImperativeHandle,
 } from "react-resizable-panels";
 import { captureFlowPng } from "./exportPng";
 import { captureFlowSvg } from "./exportSvg";
@@ -79,7 +81,6 @@ import {
   fcStatusDraftHint,
   fcStatusStaleLabel,
   fcStatusText,
-  fcWarningBanner,
   fcWarningBannerHint,
   fcWarningBannerLink,
   fcModuleLoadingOverlay,
@@ -88,6 +89,10 @@ import {
 } from "./flowchartUiClasses";
 import { CsvPastePanel } from "./CsvPastePanel";
 import { FlowTableEditor, type FlowTableEditorHandle } from "./FlowTableEditor";
+import {
+  WORKSPACE_INNER_LAYOUT_ID,
+  getWorkspaceLayoutStorage,
+} from "./workspacePaneLayout";
 
 const SAMPLES = FLOW_SAMPLES;
 
@@ -173,6 +178,10 @@ export type FlowchartEditorProps = {
   tableTopSlot?: React.ReactNode;
   /** デスクトップ幅: workspaceMode で内部 PanelGroup レイアウトを有効化 */
   isDesktop?: boolean;
+  /** 外側から内側 Group ref を受け取りペイン幅リセットに使う */
+  innerGroupRef?: RefObject<GroupImperativeHandle | null>;
+  /** デスクトップ: 表｜図 + ナビ｜エディタのペイン幅を v2 デフォルトへ */
+  onResetPaneWidths?: () => void;
 };
 
 const EMPTY_MODULE_MESSAGE = "モジュールを選択してください";
@@ -278,10 +287,13 @@ export const FlowchartEditor = forwardRef<
     moduleLoading = false,
     tableTopSlot,
     isDesktop = false,
+    innerGroupRef,
+    onResetPaneWidths,
   } = props;
 
   const innerLayout = useDefaultLayout({
-    id: "flowchart-studio:workspace-inner-v1",
+    id: WORKSPACE_INNER_LAYOUT_ID,
+    storage: getWorkspaceLayoutStorage(),
   });
 
   const skipSnapshotHydrationRef = useRef(false);
@@ -966,8 +978,8 @@ export const FlowchartEditor = forwardRef<
 
   const warningBanner =
     warnings.length > 0 && allErrors.length === 0 ? (
-      <div className={fcWarningBanner}>
-        <p className="font-medium">確認（警告）</p>
+      <details className={fcTableHelpDetails}>
+        <summary className={fcTableHelpSummary}>確認（警告）</summary>
         <p className={fcWarningBannerHint}>{WARNING_BANNER_HINT}</p>
         <ul className="mt-1 list-inside list-disc">
           {warnings.map((w) => (
@@ -982,7 +994,7 @@ export const FlowchartEditor = forwardRef<
             </li>
           ))}
         </ul>
-      </div>
+      </details>
     ) : null;
 
   const mobilePaneTabs = workspaceMode ? (
@@ -1040,6 +1052,9 @@ export const FlowchartEditor = forwardRef<
         errorRowIndices={errorRows}
         readOnly={readOnly}
         tableSchema={doc.schema}
+        errorPane={errorBanner}
+        warningPane={warningBanner}
+        onResetPaneWidths={onResetPaneWidths}
         csvPane={
           !readOnly ? (
             <details className={fcTableHelpDetails}>
@@ -1117,13 +1132,14 @@ export const FlowchartEditor = forwardRef<
           id="workspace-inner"
           orientation="horizontal"
           className="min-h-0 min-w-0 flex-1"
+          groupRef={innerGroupRef}
           defaultLayout={innerLayout.defaultLayout}
           onLayoutChanged={innerLayout.onLayoutChanged}
         >
           <Panel
             id="table"
             className={cn("flex min-h-0 min-w-0 flex-col", fcBorderR)}
-            defaultSize="40%"
+            defaultSize="52%"
             minSize="400px"
           >
             {tableTopSlot}
@@ -1153,8 +1169,6 @@ export const FlowchartEditor = forwardRef<
                 {toolbarButtons}
               </div>
             </header>
-            {errorBanner}
-            {warningBanner}
             <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
               <h2 className={cn("shrink-0", fcSectionTitle)}>表</h2>
               {tablePaneBody}
@@ -1166,7 +1180,7 @@ export const FlowchartEditor = forwardRef<
           <Panel
             id="canvas"
             className="flex min-h-0 min-w-0 flex-col"
-            defaultSize="60%"
+            defaultSize="48%"
             minSize="280px"
           >
             <h2 className="sr-only">プレビュー</h2>
@@ -1234,8 +1248,6 @@ export const FlowchartEditor = forwardRef<
                 {toolbarButtons}
               </div>
             </header>
-            {errorBanner}
-            {warningBanner}
             <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
               <h2 className={cn("shrink-0", fcSectionTitle)}>表</h2>
               {tablePaneBody}
@@ -1309,9 +1321,6 @@ export const FlowchartEditor = forwardRef<
           {toolbarButtons}
         </div>
       </header>
-
-      {errorBanner}
-      {warningBanner}
 
       <main className={cn("grid min-h-0 flex-1 gap-0", FC_WORKSPACE_MAIN_GRID)}>
         <section

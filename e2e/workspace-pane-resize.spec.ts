@@ -1,0 +1,32 @@
+import { expect, test } from "@playwright/test";
+import {
+  ensureNavExpanded,
+  ensureWorkspaceLoaded,
+  selectModule,
+} from "./helpers/flowchart";
+
+test.describe("ワークスペース ペイン幅（§E）", () => {
+  test.beforeEach(async ({ page }) => {
+    await ensureWorkspaceLoaded(page);
+    await ensureNavExpanded(page);
+    await selectModule(page, "供給動作");
+    await expect(page.getByLabel("行1 Text1")).toBeVisible({ timeout: 15_000 });
+  });
+
+  test("ペイン幅をリセットボタンが表ツールバーに表示される", async ({
+    page,
+  }) => {
+    await expect(page.getByTestId("reset-pane-widths")).toHaveText(
+      "ペイン幅をリセット"
+    );
+  });
+
+  test("ペイン幅をリセットをクリックしてもエラーにならない", async ({
+    page,
+  }) => {
+    const resetBtn = page.getByTestId("reset-pane-widths");
+    await resetBtn.click();
+    await expect(resetBtn).toBeVisible();
+    await expect(page.getByLabel("行1 Text1")).toBeVisible();
+  });
+});

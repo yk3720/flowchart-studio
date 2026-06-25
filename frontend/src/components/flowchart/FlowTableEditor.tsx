@@ -67,8 +67,14 @@ type Props = {
   readOnly?: boolean;
   /** table-9col-v1 等 — 9列ヘッダー判定に使用 */
   tableSchema?: string;
-  /** 表ペイン内ツールバー直下に挿入するスロット（CSV 取込 details 等） */
+  /** 表ビューポート直上（エラーバナー等） */
+  errorPane?: React.ReactNode;
+  /** 表ツールバー直下（警告 details 等） */
+  warningPane?: React.ReactNode;
+  /** 表ペイン内ツールバー下に挿入するスロット（CSV 取込 details 等） */
   csvPane?: React.ReactNode;
+  /** デスクトップ: ペイン幅を v2 デフォルトへ戻す（T4） */
+  onResetPaneWidths?: () => void;
 };
 
 function cellToString(value: unknown): string {
@@ -78,7 +84,17 @@ function cellToString(value: unknown): string {
 
 export const FlowTableEditor = memo(
   forwardRef<FlowTableEditorHandle, Props>(function FlowTableEditor(
-    { table, onChange, errorRowIndices, readOnly, tableSchema, csvPane },
+    {
+      table,
+      onChange,
+      errorRowIndices,
+      readOnly,
+      tableSchema,
+      errorPane,
+      warningPane,
+      csvPane,
+      onResetPaneWidths,
+    },
     ref
   ) {
     const colCount = resolveColumnCount(table, tableSchema);
@@ -87,8 +103,10 @@ export const FlowTableEditor = memo(
     const tableMinWidth = getTotalDefaultWidth(colCount, tableSchema);
     const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
     const focusCellRef = useRef<{ row: number; col: number } | null>(null);
-    const { colWidths, startResize, adjustWidth, resetWidths } =
-      useTableColumnSizing(colCount, tableSchema);
+    const { colWidths, startResize, adjustWidth } = useTableColumnSizing(
+      colCount,
+      tableSchema
+    );
     const { viewportRef, dockRef, innerRef, syncInnerWidth } =
       useSyncedHorizontalScroll();
     const [keyboardResizingIdx, setKeyboardResizingIdx] = useState<
@@ -183,49 +201,7 @@ export const FlowTableEditor = memo(
 
     return (
       <div className="flex min-h-0 flex-1 flex-col gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          {!readOnly ? (
-            <button type="button" onClick={addRow} className={fcTableAddRowBtn}>
-              行を追加
-            </button>
-          ) : null}
-          <button
-            type="button"
-            onClick={resetWidths}
-            className={fcTableAddRowBtn}
-          >
-            列幅をリセット
-          </button>
-          <span className={fcTableMeta}>
-            {table.length} 行 · {colCount} 列
-          </span>
-        </div>
-
-        {csvPane}
-
-        <details className={fcTableHelpDetails}>
-          <summary className={fcTableHelpSummary}>列の意味（ヘルプ）</summary>
-          {colCount >= 8 ? (
-            <ul className="mt-1 list-inside list-disc space-y-0.5">
-              {getHelpEntries(colCount, tableSchema).map(({ header, help }) => (
-                <li key={header}>
-                  <strong>{header}</strong> — {help}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-1">
-              9 列形式（段・列）を推奨します。判断の No
-              分岐には接続先(右)が必要です。
-            </p>
-          )}
-          {!readOnly ? (
-            <p className="mt-2 text-flow-text-muted">
-              Excel からコピーした範囲は、貼り付け先のセルを選んで Ctrl+V
-              で部分貼り付けできます。
-            </p>
-          ) : null}
-        </details>
+        {errorPane}
 
         <div
           ref={viewportRef}
@@ -360,6 +336,54 @@ export const FlowTableEditor = memo(
           </table>
         </div>
         <FlowTableDockScrollbar dockRef={dockRef} innerRef={innerRef} />
+
+        <div className="flex flex-wrap items-center gap-2">
+          {!readOnly ? (
+            <button type="button" onClick={addRow} className={fcTableAddRowBtn}>
+              行を追加
+            </button>
+          ) : null}
+          {onResetPaneWidths ? (
+            <button
+              type="button"
+              onClick={onResetPaneWidths}
+              className={fcTableAddRowBtn}
+              data-testid="reset-pane-widths"
+            >
+              ペイン幅をリセット
+            </button>
+          ) : null}
+          <span className={fcTableMeta}>
+            {table.length} 行 · {colCount} 列
+          </span>
+        </div>
+
+        {warningPane}
+        {csvPane}
+
+        <details className={fcTableHelpDetails}>
+          <summary className={fcTableHelpSummary}>列の意味（ヘルプ）</summary>
+          {colCount >= 8 ? (
+            <ul className="mt-1 list-inside list-disc space-y-0.5">
+              {getHelpEntries(colCount, tableSchema).map(({ header, help }) => (
+                <li key={header}>
+                  <strong>{header}</strong> — {help}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-1">
+              9 列形式（段・列）を推奨します。判断の No
+              分岐には接続先(右)が必要です。
+            </p>
+          )}
+          {!readOnly ? (
+            <p className="mt-2 text-flow-text-muted">
+              Excel からコピーした範囲は、貼り付け先のセルを選んで Ctrl+V
+              で部分貼り付けできます。
+            </p>
+          ) : null}
+        </details>
       </div>
     );
   })
