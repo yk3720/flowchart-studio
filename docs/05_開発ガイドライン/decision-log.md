@@ -151,6 +151,7 @@
 | 2026-06-25      | 運用       | frontend 最適化（xlsx 遅延 · FlowPreviewPane · Zod サンプル）                                                                     | `FlowPreviewPane.tsx` · `flowSamples.ts` · `REACT_RULES` §3-1                                                                                                                                                                             | 完了                              | 次: chrome 実装 §4                                                                                                                   |
 | 2026-06-25      | UX         | chrome 縦レイアウト実装（認証/ステータス表列限定 · 凡例削除 · ズーム右上 overlay）                                                | `FlowchartWorkspace.tsx` · `FlowchartEditor.tsx` · `FlowPreviewPane.tsx` · `flowchartUiClasses.ts`                                                                                                                                        | 完了                              | `typecheck` · `test` 123/123 通過                                                                                                    |
 | 2026-06-25      | 作者データ | A0001 供給部 作者文言 — 旧 ﾕﾆｯﾄ0/動作001「供給実行」廃止 · M000〜M006 は Excel 正本の Text 列で確定 · M007〜M009 はプレースホルダ | [Excel取込 §11](../03_技術仕様/Excel取込.md) · [handoff \_36 §4](c:/yk-memo/handoffs/flowchart-studio/2026-06-25_36_preview-chrome-vertical-session-end.md)                                                                               | 作者確認済                        | Web 表示確認（M003 等）· DB 手動整理済                                                                                               |
+| 2026-06-25      | ADR        | 10列 v2（色を種別の隣）· 3ペインリサイズ · ヘッダー短縮 — 方式A一括 · **ナビ配色はニュートラル維持（深い青案却下）**              | [ADR-016](<../03_技術仕様/意思決定記録(ADR).md#adr-016-10-列順-v2--3-ペインリサイズ2026-06-25>) · [ワークスペースレイアウト方針.md](../02_機能設計/ワークスペースレイアウト方針.md)                                                       | 合意済 · 未実装                   |
 | 2026-06-25      | 作者データ | Excel 段階取込 — U{n} 未作成スキップ · `excel:inspect` · 旧 `動作000` テーブル名マップ                                            | [Excel取込 §11](../03_技術仕様/Excel取込.md) · `python/scripts/inspect_device.py`                                                                                                                                                         | 完了                              | `npm run excel:inspect -- A0001`                                                                                                     |
 
 ---
@@ -169,6 +170,7 @@
 | 013     | Supabase DB-1                  | Accepted · 実装済                 |
 | 014     | 装置階層 DB-2                  | Accepted · dev/本番適用済         |
 | 015     | フロー共同編集 RLS             | Accepted · 本番適用済（`016`）    |
+| 016     | 10列 v2 · 3ペインリサイズ      | Accepted · **未実装**             |
 
 全文: [意思決定記録(ADR).md](<../03_技術仕様/意思決定記録(ADR).md>)
 
