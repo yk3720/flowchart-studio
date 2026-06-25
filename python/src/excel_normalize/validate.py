@@ -28,10 +28,9 @@ def validate_bundle(
     found = {(f["unit_label"], f["module_label"]) for f in flows}
 
     for unit_label, module_label in sorted(expected - found):
-        errors.append(
+        warnings.append(
             f"構成に「{unit_label} · {module_label}」がありますが、"
-            f"ユニットシート「{unit_label}」に対応する Excel テーブルがありません。"
-            f"テーブル名を動作名（{module_label}）に合わせてください。"
+            f"フロー表が未登録です（段階手書きでは警告）。"
         )
 
     for unit_label, module_label in sorted(found - expected):

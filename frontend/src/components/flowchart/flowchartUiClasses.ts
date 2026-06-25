@@ -229,23 +229,38 @@ export const fcNavSelect = cn(
   "w-full rounded-md border border-flow-border-strong bg-flow-surface px-3 py-1.5 text-sm text-flow-text-body"
 );
 
+/** ユニット行（▶ + ラベル + 削除）— 背景帯で動作行と対比 */
+export const fcNavUnitRow = cn(
+  "flex items-center gap-0.5 rounded-md bg-flow-surface-subtle"
+);
+
 export const fcNavUnitToggle = cn(
   fcFocusRing,
   fcTargetMin,
-  "flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-3 py-1.5 text-left text-sm font-medium text-flow-text-body hover:bg-flow-surface-subtle"
+  "flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-sm font-semibold text-flow-text-body hover:bg-flow-surface-muted/60"
 );
+
+/** 動作リスト — ユニットラベル開始 + 約1文字分のインデント */
+export const fcNavModuleList =
+  "flex flex-col gap-0.5 pl-[calc(0.5rem+1rem+0.375rem+0.25em)]";
 
 export const fcNavModuleBtn = cn(
   fcFocusRing,
   fcTargetMin,
-  "min-w-0 flex-1 rounded-md px-3 py-1.5 text-left text-sm transition-colors"
+  "min-w-0 flex-1 rounded-md px-2 py-1.5 text-left text-sm transition-colors"
 );
 
 export function fcNavModuleBtnState(selected: boolean): string {
   return selected
-    ? "border-l-2 border-flow-accent bg-flow-accent-selected-bg pl-[calc(0.75rem-2px)] font-medium text-flow-accent-selected-text"
-    : "text-flow-text-body hover:bg-flow-surface-subtle";
+    ? "border-l-2 border-flow-accent bg-flow-accent-selected-bg pl-[calc(0.5rem-2px)] font-medium text-flow-accent-selected-text"
+    : "text-flow-text-muted hover:bg-flow-surface-subtle hover:text-flow-text-body";
 }
+
+export const fcNavToggleAllBtn = cn(
+  fcFocusRing,
+  fcTargetMin,
+  "rounded-md p-1.5 text-flow-text-muted hover:bg-flow-surface-subtle"
+);
 
 export const fcNavAside = cn(
   "flex w-full shrink-0 flex-col border-r border-flow-border bg-flow-surface-muted lg:w-[min(20%,240px)] lg:min-w-[180px]"

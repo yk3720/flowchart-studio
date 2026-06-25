@@ -22,8 +22,10 @@
 | `{社内番号}_{装置名}.xlsx` | **対象外** | 装置一式の正本（構成 + 全ユニット・全動作）    |
 | `import.json`              | **対象**   | Python 正規化出力 → Web「import.json を取込…」 |
 | `README.md`                | 任意       | 装置メモ                                       |
-| `archive/`                 | 任意       | 旧版退避                                       |
-| `_scratch/{動作名}.xlsx`   | **対象外** | 1 動作だけ Web 表タブで試す用                  |
+
+**xlsx 中身の確認（エージェント · 作者共通）:** `npm run excel:inspect -- {社内番号}` — ワンライナー Python 禁止 · SSOT は [Excel取込 §11](../docs/03_技術仕様/Excel取込.md)
+| `archive/` | 任意 | 旧版退避 |
+| `_scratch/{動作名}.xlsx` | **対象外** | 1 動作だけ Web 表タブで試す用 |
 
 ## 登録装置一覧
 

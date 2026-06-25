@@ -168,7 +168,8 @@ def _minimal_kosei_wb(tmp_path: Path) -> Path:
     return path
 
 
-def test_missing_flow_table(tmp_path: Path) -> None:
+def test_missing_flow_table_warns(tmp_path: Path) -> None:
     path = _minimal_kosei_wb(tmp_path)
-    with pytest.raises(ValueError, match="供給ユニット"):
-        normalize_workbook(path)
+    result = normalize_workbook(path)
+    assert result.bundle["flows"] == []
+    assert any("未登録" in w for w in result.warnings)

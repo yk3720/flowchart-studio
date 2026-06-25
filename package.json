@@ -26,6 +26,7 @@
     "excel:a0001:scratch": "python python/scripts/build_a0001_scratch.py",
     "excel:a0001:build": "python python/scripts/build_a0001_master.py",
     "excel:a0001:normalize": "python python/scripts/normalize_device.py A0001",
+    "excel:inspect": "python python/scripts/inspect_device.py",
     "excel:a0001": "npm run excel:a0001:scratch ; npm run excel:a0001:build",
     "excel:demo-devices": "python python/scripts/build_demo_devices.py",
     "seed:demo-devices": "npx tsx --tsconfig tsconfig.json database/src/seed/import-demo-devices.ts",

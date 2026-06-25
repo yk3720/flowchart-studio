@@ -85,6 +85,7 @@
 ```powershell
 cd c:\yk-application\flowchart-studio
 npm run dev
+npm run excel:inspect -- A0001
 npm run test
 npm run build
 npm run test:e2e
@@ -114,21 +115,21 @@ npm run test:e2e
 
 ## SSOT マップ
 
-| ドメイン                     | 正本                                                                         |
-| ---------------------------- | ---------------------------------------------------------------------------- |
-| **セッション進捗 · 次の1件** | `c:/yk-memo/handoffs/flowchart-studio/`                                      |
-| **講座提出**                 | `yk-memo/.../00_テーマ/選定表_記入稿.md`                                     |
-| 要求定義                     | `docs/01_要求定義/00_目次.md` → 必要時 `要求定義書.md`（§単位）              |
-| 機能設計                     | `docs/02_機能設計/00_目次.md` → 必要時 `現状とロードマップ.md` / `UI仕様.md` |
-| UI ボタン（棚卸し）          | `docs/02_機能設計/ボタン一覧.md` — 増減時は同一作業で更新                    |
-| 技術仕様                     | `docs/03_技術仕様/00_目次.md` → 必要時1本                                    |
-| リポジトリ構成               | `docs/04_リポジトリ構造/構成詳細.md`（入口: `00_目次.md`）                   |
-| 開発経緯                     | `docs/05_開発ガイドライン/00_目次.md` → `decision-log.md`                    |
-| ユビキタス言語               | `docs/06_ユビキタス言語/00_目次.md`                                          |
-| データモデル                 | `docs/03_技術仕様/データモデル.md`                                           |
-| 図形・色 · 列（作者向け）    | `docs/03_技術仕様/作者ガイド.md` · `lib/flowchart/table/tableColumns.ts`     |
-| 作者 Excel · import.json     | `docs/03_技術仕様/Excel取込.md` · `data/devices/README.md`                   |
-| ADR                          | `docs/03_技術仕様/意思決定記録(ADR).md`                                      |
+| ドメイン                     | 正本                                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------------ |
+| **セッション進捗 · 次の1件** | `c:/yk-memo/handoffs/flowchart-studio/`                                              |
+| **講座提出**                 | `yk-memo/.../00_テーマ/選定表_記入稿.md`                                             |
+| 要求定義                     | `docs/01_要求定義/00_目次.md` → 必要時 `要求定義書.md`（§単位）                      |
+| 機能設計                     | `docs/02_機能設計/00_目次.md` → 必要時 `現状とロードマップ.md` / `UI仕様.md`         |
+| UI ボタン（棚卸し）          | `docs/02_機能設計/ボタン一覧.md` — 増減時は同一作業で更新                            |
+| 技術仕様                     | `docs/03_技術仕様/00_目次.md` → 必要時1本                                            |
+| リポジトリ構成               | `docs/04_リポジトリ構造/構成詳細.md`（入口: `00_目次.md`）                           |
+| 開発経緯                     | `docs/05_開発ガイドライン/00_目次.md` → `decision-log.md`                            |
+| ユビキタス言語               | `docs/06_ユビキタス言語/00_目次.md`                                                  |
+| データモデル                 | `docs/03_技術仕様/データモデル.md`                                                   |
+| 図形・色 · 列（作者向け）    | `docs/03_技術仕様/作者ガイド.md` · `lib/flowchart/table/tableColumns.ts`             |
+| 作者 Excel · import.json     | `docs/03_技術仕様/Excel取込.md` · `data/devices/README.md` · `npm run excel:inspect` |
+| ADR                          | `docs/03_技術仕様/意思決定記録(ADR).md`                                              |
 
 ---
 

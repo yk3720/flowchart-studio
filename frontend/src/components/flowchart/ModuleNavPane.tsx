@@ -3,9 +3,11 @@
 import {
   ChevronDown,
   ChevronRight,
+  FoldVertical,
   PanelLeftClose,
   PanelLeftOpen,
   Trash2,
+  UnfoldVertical,
 } from "lucide-react";
 import { useCallback, useRef, type KeyboardEvent } from "react";
 
@@ -30,8 +32,11 @@ import {
   fcNavLabel,
   fcNavModuleBtn,
   fcNavModuleBtnState,
+  fcNavModuleList,
   fcNavSelect,
   fcNavTitle,
+  fcNavToggleAllBtn,
+  fcNavUnitRow,
   fcNavUnitToggle,
 } from "./flowchartUiClasses";
 
@@ -45,6 +50,7 @@ type ModuleNavPaneProps = {
   onToggleCollapsed: () => void;
   onSelectDevice: (deviceId: string) => void;
   onToggleUnit: (unitId: string) => void;
+  onToggleAllUnits: () => void;
   onSelectModule: (moduleId: string) => void;
   onRequestDeleteUnit?: (unitId: string) => void;
   onRequestDeleteModule?: (moduleId: string) => void;
@@ -120,7 +126,7 @@ function UnitSection({
 }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <div className="flex items-center gap-0.5">
+      <div className={fcNavUnitRow}>
         <button
           type="button"
           onClick={onToggleUnit}
@@ -150,7 +156,7 @@ function UnitSection({
         ) : null}
       </div>
       {expanded ? (
-        <div className="flex flex-col gap-0.5 pl-5">
+        <div className={fcNavModuleList}>
           {unit.modules.map((mod) => (
             <ModuleButton
               key={mod.id}
@@ -181,12 +187,17 @@ export function ModuleNavPane({
   onToggleCollapsed,
   onSelectDevice,
   onToggleUnit,
+  onToggleAllUnits,
   onSelectModule,
   onRequestDeleteUnit,
   onRequestDeleteModule,
   onRequestDeleteDevice,
 }: ModuleNavPaneProps) {
   const navRef = useRef<HTMLElement>(null);
+
+  const allUnitsExpanded =
+    device.units.length > 0 &&
+    device.units.every((unit) => expandedUnitIds.has(unit.id));
 
   const handleNavKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
@@ -266,15 +277,39 @@ export function ModuleNavPane({
     <aside className={fcNavAside}>
       <div className={fcNavHeader}>
         <h2 className={fcNavTitle}>フロー</h2>
-        <button
-          type="button"
-          onClick={onToggleCollapsed}
-          className={fcNavIconBtn}
-          title="ナビを閉じる"
-          aria-label="ナビを閉じる"
-        >
-          <PanelLeftClose className="size-4" />
-        </button>
+        <div className="flex shrink-0 items-center gap-0.5">
+          <button
+            type="button"
+            onClick={onToggleAllUnits}
+            data-testid="toggle-all-units"
+            className={fcNavToggleAllBtn}
+            title={
+              allUnitsExpanded
+                ? "すべてのユニットを折りたたみ"
+                : "すべてのユニットを展開"
+            }
+            aria-label={
+              allUnitsExpanded
+                ? "すべてのユニットを折りたたみ"
+                : "すべてのユニットを展開"
+            }
+          >
+            {allUnitsExpanded ? (
+              <FoldVertical className="size-4" aria-hidden />
+            ) : (
+              <UnfoldVertical className="size-4" aria-hidden />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={onToggleCollapsed}
+            className={fcNavIconBtn}
+            title="ナビを閉じる"
+            aria-label="ナビを閉じる"
+          >
+            <PanelLeftClose className="size-4" />
+          </button>
+        </div>
       </div>
 
       <div className={cn("space-y-2", fcBorderB, "px-3 py-2")}>

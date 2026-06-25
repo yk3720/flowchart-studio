@@ -53,14 +53,6 @@ type Props = {
   devices: readonly Device[];
 };
 
-function expandedUnitsForDevice(
-  devices: readonly Device[],
-  deviceId: string
-): Set<string> {
-  const device = findDevice(devices, deviceId);
-  return new Set(device?.units.map((u) => u.id) ?? []);
-}
-
 export function FlowchartWorkspace({
   role,
   email,
@@ -79,8 +71,8 @@ export function FlowchartWorkspace({
     devices[0]?.id ?? ""
   );
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
-  const [expandedUnitIds, setExpandedUnitIds] = useState<Set<string>>(() =>
-    expandedUnitsForDevice(devices, devices[0]?.id ?? "")
+  const [expandedUnitIds, setExpandedUnitIds] = useState<Set<string>>(
+    () => new Set()
   );
   const [navCollapsed, setNavCollapsed] = useState(false);
   const [initialSnapshot, setInitialSnapshot] = useState<ModuleSnapshot | null>(
@@ -174,6 +166,17 @@ export function FlowchartWorkspace({
       return next;
     });
   }, []);
+
+  const handleToggleAllUnits = useCallback(() => {
+    if (!device) return;
+    setExpandedUnitIds((prev) => {
+      const allExpanded =
+        device.units.length > 0 &&
+        device.units.every((unit) => prev.has(unit.id));
+      if (allExpanded) return new Set();
+      return new Set(device.units.map((unit) => unit.id));
+    });
+  }, [device]);
 
   const isModuleLoadStale = useCallback((generation: number) => {
     return generation !== loadGenerationRef.current;
@@ -274,7 +277,7 @@ export function FlowchartWorkspace({
       setLoadSource("");
       setOfflineCachedAt(null);
       setPinned(false);
-      setExpandedUnitIds(expandedUnitsForDevice(visibleDevices, deviceId));
+      setExpandedUnitIds(new Set());
       setLoadKey((k) => k + 1);
     },
     [persistCurrentModule, selectedDeviceId, visibleDevices]
@@ -535,6 +538,7 @@ export function FlowchartWorkspace({
           onToggleCollapsed={() => setNavCollapsed((v) => !v)}
           onSelectDevice={handleSelectDevice}
           onToggleUnit={handleToggleUnit}
+          onToggleAllUnits={handleToggleAllUnits}
           onSelectModule={handleSelectModule}
           onRequestDeleteUnit={setUnitDeleteTargetId}
           onRequestDeleteModule={setModuleDeleteTargetId}

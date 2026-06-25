@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from openpyxl.utils import range_boundaries
@@ -49,6 +50,13 @@ def resolve_table_module_label(
             return mod
         if table_name == f"{unit_label}_{mod}":
             return mod
+
+    # v0.3 移行期: テーブル名 動作000〜動作009 → ユニット内の n 番目モジュール
+    legacy = re.match(r"^動作(\d{3})$", table_name)
+    if legacy:
+        mod_index = int(legacy.group(1)) % 100
+        if 0 <= mod_index < len(expected_modules):
+            return expected_modules[mod_index]
 
     return None
 
@@ -159,10 +167,7 @@ def list_unit_sheets(workbook: Workbook, kosei: KoseiSheet) -> dict[str, Workshe
     for unit_label in kosei.unit_labels:
         sheet_title = kosei.unit_sheet_title(unit_label)
         if sheet_title not in sheets:
-            raise ValueError(
-                f"構成のユニット「{unit_label}」に対応するシート「{sheet_title}」がありません。"
-                f"（既存シート: {', '.join(sheets.keys()) or 'なし'}）"
-            )
+            continue
         unit_sheets[unit_label] = sheets[sheet_title]
 
     mapped_titles = {kosei.unit_sheet_title(u) for u in kosei.unit_labels}
