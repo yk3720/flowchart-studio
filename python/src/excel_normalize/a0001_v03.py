@@ -40,9 +40,9 @@ FLOW_TEXT_OVERRIDES: dict[str, str] = {
 def flow_rows_for_module(module_name: str) -> list[list[str]]:
     middle = FLOW_TEXT_OVERRIDES.get(module_name, module_name)
     return [
-        ["10", "端子", "20", "", "1", "0", "開始", "", "", ""],
-        ["20", "処理", "30", "", "2", "0", middle, "", "", ""],
-        ["30", "端子", "", "", "3", "0", "終了", "", "", ""],
+        ["10", "端子", "", "20", "", "1", "0", "開始", "", ""],
+        ["20", "処理", "", "30", "", "2", "0", middle, "", ""],
+        ["30", "端子", "", "", "", "3", "0", "終了", "", ""],
     ]
 
 

@@ -12,14 +12,15 @@ import { DEFAULT_LAYOUT } from "../model/types";
 
 export function generateFlowchart(
   table: FlowTableRow[],
-  layout: LayoutConfig = DEFAULT_LAYOUT
+  layout: LayoutConfig = DEFAULT_LAYOUT,
+  schema?: string
 ): GenerateResult {
-  const errors = validateTable(table);
+  const errors = validateTable(table, schema);
   if (errors.length > 0) {
     return { ok: false, errors };
   }
 
-  const { nodes, rowMap } = parseTable(table);
+  const { nodes, rowMap } = parseTable(table, schema);
   const rowHeights = measureRowHeights(rowMap, layout);
   const { placed, bounds } = layoutGrid(rowMap, rowHeights, layout);
   const edges = buildEdges(nodes, placed);

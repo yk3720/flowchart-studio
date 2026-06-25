@@ -1,7 +1,10 @@
 import { parseTable } from "../table/parseTable";
 import type { FlowTableRow } from "./types";
 
-export function validateTable(table: FlowTableRow[]): string[] {
+export function validateTable(
+  table: FlowTableRow[],
+  schema?: string
+): string[] {
   const errors: string[] = [];
   if (!table.length) {
     errors.push("表が空です");
@@ -22,7 +25,7 @@ export function validateTable(table: FlowTableRow[]): string[] {
     }
   }
 
-  const { nodes } = parseTable(table);
+  const { nodes } = parseTable(table, schema);
   if (nodes.length === 0) {
     errors.push("有効なノードが 1 件もありません（ID 列を確認してください）");
     return errors;

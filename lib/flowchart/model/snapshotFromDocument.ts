@@ -12,7 +12,11 @@ export function snapshotFromFlowchartDocument(
   doc: FlowchartDocument
 ): SnapshotFromDocumentResult {
   const normalized = normalizeFlowchartDocument(doc);
-  const generated = generateFlowchart(normalized.table, normalized.layout);
+  const generated = generateFlowchart(
+    normalized.table,
+    normalized.layout,
+    normalized.schema
+  );
   if (!generated.ok) {
     return {
       ok: false,

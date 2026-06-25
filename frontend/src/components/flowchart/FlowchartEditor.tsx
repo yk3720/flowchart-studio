@@ -178,7 +178,7 @@ function rfFromDocument(doc: FlowchartDocument): {
   nodes: Node<FlowNodeData>[];
   edges: Edge[];
 } {
-  const result = generateFlowchart(doc.table, doc.layout);
+  const result = generateFlowchart(doc.table, doc.layout, doc.schema);
   if (!result.ok) {
     return { nodes: [], edges: [] };
   }
@@ -392,7 +392,11 @@ export const FlowchartEditor = forwardRef<
       setDoc(normalizeFlowchartDocument(parsed));
       refreshWarnings(parsed.table);
 
-      const result = generateFlowchart(parsed.table, parsed.layout);
+      const result = generateFlowchart(
+        parsed.table,
+        parsed.layout,
+        parsed.schema
+      );
       if (!result.ok) {
         setGenErrors(result.errors);
         setStatus(

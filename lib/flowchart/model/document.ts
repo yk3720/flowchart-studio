@@ -4,7 +4,9 @@ import { flowchartDocumentPayloadSchema } from "../import/importBundleSchema";
 import {
   ensureNineColumnTable,
   inferTableLayout,
+  migrateDocToV2,
   TIER10_SCHEMA,
+  TIER10_V1_SCHEMA,
   TIER9_SCHEMA,
 } from "../table/tableColumns";
 
@@ -60,15 +62,18 @@ export function parseFlowchartDocument(jsonText: string): {
   return { doc: normalizeFlowchartDocument(doc), errors: [] };
 }
 
-/** 読込時: tier9 を 10 列に揃え · schema を table-10col-v1 へ */
+/** 読込時: tier9 を 10 列に揃え · v1 を v2 へマイグレーション */
 export function normalizeFlowchartDocument(
   doc: FlowchartDocument
 ): FlowchartDocument {
   const layout = inferTableLayout(doc.table, doc.schema);
-  const schemaForPad = layout === "tier9" ? TIER10_SCHEMA : doc.schema;
+  // 9列→10列パディングは v1 形式（色 = index 9）で揃える
+  const schemaForPad = layout === "tier9" ? TIER10_V1_SCHEMA : doc.schema;
   const table = ensureNineColumnTable(doc.table, schemaForPad);
-  const schema = layout === "tier9" ? TIER10_SCHEMA : doc.schema;
-  return { ...doc, table, ...(schema ? { schema } : {}) };
+  const schema = layout === "tier9" ? TIER10_V1_SCHEMA : doc.schema;
+  const padded = { ...doc, table, ...(schema ? { schema } : {}) };
+  // v1 → v2 マイグレーション（ADR-016）
+  return migrateDocToV2(padded);
 }
 
 export function serializeDocument(doc: FlowchartDocument): string {

@@ -3,6 +3,7 @@
 import {
   createEmptyRow,
   getColumnHelp,
+  getDisplayHeaders,
   getHeaders,
   getHelpEntries,
   isColorTableColumn,
@@ -11,6 +12,7 @@ import {
   SHAPE_TYPE_OPTIONS,
   suggestNextId,
 } from "@/lib/flowchart/table/tableColumns";
+import { getTotalDefaultWidth } from "@/lib/flowchart/table/tableColumnWidths";
 import { COLOR_HINT_SELECT_OPTIONS } from "@/lib/flowchart/visual/flowColors";
 import {
   applyPartialPaste,
@@ -42,7 +44,6 @@ import {
   fcTableHeadCell,
   fcTableHeadCellAction,
   fcTableHeadCellIndex,
-  fcTableHeadHelpMark,
   fcTableHelpDetails,
   fcTableHelpSummary,
   fcTableMeta,
@@ -82,6 +83,8 @@ export const FlowTableEditor = memo(
   ) {
     const colCount = resolveColumnCount(table, tableSchema);
     const headers = getHeaders(colCount, tableSchema);
+    const displayHeaders = getDisplayHeaders(colCount, tableSchema);
+    const tableMinWidth = getTotalDefaultWidth(colCount, tableSchema);
     const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
     const focusCellRef = useRef<{ row: number; col: number } | null>(null);
     const { colWidths, startResize, adjustWidth, resetWidths } =
@@ -145,7 +148,7 @@ export const FlowTableEditor = memo(
 
     const addRow = () => {
       const id = suggestNextId(table);
-      updateTable([...table, createEmptyRow(colCount, id)]);
+      updateTable([...table, createEmptyRow(colCount, id, tableSchema)]);
     };
 
     const deleteRow = (rowIndex: number) => {
@@ -157,7 +160,8 @@ export const FlowTableEditor = memo(
       colCount >= 8 ? colIndex === 1 : colIndex === 1 && colCount >= 2;
 
     const isSelectColumn = (colIndex: number) =>
-      isShapeColumn(colIndex) || isColorTableColumn(colIndex, colCount);
+      isShapeColumn(colIndex) ||
+      isColorTableColumn(colIndex, colCount, tableSchema);
 
     const handlePaste = (e: React.ClipboardEvent) => {
       if (readOnly) return;
@@ -228,7 +232,7 @@ export const FlowTableEditor = memo(
           className={fcTableScroll}
           onPasteCapture={handlePaste}
         >
-          <table className={fcTable}>
+          <table className={fcTable} style={{ minWidth: tableMinWidth }}>
             <colgroup>
               {colWidths.map((w, i) => (
                 <col key={i} style={{ width: w }} />
@@ -239,8 +243,9 @@ export const FlowTableEditor = memo(
                 <th className={fcTableHeadCellIndex}>#</th>
                 {headers.map((h, colIndex) => {
                   const fullIdx = colIndex + 1;
-                  const help = getColumnHelp(h, colCount);
+                  const help = getColumnHelp(h, colCount, tableSchema);
                   const isKbResizing = keyboardResizingIdx === fullIdx;
+                  const displayLabel = displayHeaders[colIndex] ?? h;
                   return (
                     <th
                       key={h}
@@ -253,8 +258,7 @@ export const FlowTableEditor = memo(
                       onKeyDown={(e) => handleHeaderKeyDown(fullIdx, e)}
                     >
                       <span className={fcTableHeadCellText} title={help ?? h}>
-                        {h}
-                        {help && <span className={fcTableHeadHelpMark}>?</span>}
+                        {displayLabel}
                       </span>
                       <span
                         className={fcTableResizeHandle}
@@ -284,7 +288,11 @@ export const FlowTableEditor = memo(
                         {isSelectColumn(colIndex) ? (
                           <select
                             value={
-                              isColorTableColumn(colIndex, colCount)
+                              isColorTableColumn(
+                                colIndex,
+                                colCount,
+                                tableSchema
+                              )
                                 ? cellToString(row[colIndex])
                                 : cellToString(row[colIndex]) || "処理"
                             }
@@ -297,7 +305,11 @@ export const FlowTableEditor = memo(
                             title={cellToString(row[colIndex])}
                             {...bindCellFocus(rowIndex, colIndex)}
                           >
-                            {(isColorTableColumn(colIndex, colCount)
+                            {(isColorTableColumn(
+                              colIndex,
+                              colCount,
+                              tableSchema
+                            )
                               ? COLOR_HINT_SELECT_OPTIONS
                               : SHAPE_TYPE_OPTIONS.map((opt) => ({
                                   value: opt,

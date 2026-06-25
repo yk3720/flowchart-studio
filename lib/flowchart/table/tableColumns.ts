@@ -78,12 +78,29 @@ export const COLUMN_HELP_9: Record<(typeof TABLE_HEADERS_9)[number], string> = {
   Text3: "補足（3行目）",
 };
 
-/** 作者向けの列の説明（10列） */
+/** 作者向けの列の説明（10列 v1） */
 export const COLUMN_HELP_10: Record<(typeof TABLE_HEADERS_10)[number], string> =
   {
     ...COLUMN_HELP_9,
     色: COLOR_COLUMN_HELP,
   };
+
+/** 作者向けの列の説明（10列 v2 · ADR-016） */
+export const COLUMN_HELP_10_V2: Record<
+  (typeof TABLE_HEADERS_10_V2)[number],
+  string
+> = {
+  ID: "ノード番号（10, 20…）。他行の接続先にも使う",
+  図形種別: SHAPE_TYPE_COLUMN_HELP,
+  色: COLOR_COLUMN_HELP,
+  "接続先(下)": CONNECT_DOWN_HELP,
+  "接続先(右)": CONNECT_RIGHT_HELP,
+  段: "縦位置（同じ段 = 同じ高さで横並び）",
+  列: "横位置（0=左、1=右 … 分岐の並び）",
+  Text1: "図形に表示する主テキスト（例: MR100 · 取付経路A）",
+  Text2: "補足（2行目）",
+  Text3: "補足（3行目）",
+};
 
 export const SHAPE_TYPE_OPTIONS = [
   "端子",
@@ -95,8 +112,39 @@ export const SHAPE_TYPE_OPTIONS = [
 
 export type TableLayout = "legacy8" | "tier9";
 
-/** 新規表・雛形の既定 schema（段 + 列 + 色） */
-export const TIER10_SCHEMA = "table-10col-v1";
+/** 10列 v2（色が index 2 · ADR-016） */
+export const TABLE_HEADERS_10_V2 = [
+  "ID",
+  "図形種別",
+  "色",
+  "接続先(下)",
+  "接続先(右)",
+  "段",
+  "列",
+  "Text1",
+  "Text2",
+  "Text3",
+] as const;
+
+/** 画面表示用の短縮ラベル（10列 v2） */
+export const DISPLAY_HEADERS_10_V2 = [
+  "ID",
+  "種別",
+  "色",
+  "下先",
+  "右先",
+  "段",
+  "列",
+  "文1",
+  "文2",
+  "文3",
+] as const;
+
+/** 新規表・雛形の既定 schema（10列 v2 · ADR-016） */
+export const TIER10_SCHEMA = "table-10col-v2";
+
+/** 10列 v1 schema（読込時に v2 へマイグレーション） */
+export const TIER10_V1_SCHEMA = "table-10col-v1";
 
 /** 9列 schema（後方互換） */
 export const TIER9_SCHEMA = "table-9col-v1";
@@ -106,6 +154,10 @@ const TEN_COL_WIDTH = TABLE_HEADERS_10.length;
 
 function usesTenColumnSchema(schema?: string): boolean {
   return schema?.includes("10col") ?? false;
+}
+
+export function isTenColV2Schema(schema?: string): boolean {
+  return schema === "table-10col-v2";
 }
 
 function usesTierColumnSchema(schema?: string): boolean {
@@ -213,11 +265,11 @@ export function getColumnCount(table: FlowTableRow[], schema?: string): number {
 
 export function getHeaders(colCount: number, schema?: string): string[] {
   if (colCount >= TEN_COL_WIDTH || usesTenColumnSchema(schema)) {
-    const headers: string[] = [...TABLE_HEADERS_10];
-    while (headers.length < colCount) {
-      headers.push(`列${headers.length + 1}`);
-    }
-    return headers.slice(0, colCount);
+    const base = isTenColV2Schema(schema)
+      ? [...TABLE_HEADERS_10_V2]
+      : [...TABLE_HEADERS_10];
+    while (base.length < colCount) base.push(`列${base.length + 1}`);
+    return base.slice(0, colCount);
   }
   if (colCount >= NINE_COL_WIDTH || schema?.includes("9col")) {
     const headers: string[] = [...TABLE_HEADERS_9];
@@ -235,10 +287,16 @@ export function getHeaders(colCount: number, schema?: string): string[] {
 
 export function getColumnHelp(
   header: string,
-  colCount: number
+  colCount: number,
+  schema?: string
 ): string | undefined {
-  if (colCount >= TEN_COL_WIDTH && header in COLUMN_HELP_10) {
-    return COLUMN_HELP_10[header as (typeof TABLE_HEADERS_10)[number]];
+  if (colCount >= TEN_COL_WIDTH) {
+    if (isTenColV2Schema(schema) && header in COLUMN_HELP_10_V2) {
+      return COLUMN_HELP_10_V2[header as (typeof TABLE_HEADERS_10_V2)[number]];
+    }
+    if (header in COLUMN_HELP_10) {
+      return COLUMN_HELP_10[header as (typeof TABLE_HEADERS_10)[number]];
+    }
   }
   if (colCount >= 9 && header in COLUMN_HELP_9) {
     return COLUMN_HELP_9[header as (typeof TABLE_HEADERS_9)[number]];
@@ -254,28 +312,54 @@ export function getHelpEntries(
   schema?: string
 ): { header: string; help: string }[] {
   return getHeaders(colCount, schema)
-    .map((header) => ({ header, help: getColumnHelp(header, colCount) }))
+    .map((header) => ({
+      header,
+      help: getColumnHelp(header, colCount, schema),
+    }))
     .filter((e): e is { header: string; help: string } => Boolean(e.help));
+}
+
+/**
+ * 画面表示用の短縮ラベル。v2 は DISPLAY_HEADERS_10_V2 を返す。
+ * それ以外は getHeaders と同じ（完全論理名）。
+ */
+export function getDisplayHeaders(colCount: number, schema?: string): string[] {
+  if (isTenColV2Schema(schema) && colCount >= TEN_COL_WIDTH) {
+    const headers: string[] = [...DISPLAY_HEADERS_10_V2];
+    while (headers.length < colCount) headers.push(`列${headers.length + 1}`);
+    return headers.slice(0, colCount);
+  }
+  return getHeaders(colCount, schema);
 }
 
 /** 表 UI で数値として編集する列 */
 export function isNumericTableColumn(
   colIndex: number,
-  colCount: number
+  colCount: number,
+  schema?: string
 ): boolean {
   if (colIndex === 0) return true;
-  if (colCount >= 9 && (colIndex === 4 || colIndex === 5)) return true;
+  if (colCount >= 9) {
+    // v2: 段=index 5、列=index 6
+    if (isTenColV2Schema(schema)) return colIndex === 5 || colIndex === 6;
+    // v1: 段=index 4、列=index 5
+    return colIndex === 4 || colIndex === 5;
+  }
   if (colCount >= 8 && colCount < 9 && colIndex === 4) return true;
   if (colCount === 7 && colIndex === 3) return true;
   return false;
 }
 
-/** 表 UI: 10列目「色」 */
+/** 表 UI: 色列かどうか（v2 は index 2、v1 は index 9） */
 export function isColorTableColumn(
   colIndex: number,
-  colCount: number
+  colCount: number,
+  schema?: string
 ): boolean {
-  return colCount >= TEN_COL_WIDTH && colIndex === TEN_COL_WIDTH - 1;
+  if (colCount < TEN_COL_WIDTH) return false;
+  return isTenColV2Schema(schema)
+    ? colIndex === 2
+    : colIndex === TEN_COL_WIDTH - 1;
 }
 
 /** 行を列数に合わせてパディング */
@@ -288,13 +372,24 @@ export function normalizeRow(
   return out.slice(0, colCount);
 }
 
-export function createEmptyRow(colCount: number, id?: number): FlowTableRow {
+export function createEmptyRow(
+  colCount: number,
+  id?: number,
+  schema?: string
+): FlowTableRow {
   const row: FlowTableRow = Array(colCount).fill("");
   if (colCount >= 9) {
     row[0] = id ?? 10;
     row[1] = "処理";
-    row[4] = 0;
-    row[5] = 0;
+    if (isTenColV2Schema(schema)) {
+      // v2: [ID, 種別, 色, 接続先(下), 接続先(右), 段, 列, Text1, Text2, Text3]
+      row[5] = 0; // 段
+      row[6] = 0; // 列
+    } else {
+      // v1: [ID, 種別, 接続先(下), 接続先(右), 段, 列, Text1, Text2, Text3, 色]
+      row[4] = 0; // 段
+      row[5] = 0; // 列
+    }
   } else if (colCount >= 8) {
     row[0] = id ?? 10;
     row[1] = "処理";
@@ -304,6 +399,31 @@ export function createEmptyRow(colCount: number, id?: number): FlowTableRow {
     row[1] = "処理";
   }
   return row;
+}
+
+/**
+ * 10列 v1 の行を v2 列順に変換する。
+ * v1: [ID, 種別, 接続先(下), 接続先(右), 段, 列, Text1, Text2, Text3, 色]
+ * v2: [ID, 種別, 色, 接続先(下), 接続先(右), 段, 列, Text1, Text2, Text3]
+ */
+export function migrateTable10ColV1ToV2(row: FlowTableRow): FlowTableRow {
+  const r = normalizeRow(row, TEN_COL_WIDTH);
+  return [r[0], r[1], r[9], r[2], r[3], r[4], r[5], r[6], r[7], r[8]];
+}
+
+/**
+ * table-10col-v1 ドキュメントを v2 に変換して返す。
+ * schema が v1 でなければそのまま返す。
+ */
+export function migrateDocToV2<
+  T extends { schema?: string; table: FlowTableRow[] },
+>(doc: T): T {
+  if (doc.schema !== TIER10_V1_SCHEMA) return doc;
+  return {
+    ...doc,
+    schema: TIER10_SCHEMA,
+    table: doc.table.map(migrateTable10ColV1ToV2),
+  };
 }
 
 /** 数値 ID の最大値 + 10（新規行用） */

@@ -12,6 +12,7 @@ TABLE_GAP_COLS = 13
 FLOW_HEADERS = (
     "ID",
     "図形種別",
+    "色",
     "接続先(下)",
     "接続先(右)",
     "段",
@@ -19,11 +20,10 @@ FLOW_HEADERS = (
     "Text1",
     "Text2",
     "Text3",
-    "色",
 )
 
 FLOW_COLUMN_COUNT = len(FLOW_HEADERS)
-FLOW_SCHEMA = "table-10col-v1"
+FLOW_SCHEMA = "table-10col-v2"
 
 DEFAULT_LAYOUT = {
     "width": 160,

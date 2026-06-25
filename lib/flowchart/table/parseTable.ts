@@ -1,5 +1,6 @@
 import { normalizeShapeType } from "../model/normalizeShapeType";
 import { normalizeColorHint } from "../visual/flowColors";
+import { isTenColV2Schema } from "./tableColumns";
 import type { FlowNode, FlowTableRow, ParseResult } from "../model/types";
 
 function normId(v: unknown): string {
@@ -21,10 +22,14 @@ function splitDests(v: unknown): string[] {
     .filter(Boolean);
 }
 
-export function parseTable(table: FlowTableRow[]): ParseResult {
+export function parseTable(
+  table: FlowTableRow[],
+  schema?: string
+): ParseResult {
   const nodes: FlowNode[] = [];
   const rowMap = new Map<number, FlowNode[]>();
   const colCount = table[0]?.length ?? 0;
+  const isV2 = isTenColV2Schema(schema);
 
   for (let i = 0; i < table.length; i++) {
     const row = table[i] ?? [];
@@ -35,10 +40,24 @@ export function parseTable(table: FlowTableRow[]): ParseResult {
     let destsDown: string[];
     let destsRight: string[];
     let level: number;
-
     let tier: number | undefined;
+    let colorHintRaw: unknown = undefined;
 
-    if (colCount >= 9) {
+    if (colCount >= 9 && isV2) {
+      // v2: [ID, 種別, 色, 接続先(下), 接続先(右), 段, 列, Text1, Text2, Text3]
+      txts = [];
+      for (let j = 7; j < Math.min(10, row.length); j++) {
+        if (row[j] !== null && row[j] !== undefined && row[j] !== "") {
+          txts.push(String(row[j]));
+        }
+      }
+      colorHintRaw = row[2];
+      destsDown = splitDests(row[3]);
+      destsRight = splitDests(row[4]);
+      tier = parseLevel(row[5]);
+      level = parseLevel(row[6]);
+    } else if (colCount >= 9) {
+      // v1: [ID, 種別, 接続先(下), 接続先(右), 段, 列, Text1, Text2, Text3, 色]
       txts = [];
       for (let j = 6; j < Math.min(9, row.length); j++) {
         if (row[j] !== null && row[j] !== undefined && row[j] !== "") {
@@ -49,6 +68,7 @@ export function parseTable(table: FlowTableRow[]): ParseResult {
       destsRight = splitDests(row[3]);
       tier = parseLevel(row[4]);
       level = parseLevel(row[5]);
+      if (colCount >= 10) colorHintRaw = row[9];
     } else if (colCount >= 8) {
       txts = [];
       for (let j = 5; j < Math.min(8, row.length); j++) {
@@ -91,7 +111,9 @@ export function parseTable(table: FlowTableRow[]): ParseResult {
       destsRight,
       level,
       ...(tier !== undefined ? { tier } : {}),
-      ...(colCount >= 10 ? { colorHint: normalizeColorHint(row[9]).hint } : {}),
+      ...(colorHintRaw !== undefined
+        ? { colorHint: normalizeColorHint(colorHintRaw).hint }
+        : {}),
       rowIndex: i,
     };
     nodes.push(node);

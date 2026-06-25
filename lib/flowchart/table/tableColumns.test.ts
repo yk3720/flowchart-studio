@@ -12,9 +12,12 @@ import {
   suggestNextId,
   TABLE_HEADERS_9,
   TABLE_HEADERS_10,
+  TABLE_HEADERS_10_V2,
   TIER10_SCHEMA,
+  TIER10_V1_SCHEMA,
   TIER9_SCHEMA,
   isColorTableColumn,
+  migrateTable10ColV1ToV2,
 } from "./tableColumns";
 
 describe("tableColumns", () => {
@@ -120,24 +123,53 @@ describe("tableColumns", () => {
     expect(row).toHaveLength(8);
   });
 
-  it("getHeaders returns 10 columns with 色 for tier10 schema", () => {
-    expect(getHeaders(10, TIER10_SCHEMA)).toEqual([...TABLE_HEADERS_10]);
-    expect(getHeaders(10, TIER10_SCHEMA)[9]).toBe("色");
+  it("getHeaders returns v2 column order for TIER10_SCHEMA (table-10col-v2)", () => {
+    expect(getHeaders(10, TIER10_SCHEMA)).toEqual([...TABLE_HEADERS_10_V2]);
+    expect(getHeaders(10, TIER10_SCHEMA)[2]).toBe("色");
+    expect(getHeaders(10, TIER10_SCHEMA)[3]).toBe("接続先(下)");
   });
 
-  it("resolveColumnCount uses 10 for table-10col-v1", () => {
+  it("getHeaders returns v1 column order for TIER10_V1_SCHEMA", () => {
+    expect(getHeaders(10, TIER10_V1_SCHEMA)).toEqual([...TABLE_HEADERS_10]);
+    expect(getHeaders(10, TIER10_V1_SCHEMA)[9]).toBe("色");
+  });
+
+  it("resolveColumnCount uses 10 for v2 schema", () => {
     expect(resolveColumnCount([], TIER10_SCHEMA)).toBe(10);
   });
 
-  it("isColorTableColumn identifies column index 9 at width 10", () => {
-    expect(isColorTableColumn(9, 10)).toBe(true);
+  it("isColorTableColumn: v2 uses index 2, v1 uses index 9", () => {
+    expect(isColorTableColumn(2, 10, TIER10_SCHEMA)).toBe(true);
+    expect(isColorTableColumn(9, 10, TIER10_SCHEMA)).toBe(false);
+    expect(isColorTableColumn(9, 10, TIER10_V1_SCHEMA)).toBe(true);
+    expect(isColorTableColumn(2, 10, TIER10_V1_SCHEMA)).toBe(false);
     expect(isColorTableColumn(9, 9)).toBe(false);
   });
 
-  it("createEmptyRow for 10 columns", () => {
-    const row = createEmptyRow(10, 80);
+  it("createEmptyRow for 10 columns v2 places 段/列 at index 5/6", () => {
+    const row = createEmptyRow(10, 80, TIER10_SCHEMA);
     expect(row).toHaveLength(10);
-    expect(row[9]).toBe("");
-    expect(inferTableLayout([row], TIER10_SCHEMA)).toBe("tier9");
+    expect(row[5]).toBe(0); // 段
+    expect(row[6]).toBe(0); // 列
+    expect(row[2]).toBe(""); // 色（空）
+  });
+
+  it("migrateTable10ColV1ToV2 reorders v1 row to v2", () => {
+    // v1: [ID, 種別, 下先, 右先, 段, 列, T1, T2, T3, 色]
+    const v1row = ["1", "処理", "2", "3", "1", "0", "A", "B", "C", "橙"];
+    const v2row = migrateTable10ColV1ToV2(v1row);
+    // v2: [ID, 種別, 色, 下先, 右先, 段, 列, T1, T2, T3]
+    expect(v2row).toEqual([
+      "1",
+      "処理",
+      "橙",
+      "2",
+      "3",
+      "1",
+      "0",
+      "A",
+      "B",
+      "C",
+    ]);
   });
 });
