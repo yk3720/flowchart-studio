@@ -45,6 +45,8 @@
 | 3   | `c:/yk-memo/.../新チャット依頼.md` — コピペ2行目（本ファイルと同じセッション MD）   |
 | 4   | `docs/05_開発ガイドライン/decision-log.md` — タイムライン **1行**（本文コピー禁止） |
 
+**RUN 最小:** Phase C は **Bash 1 本/リポ**（add+commit+push）。Post-C 専用 commit 禁止 — `handoff-session-work` · `git-save.md` · `AGENT_SHELL_RULES` D-2。
+
 **更新しない:** handoffs 以外への §4 書き戻し
 
 ---
