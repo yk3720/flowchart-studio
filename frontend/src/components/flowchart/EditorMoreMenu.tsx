@@ -45,6 +45,10 @@ type EditorMoreMenuProps = {
   onExportPng: () => void;
   onExportSvg: () => void;
   onClearDraft: () => void;
+  onSaveJson: () => void;
+  onImportJson: () => void;
+  onCopyTable: () => void;
+  onCopyColumnFormat: () => void;
   importBundle?: {
     disabled: boolean;
     disabledTitle?: string;
@@ -131,6 +135,10 @@ export function EditorMoreMenu({
   onExportPng,
   onExportSvg,
   onClearDraft,
+  onSaveJson,
+  onImportJson,
+  onCopyTable,
+  onCopyColumnFormat,
   importBundle,
   resetFlow,
 }: EditorMoreMenuProps) {
@@ -235,12 +243,8 @@ export function EditorMoreMenu({
     closeMenu();
   };
 
-  const starterHint = moduleSelected
-    ? "選択中モジュールの表を雛形で始めます（編集中は確認）"
-    : undefined;
-
   const sampleHint = moduleSelected
-    ? "例はプレビューのみ。保存する場合は「モジュールに適用」"
+    ? "例はプレビューのみ。保存する場合は「例を適用」"
     : "保存せずに例の表と図を表示";
 
   return (
@@ -271,60 +275,10 @@ export function EditorMoreMenu({
           className={fcMenuDropdown}
           onKeyDown={handleMenuKeyDown}
         >
-          {!readOnly ? (
-            <>
-              <MenuSection label="始め方" hint={starterHint} isFirst />
-              {starters.map((starter) => (
-                <MenuItem
-                  key={starter.key}
-                  onClick={() => closeAnd(() => onApplyStarter(starter.key))}
-                >
-                  {starter.label}
-                </MenuItem>
-              ))}
-
-              <MenuSection label="サンプル（例）" hint={sampleHint} />
-              {samples.map((sample) => (
-                <MenuItem
-                  key={sample.key}
-                  onClick={() => closeAnd(() => onPreviewSample(sample.key))}
-                >
-                  {sample.label}
-                </MenuItem>
-              ))}
-            </>
-          ) : null}
-
-          <MenuSection label="出力" isFirst={readOnly} />
-          <MenuItem
-            disabled={!canExport}
-            title={exportDisabledTitle}
-            onClick={() => closeAnd(onExportPng)}
-          >
-            PNG
-          </MenuItem>
-          <MenuItem
-            disabled={!canExport}
-            title={exportDisabledTitle}
-            onClick={() => closeAnd(onExportSvg)}
-          >
-            SVG
-          </MenuItem>
-
-          {pinOffline ? (
-            <>
-              <MenuSection label="オフライン" />
-              <MenuItem onClick={() => closeAnd(pinOffline.onToggle)}>
-                {pinOffline.pinned
-                  ? "オフライン保存を解除"
-                  : "オフライン用に保存"}
-              </MenuItem>
-            </>
-          ) : null}
-
+          {/* 取込: import.json（workspace のみ） */}
           {!readOnly && workspaceMode && importBundle ? (
             <>
-              <MenuSection label="装置取込" isFirst={readOnly} />
+              <MenuSection label="取込" isFirst />
               <MenuItem
                 disabled={importBundle.disabled}
                 title={importBundle.disabledTitle}
@@ -333,7 +287,7 @@ export function EditorMoreMenu({
                   importInputRef.current?.click();
                 }}
               >
-                import.json を取込…
+                import.jsonを取込…
               </MenuItem>
               <input
                 ref={importInputRef}
@@ -354,29 +308,107 @@ export function EditorMoreMenu({
             </>
           ) : null}
 
-          {!readOnly && workspaceMode && moduleSelected && resetFlow ? (
+          {/* 書き出し */}
+          <MenuSection
+            label="書き出し"
+            isFirst={readOnly || !(workspaceMode && importBundle)}
+          />
+          {!readOnly ? (
             <>
-              <MenuSection label="フロー" />
-              <MenuItem
-                destructive
-                onClick={() => closeAnd(resetFlow.onRequestReset)}
-              >
-                フローを雛形にリセット…
+              <MenuItem onClick={() => closeAnd(onSaveJson)}>
+                JSONをダウンロード
+              </MenuItem>
+              <MenuItem onClick={() => closeAnd(onCopyTable)}>
+                表をコピー
+              </MenuItem>
+              <MenuItem onClick={() => closeAnd(onCopyColumnFormat)}>
+                ヘッダーをコピー
+              </MenuItem>
+            </>
+          ) : null}
+          <MenuItem
+            disabled={!canExport}
+            title={exportDisabledTitle}
+            onClick={() => closeAnd(onExportPng)}
+          >
+            PNGをダウンロード
+          </MenuItem>
+          <MenuItem
+            disabled={!canExport}
+            title={exportDisabledTitle}
+            onClick={() => closeAnd(onExportSvg)}
+          >
+            SVGをダウンロード
+          </MenuItem>
+
+          {/* 読込（編集者のみ） */}
+          {!readOnly ? (
+            <>
+              <MenuSection label="読込" />
+              <MenuItem onClick={() => closeAnd(onImportJson)}>
+                JSONから読込…
               </MenuItem>
             </>
           ) : null}
 
-          {!workspaceMode ? (
+          {/* 雛形・例（編集者のみ） */}
+          {!readOnly ? (
             <>
-              <MenuSection label="下書き" />
-              <MenuItem
-                destructive
-                disabled={clearDraftDisabled}
-                title={clearDraftTitle}
-                onClick={() => closeAnd(onClearDraft)}
-              >
-                下書きを削除
+              <MenuSection label="雛形・例" hint={sampleHint} />
+              {starters.map((starter) => (
+                <MenuItem
+                  key={starter.key}
+                  onClick={() => closeAnd(() => onApplyStarter(starter.key))}
+                >
+                  {starter.label}
+                </MenuItem>
+              ))}
+              {samples.map((sample) => (
+                <MenuItem
+                  key={sample.key}
+                  onClick={() => closeAnd(() => onPreviewSample(sample.key))}
+                >
+                  {sample.label}
+                </MenuItem>
+              ))}
+            </>
+          ) : null}
+
+          {/* オフライン */}
+          {pinOffline ? (
+            <>
+              <MenuSection label="オフライン" />
+              <MenuItem onClick={() => closeAnd(pinOffline.onToggle)}>
+                {pinOffline.pinned
+                  ? "オフライン保存を解除"
+                  : "オフラインに保存"}
               </MenuItem>
+            </>
+          ) : null}
+
+          {/* 危険 */}
+          {(!readOnly && workspaceMode && moduleSelected && resetFlow) ||
+          !workspaceMode ? (
+            <>
+              <MenuSection label="危険" />
+              {!readOnly && workspaceMode && moduleSelected && resetFlow ? (
+                <MenuItem
+                  destructive
+                  onClick={() => closeAnd(resetFlow.onRequestReset)}
+                >
+                  フローをリセット…
+                </MenuItem>
+              ) : null}
+              {!workspaceMode ? (
+                <MenuItem
+                  destructive
+                  disabled={clearDraftDisabled}
+                  title={clearDraftTitle}
+                  onClick={() => closeAnd(onClearDraft)}
+                >
+                  下書きを削除
+                </MenuItem>
+              ) : null}
             </>
           ) : null}
         </div>

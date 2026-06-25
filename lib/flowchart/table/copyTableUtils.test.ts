@@ -32,21 +32,11 @@ describe("columnFormatTsv", () => {
     expect(firstLine).toBe(TABLE_HEADERS_10.join("\t"));
   });
 
-  it("has 4 lines: header + 3 sample rows", () => {
-    expect(columnFormatTsv().split("\n")).toHaveLength(4);
+  it("returns header row only (no sample rows)", () => {
+    expect(columnFormatTsv().split("\n")).toHaveLength(1);
   });
 
-  it("sample rows follow 端子→処理→端子 pattern", () => {
-    const [, r1, r2, r3] = columnFormatTsv().split("\n");
-    expect(r1.split("\t")[1]).toBe("端子");
-    expect(r2.split("\t")[1]).toBe("処理");
-    expect(r3.split("\t")[1]).toBe("端子");
-  });
-
-  it("each sample row has 10 columns", () => {
-    const [, ...rows] = columnFormatTsv().split("\n");
-    for (const row of rows) {
-      expect(row.split("\t")).toHaveLength(10);
-    }
+  it("header has 10 columns", () => {
+    expect(columnFormatTsv().split("\t")).toHaveLength(10);
   });
 });

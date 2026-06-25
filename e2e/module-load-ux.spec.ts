@@ -42,7 +42,7 @@ test.describe("モジュール読込 UX", () => {
     await selectModule(page, "供給動作");
     await expect(page.getByLabel("行2 Text1")).toBeVisible({ timeout: 15_000 });
 
-    await loadSampleFromMenu(page, "例を見る: カレーの作り方");
+    await loadSampleFromMenu(page, "例: カレーの作り方");
     await expect(page.getByText("レシピを確認")).toBeVisible({
       timeout: 15_000,
     });
@@ -58,7 +58,7 @@ test.describe("モジュール読込 UX", () => {
 test.describe("サンプルプレビュー（モジュール未選択）", () => {
   test("例を見たあとプレビューを終了できる", async ({ page }) => {
     await ensureWorkspaceLoaded(page);
-    await loadSampleFromMenu(page, "例を見る: カレーの作り方");
+    await loadSampleFromMenu(page, "例: カレーの作り方");
     await expect(page.getByText("レシピを確認")).toBeVisible({
       timeout: 15_000,
     });

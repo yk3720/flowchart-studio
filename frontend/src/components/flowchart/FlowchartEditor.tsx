@@ -26,6 +26,10 @@ import {
   serializeDocument,
 } from "@/lib/flowchart/model/document";
 import {
+  columnFormatTsv,
+  tableToTsv,
+} from "@/lib/flowchart/table/copyTableUtils";
+import {
   clearDraft,
   loadDraft,
   saveDraft,
@@ -102,14 +106,14 @@ const SAMPLES: Record<string, FlowchartDocument> = {
 };
 
 const STARTER_OPTIONS = [
-  { key: "templateStarter", label: "雛形を適用: はじめから" },
-  { key: "templateLinear", label: "雛形を適用: 直線フロー" },
+  { key: "templateStarter", label: "雛形: はじめから" },
+  { key: "templateLinear", label: "雛形: 直線フロー" },
 ] as const;
 
 const DEMO_SAMPLE_OPTIONS = [
-  { key: "curry", label: "例を見る: カレーの作り方" },
-  { key: "morning", label: "例を見る: 朝の出勤準備" },
-  { key: "atm", label: "例を見る: ATMで現金を下ろす" },
+  { key: "curry", label: "例: カレーの作り方" },
+  { key: "morning", label: "例: 朝の出勤準備" },
+  { key: "atm", label: "例: ATMで現金を下ろす" },
 ] as const;
 
 type StarterKey = (typeof STARTER_OPTIONS)[number]["key"];
@@ -187,7 +191,7 @@ const EMPTY_MODULE_NAV_HINT =
 const REGENERATE_HINT =
   "表を編集したあとは「再生成」でプレビューを更新します。";
 const EMPTY_SAMPLE_HINT =
-  "または「その他」→「サンプル（例）」から表と図を表示できます";
+  "または「その他」→「雛形・例」から表と図を表示できます";
 const EMPTY_TABLE_MESSAGE = "Excel から取込むか、表を入力してください";
 
 function resolveInitialState(props: FlowchartEditorProps): {
@@ -648,10 +652,7 @@ export const FlowchartEditor = forwardRef<
   };
 
   const handleSaveJson = () => {
-    if (readOnly) {
-      setStatus("閲覧者は表のダウンロードはできません");
-      return;
-    }
+    if (readOnly) return;
     const { doc: parsed, errors } = parseFlowchartDocument(jsonText);
     if (errors.length > 0) {
       setParseErrors(errors);
@@ -660,7 +661,17 @@ export const FlowchartEditor = forwardRef<
     }
     if (parsed) downloadJson(parsed);
     else downloadJson(doc);
-    setStatus("JSON をダウンロードしました");
+    setStatus("JSONをダウンロードしました");
+  };
+
+  const handleCopyTable = async () => {
+    await navigator.clipboard.writeText(tableToTsv(doc.table));
+    setStatus("表をコピーしました");
+  };
+
+  const handleCopyColumnFormat = async () => {
+    await navigator.clipboard.writeText(columnFormatTsv());
+    setStatus("ヘッダーをコピーしました");
   };
 
   const handleImportFile = (file: File) => {
@@ -805,36 +816,19 @@ export const FlowchartEditor = forwardRef<
 
   const toolbarButtons = (
     <>
-      <button
-        ref={headerRegenerateRef}
-        type="button"
-        onClick={handleRegenerate}
-        disabled={!showEditorPanes || readOnly}
-        className={cn(
-          fcBtnPrimary,
-          isStale && showEditorPanes && !readOnly ? fcStaleRing : ""
-        )}
-      >
-        再生成
-      </button>
-
       {!readOnly ? (
-        <>
-          <button
-            type="button"
-            onClick={handleSaveJson}
-            className={fcBtnSecondary}
-          >
-            JSON をダウンロード
-          </button>
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className={fcBtnSecondary}
-          >
-            表を読込
-          </button>
-        </>
+        <button
+          ref={headerRegenerateRef}
+          type="button"
+          onClick={handleRegenerate}
+          disabled={!showEditorPanes}
+          className={cn(
+            fcBtnPrimary,
+            isStale && showEditorPanes ? fcStaleRing : ""
+          )}
+        >
+          再生成
+        </button>
       ) : null}
 
       <EditorMoreMenu
@@ -857,6 +851,10 @@ export const FlowchartEditor = forwardRef<
         onExportPng={() => void handleExportPng()}
         onExportSvg={() => void handleExportSvg()}
         onClearDraft={handleClearDraft}
+        onSaveJson={handleSaveJson}
+        onImportJson={() => fileInputRef.current?.click()}
+        onCopyTable={() => void handleCopyTable()}
+        onCopyColumnFormat={() => void handleCopyColumnFormat()}
         importBundle={importBundle}
         resetFlow={resetFlow}
       />
@@ -872,7 +870,7 @@ export const FlowchartEditor = forwardRef<
               onClick={handleApplyPreviewToModule}
               className={fcBtnAccent}
             >
-              モジュールに適用
+              例を適用
             </button>
           ) : null}
           <button
@@ -881,7 +879,7 @@ export const FlowchartEditor = forwardRef<
             onClick={handleCancelModulePreview}
             className={fcBtnSecondary}
           >
-            プレビューを終了
+            例の表示を終了
           </button>
         </>
       ) : null}
@@ -1009,12 +1007,7 @@ export const FlowchartEditor = forwardRef<
   ) : (
     <>
       {!readOnly ? <p className={fcEmptyHint}>{REGENERATE_HINT}</p> : null}
-      {!readOnly ? (
-        <CsvPastePanel
-          onApply={handleCsvApply}
-          onRegenerate={handleRegenerate}
-        />
-      ) : null}
+      {!readOnly ? <CsvPastePanel onApply={handleCsvApply} /> : null}
       <FlowTableEditor
         ref={tableEditorRef}
         table={doc.table}

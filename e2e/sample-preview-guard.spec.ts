@@ -18,7 +18,7 @@ test.describe("サンプルプレビューと上書き防止", () => {
     await page.getByRole("button", { name: "再生成" }).click();
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
 
-    await loadSampleFromMenu(page, "例を見る: カレーの作り方");
+    await loadSampleFromMenu(page, "例: カレーの作り方");
     await expect(page.getByText("レシピを確認")).toBeVisible({
       timeout: 15_000,
     });
@@ -39,7 +39,7 @@ test.describe("サンプルプレビューと上書き防止", () => {
     await page.getByRole("button", { name: "再生成" }).click();
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
 
-    await loadSampleFromMenu(page, "雛形を適用: 直線フロー");
+    await loadSampleFromMenu(page, "雛形: 直線フロー");
     await expect(
       page.getByRole("alertdialog", { name: "表を雛形で始め直しますか？" })
     ).toBeVisible();

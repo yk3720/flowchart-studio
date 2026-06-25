@@ -12,7 +12,7 @@ const A0001_SCRATCH_XLSX = path.join(
 function excelFileInput(page: import("@playwright/test").Page) {
   return page
     .locator("label")
-    .filter({ hasText: "Excel ファイル…" })
+    .filter({ hasText: "Excelから取込…" })
     .locator('input[type="file"]');
 }
 
@@ -34,13 +34,8 @@ test.describe("A0001 1 動作 Excel Web 取込", () => {
     });
 
     await expect(page.getByText(/3 行を表に反映/)).toBeVisible();
-    await expect(page.getByText("プレビューはまだ古い")).toBeVisible();
 
-    await page
-      .getByRole("status")
-      .filter({ hasText: "プレビューはまだ古い" })
-      .getByRole("button", { name: "再生成" })
-      .click();
+    await headerRegenerate(page).click();
 
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
     await expect(page.locator(".react-flow__node")).toHaveCount(3, {

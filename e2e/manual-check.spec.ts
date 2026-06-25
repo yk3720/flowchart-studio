@@ -31,7 +31,7 @@ test.describe("サンプル表示（モジュール未選択）", () => {
     await ensureWorkspaceLoaded(page);
 
     await expect(page.getByText(EMPTY_MODULE_MSG)).toHaveCount(2);
-    await loadSampleFromMenu(page, "例を見る: カレーの作り方");
+    await loadSampleFromMenu(page, "例: カレーの作り方");
 
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
     await expect(page.getByText(EMPTY_MODULE_MSG)).toHaveCount(0);
@@ -136,7 +136,8 @@ test.describe("M2 AC + P0 UX 手動確認（自動化）", () => {
     const json = fs.readFileSync(FIXTURE_SIMPLE_YES, "utf-8");
     const nodeCountBefore = await page.locator(".react-flow__node").count();
 
-    await page.getByRole("button", { name: "表を読込" }).click();
+    await openMoreMenu(page);
+    await page.getByRole("menuitem", { name: "JSONから読込…" }).click();
     await page.locator('input[type="file"][accept*="json"]').setInputFiles({
       name: "sample-simple-yes.json",
       mimeType: "application/json",
@@ -158,7 +159,7 @@ test.describe("M2 AC + P0 UX 手動確認（自動化）", () => {
 
     const downloadPromise = page.waitForEvent("download", { timeout: 15_000 });
     await openMoreMenu(page);
-    await page.getByRole("menuitem", { name: "PNG" }).click();
+    await page.getByRole("menuitem", { name: "PNGをダウンロード" }).click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(/\.png$/i);
   });
@@ -187,7 +188,9 @@ test.describe("M2 AC + P0 UX 手動確認（自動化）", () => {
     await expect(page.getByText("プレビューは古い")).toBeVisible();
 
     await openMoreMenu(page);
-    await expect(page.getByRole("menuitem", { name: "PNG" })).toBeDisabled();
+    await expect(
+      page.getByRole("menuitem", { name: "PNGをダウンロード" })
+    ).toBeDisabled();
   });
 
   test("B-2: 表編集が再生成後にプレビューへ反映", async ({ page }) => {

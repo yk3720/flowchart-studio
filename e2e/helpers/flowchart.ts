@@ -65,7 +65,7 @@ export async function ensureNavExpanded(page: Page) {
 /** サンプル読込で表・プレビューを表示（モジュール未選択でも可） */
 export async function openPreviewWithSample(
   page: Page,
-  label = "例を見る: カレーの作り方"
+  label = "例: カレーの作り方"
 ) {
   await ensureWorkspaceLoaded(page);
   await loadSampleFromMenu(page, label);
