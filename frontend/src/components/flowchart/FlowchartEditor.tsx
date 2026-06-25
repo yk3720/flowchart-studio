@@ -87,6 +87,8 @@ import {
   fcWarningBannerLink,
   fcModuleLoadingOverlay,
   fcPreviewChrome,
+  fcTableHelpDetails,
+  fcTableHelpSummary,
   fcZoomBtn,
   fcZoomPercent,
 } from "./flowchartUiClasses";
@@ -1006,8 +1008,6 @@ export const FlowchartEditor = forwardRef<
     </div>
   ) : (
     <>
-      {!readOnly ? <p className={fcEmptyHint}>{REGENERATE_HINT}</p> : null}
-      {!readOnly ? <CsvPastePanel onApply={handleCsvApply} /> : null}
       <FlowTableEditor
         ref={tableEditorRef}
         table={doc.table}
@@ -1015,6 +1015,17 @@ export const FlowchartEditor = forwardRef<
         errorRowIndices={errorRows}
         readOnly={readOnly}
         tableSchema={doc.schema}
+        csvPane={
+          !readOnly ? (
+            <details className={fcTableHelpDetails}>
+              <summary className={fcTableHelpSummary}>CSV / Excel 取込</summary>
+              <p className="mt-1 text-xs text-flow-text-muted">
+                {REGENERATE_HINT}
+              </p>
+              <CsvPastePanel onApply={handleCsvApply} />
+            </details>
+          ) : undefined
+        }
       />
     </>
   );
@@ -1182,7 +1193,7 @@ export const FlowchartEditor = forwardRef<
             </header>
             {errorBanner}
             {warningBanner}
-            <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-4">
+            <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
               <h2 className={cn("shrink-0", fcSectionTitle)}>表</h2>
               {tablePaneBody}
             </div>

@@ -466,8 +466,6 @@ export function FlowchartWorkspace({
     statusBanner = offlineCachedAt
       ? `オフライン用キャッシュ（${formatCachedAt(offlineCachedAt)}）`
       : "オフライン用キャッシュ";
-  } else if (!statusBanner && loadSource === "cloud") {
-    statusBanner = "クラウドから読み込み";
   }
 
   if (!device) {

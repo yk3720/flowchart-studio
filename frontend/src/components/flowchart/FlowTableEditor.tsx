@@ -19,7 +19,17 @@ import {
 } from "@/lib/flowchart/table/pasteTableCells";
 import type { FlowTableRow } from "@/lib/flowchart/model/types";
 import { cn } from "@/lib/utils";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
+import { useSyncedHorizontalScroll } from "./table/useSyncedHorizontalScroll";
+import { FlowTableDockScrollbar } from "./table/FlowTableDockScrollbar";
+import { useTableColumnSizing } from "./table/useTableColumnSizing";
 import {
   fcTableAddRowBtn,
   fcTableCell,
@@ -39,6 +49,9 @@ import {
   fcTableRowError,
   fcTableScroll,
   fcTable,
+  fcTableHeadCellText,
+  fcTableResizeHandle,
+  fcFocusRing,
 } from "./flowchartUiClasses";
 
 export type FlowTableEditorHandle = {
@@ -52,6 +65,8 @@ type Props = {
   readOnly?: boolean;
   /** table-9col-v1 等 — 9列ヘッダー判定に使用 */
   tableSchema?: string;
+  /** 表ペイン内ツールバー直下に挿入するスロット（CSV 取込 details 等） */
+  csvPane?: React.ReactNode;
 };
 
 function cellToString(value: unknown): string {
@@ -61,14 +76,48 @@ function cellToString(value: unknown): string {
 
 export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
   function FlowTableEditor(
-    { table, onChange, errorRowIndices, readOnly, tableSchema },
+    { table, onChange, errorRowIndices, readOnly, tableSchema, csvPane },
     ref
   ) {
     const colCount = resolveColumnCount(table, tableSchema);
     const headers = getHeaders(colCount, tableSchema);
     const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
-    const scrollRef = useRef<HTMLDivElement>(null);
     const focusCellRef = useRef<{ row: number; col: number } | null>(null);
+    const { colWidths, startResize, adjustWidth, resetWidths } =
+      useTableColumnSizing(colCount, tableSchema);
+    const { viewportRef, dockRef, innerRef, syncInnerWidth } =
+      useSyncedHorizontalScroll();
+    const [keyboardResizingIdx, setKeyboardResizingIdx] = useState<
+      number | null
+    >(null);
+
+    // 列幅変化後に dock スクロールバー幅を同期
+    useEffect(() => {
+      syncInnerWidth();
+    }, [colWidths, syncInnerWidth]);
+
+    const handleHeaderKeyDown = (
+      colIdx: number,
+      e: KeyboardEvent<HTMLTableCellElement>
+    ) => {
+      if (keyboardResizingIdx === null) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          setKeyboardResizingIdx(colIdx);
+        }
+      } else if (keyboardResizingIdx === colIdx) {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          adjustWidth(colIdx, -10);
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          adjustWidth(colIdx, 10);
+        } else if (e.key === "Enter" || e.key === "Escape") {
+          e.preventDefault();
+          setKeyboardResizingIdx(null);
+        }
+      }
+    };
 
     useImperativeHandle(ref, () => ({
       scrollToRow: (rowIndex: number) => {
@@ -129,6 +178,26 @@ export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
 
     return (
       <div className="flex min-h-0 flex-1 flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {!readOnly ? (
+            <button type="button" onClick={addRow} className={fcTableAddRowBtn}>
+              行を追加
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={resetWidths}
+            className={fcTableAddRowBtn}
+          >
+            列幅をリセット
+          </button>
+          <span className={fcTableMeta}>
+            {table.length} 行 · {colCount} 列
+          </span>
+        </div>
+
+        {csvPane}
+
         <details className={fcTableHelpDetails}>
           <summary className={fcTableHelpSummary}>列の意味（ヘルプ）</summary>
           {colCount >= 8 ? (
@@ -153,38 +222,43 @@ export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
           ) : null}
         </details>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {!readOnly ? (
-            <>
-              <button
-                type="button"
-                onClick={addRow}
-                className={fcTableAddRowBtn}
-              >
-                行を追加
-              </button>
-            </>
-          ) : null}
-          <span className={fcTableMeta}>
-            {table.length} 行 · {colCount} 列
-          </span>
-        </div>
-
         <div
-          ref={scrollRef}
+          ref={viewportRef}
           className={fcTableScroll}
           onPasteCapture={handlePaste}
         >
           <table className={fcTable}>
+            <colgroup>
+              {colWidths.map((w, i) => (
+                <col key={i} style={{ width: w }} />
+              ))}
+            </colgroup>
             <thead className={fcTableHead}>
               <tr>
                 <th className={fcTableHeadCellIndex}>#</th>
-                {headers.map((h) => {
+                {headers.map((h, colIndex) => {
+                  const fullIdx = colIndex + 1;
                   const help = getColumnHelp(h, colCount);
+                  const isKbResizing = keyboardResizingIdx === fullIdx;
                   return (
-                    <th key={h} className={fcTableHeadCell} title={help}>
-                      {h}
-                      {help && <span className={fcTableHeadHelpMark}>?</span>}
+                    <th
+                      key={h}
+                      className={cn(
+                        fcTableHeadCell,
+                        fcFocusRing,
+                        isKbResizing && "ring-2 ring-inset ring-flow-accent"
+                      )}
+                      tabIndex={0}
+                      onKeyDown={(e) => handleHeaderKeyDown(fullIdx, e)}
+                    >
+                      <span className={fcTableHeadCellText} title={help ?? h}>
+                        {h}
+                        {help && <span className={fcTableHeadHelpMark}>?</span>}
+                      </span>
+                      <span
+                        className={fcTableResizeHandle}
+                        onMouseDown={(e) => startResize(fullIdx, e)}
+                      />
                     </th>
                   );
                 })}
@@ -219,6 +293,7 @@ export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
                             disabled={readOnly}
                             className={fcTableCellInput}
                             aria-label={`行${rowIndex + 1} ${h}`}
+                            title={cellToString(row[colIndex])}
                             {...bindCellFocus(rowIndex, colIndex)}
                           >
                             {(isColorTableColumn(colIndex, colCount)
@@ -246,6 +321,7 @@ export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
                             readOnly={readOnly}
                             className={fcTableCellInputMono}
                             aria-label={`行${rowIndex + 1} ${h}`}
+                            title={cellToString(row[colIndex])}
                             {...bindCellFocus(rowIndex, colIndex)}
                           />
                         )}
@@ -270,6 +346,7 @@ export const FlowTableEditor = forwardRef<FlowTableEditorHandle, Props>(
             </tbody>
           </table>
         </div>
+        <FlowTableDockScrollbar dockRef={dockRef} innerRef={innerRef} />
       </div>
     );
   }

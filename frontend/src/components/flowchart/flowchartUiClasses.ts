@@ -401,12 +401,22 @@ export const fcTableScroll = cn(
   "min-h-0 flex-1 overflow-auto scroll-pt-10 rounded-md border border-flow-border-strong"
 );
 
-export const fcTable = cn(fcTextUi, "w-full min-w-[640px] border-collapse");
+export const fcTable = cn(fcTextUi, "border-collapse table-fixed");
 
 export const fcTableHead = "sticky top-0 z-10 bg-flow-surface-subtle";
 
 export const fcTableHeadCell = cn(
-  "border-b border-flow-border px-2 py-1.5 text-left font-medium text-flow-text-body"
+  "relative border-b border-flow-border px-2 py-1.5 text-left font-medium text-flow-text-body"
+);
+
+/** 列ヘッダー内のテキスト切り詰め（リサイズハンドルのスペースを確保） */
+export const fcTableHeadCellText =
+  "block overflow-hidden text-ellipsis whitespace-nowrap pr-2";
+
+/** 列リサイズハンドル — ヘッダーセル右端 8px ヒット領域 */
+export const fcTableResizeHandle = cn(
+  "absolute inset-y-0 right-0 z-10 w-2 cursor-col-resize touch-none select-none",
+  "border-r border-transparent hover:border-flow-accent"
 );
 
 export const fcTableHeadCellIndex = cn(
@@ -435,7 +445,7 @@ export const fcTableCellIndex = cn(
 export const fcTableCellInput = cn(
   fcFocusRing,
   fcTextUi,
-  "scroll-mt-10 w-full rounded border-0 bg-transparent px-1.5 py-1 focus:bg-flow-surface disabled:cursor-default disabled:opacity-90"
+  "scroll-mt-10 w-full text-ellipsis rounded border-0 bg-transparent px-1.5 py-1 focus:bg-flow-surface disabled:cursor-default disabled:opacity-90"
 );
 
 export const fcTableCellInputMono = cn(fcTableCellInput, "font-mono");
