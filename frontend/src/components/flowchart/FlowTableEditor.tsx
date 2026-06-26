@@ -65,6 +65,8 @@ export type FlowTableEditorHandle = {
 type Props = {
   table: FlowTableRow[];
   onChange: (table: FlowTableRow[]) => void;
+  /** セル確定時（input blur · select change · 行追加/削除）に発火 — Undo スタック用 */
+  onCommit?: () => void;
   errorRowIndices?: Set<number>;
   readOnly?: boolean;
   /** table-9col-v1 等 — 9列ヘッダー判定に使用 */
@@ -91,6 +93,7 @@ export const FlowTableEditor = memo(
     {
       table,
       onChange,
+      onCommit,
       errorRowIndices,
       readOnly,
       tableSchema,
@@ -166,6 +169,7 @@ export const FlowTableEditor = memo(
     const addRow = () => {
       const id = suggestNextId(table);
       updateTable([...table, createEmptyRow(colCount, id, tableSchema)]);
+      onCommit?.();
     };
 
     useImperativeHandle(ref, () => ({
@@ -181,6 +185,7 @@ export const FlowTableEditor = memo(
     const deleteRow = (rowIndex: number) => {
       if (table.length <= 1) return;
       updateTable(table.filter((_, i) => i !== rowIndex));
+      onCommit?.();
     };
 
     const isShapeColumn = (colIndex: number) =>
@@ -328,9 +333,10 @@ export const FlowTableEditor = memo(
                                 ? cellToString(row[colIndex])
                                 : cellToString(row[colIndex]) || "処理"
                             }
-                            onChange={(e) =>
-                              updateCell(rowIndex, colIndex, e.target.value)
-                            }
+                            onChange={(e) => {
+                              updateCell(rowIndex, colIndex, e.target.value);
+                              onCommit?.();
+                            }}
                             disabled={readOnly}
                             className={fcTableCellInput}
                             aria-label={`行${rowIndex + 1} ${h}`}
@@ -363,6 +369,7 @@ export const FlowTableEditor = memo(
                             onChange={(e) =>
                               updateCell(rowIndex, colIndex, e.target.value)
                             }
+                            onBlur={() => onCommit?.()}
                             readOnly={readOnly}
                             className={fcTableCellInputMono}
                             aria-label={`行${rowIndex + 1} ${h}`}

@@ -47,6 +47,7 @@ import { getStarterFlowSnapshot } from "@/lib/flowchart/equipment/starterFlowSna
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { FlowAlertDialog } from "./FlowAlertDialog";
 import { FlowchartEditor, type FlowchartEditorHandle } from "./FlowchartEditor";
+import { UnsavedSwitchDialog } from "./UnsavedSwitchDialog";
 import { ModuleNavPane } from "./ModuleNavPane";
 import {
   resetWorkspacePaneLayouts,
@@ -120,6 +121,12 @@ export function FlowchartWorkspace({
   const [flowResetConfirmOpen, setFlowResetConfirmOpen] = useState(false);
   const [flowResetPending, setFlowResetPending] = useState(false);
   const flowResetInFlightRef = useRef(false);
+  /** 未保存切替確認ダイアログ用 — kind: "module"|"device", id: 切替先 ID */
+  const [pendingSwitch, setPendingSwitch] = useState<{
+    kind: "module" | "device";
+    id: string;
+  } | null>(null);
+  const [pendingSwitchSaving, setPendingSwitchSaving] = useState(false);
   /** 削除成功直後のナビ反映（refresh 完了前 · E2E スタブ時もサーバーと一致） */
   const [optimisticRemovedModuleIds, setOptimisticRemovedModuleIds] = useState(
     () => new Set<string>()
@@ -186,6 +193,15 @@ export function FlowchartWorkspace({
       }
     });
   }, [moduleInfo, device, isEditor]);
+
+  /** ローカルキャッシュのみ更新（破棄して切替時に使用） */
+  const cacheCurrentModule = useCallback(() => {
+    if (!moduleInfo || !editorRef.current || !device) return;
+    const snapshot = editorRef.current.getSnapshot();
+    void persistModuleDraft(moduleInfo.module, device, snapshot, {
+      saveToCloud: false,
+    });
+  }, [moduleInfo, device]);
 
   const handleToggleUnit = useCallback((unitId: string) => {
     setExpandedUnitIds((prev) => {
@@ -278,6 +294,10 @@ export function FlowchartWorkspace({
 
   const handleSelectModule = useCallback(
     (moduleId: string) => {
+      if (editorRef.current?.isUnsaved) {
+        setPendingSwitch({ kind: "module", id: moduleId });
+        return;
+      }
       persistCurrentModule();
       resetModuleLoadState();
       setSelectedModuleId(moduleId);
@@ -293,8 +313,12 @@ export function FlowchartWorkspace({
   );
 
   const handleSelectDevice = useCallback(
-    (deviceId: string) => {
+    (deviceId: string, options?: { skipUnsavedCheck?: boolean }) => {
       if (deviceId === selectedDeviceId) return;
+      if (!options?.skipUnsavedCheck && editorRef.current?.isUnsaved) {
+        setPendingSwitch({ kind: "device", id: deviceId });
+        return;
+      }
       persistCurrentModule();
       userContentOverrideRef.current = false;
       loadGenerationRef.current += 1;
@@ -319,8 +343,9 @@ export function FlowchartWorkspace({
     );
     if (imported) {
       // 取込後に devices が更新されてから選択する（import ハンドラと非同期に連携）
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- devices 反映待ちの意図的パターン
-      handleSelectDevice(imported.id);
+
+      handleSelectDevice(imported.id, { skipUnsavedCheck: true });
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- import キュークリアの意図的パターン
       setSelectDeviceAfterImport(null);
     }
   }, [devices, selectDeviceAfterImport, handleSelectDevice]);
@@ -486,6 +511,65 @@ export function FlowchartWorkspace({
   const handleTogglePinClick = useCallback(() => {
     void handleTogglePin();
   }, [handleTogglePin]);
+
+  const doModuleSwitch = useCallback(
+    (moduleId: string) => {
+      resetModuleLoadState();
+      setSelectedModuleId(moduleId);
+      const found = device ? findModule(device, moduleId) : null;
+      if (found) {
+        setExpandedUnitIds((prev) => new Set(prev).add(found.unit.id));
+      }
+      if (device) void loadModule(device, moduleId);
+    },
+    [resetModuleLoadState, loadModule, device]
+  );
+
+  const doDeviceSwitch = useCallback((deviceId: string) => {
+    userContentOverrideRef.current = false;
+    loadGenerationRef.current += 1;
+    prefetchGenerationRef.current += 1;
+    setLoadingModule(false);
+    setSelectedDeviceId(deviceId);
+    setSelectedModuleId(null);
+    setInitialSnapshot(null);
+    setLoadSource("");
+    setOfflineCachedAt(null);
+    setPinned(false);
+    setExpandedUnitIds(new Set());
+    setLoadKey((k) => k + 1);
+  }, []);
+
+  const handleUnsavedSwitchSave = useCallback(() => {
+    if (!pendingSwitch) return;
+    const { kind, id } = pendingSwitch;
+    setPendingSwitch(null);
+    setPendingSwitchSaving(false);
+    persistCurrentModule();
+    if (kind === "module") {
+      doModuleSwitch(id);
+    } else {
+      doDeviceSwitch(id);
+    }
+  }, [pendingSwitch, persistCurrentModule, doModuleSwitch, doDeviceSwitch]);
+
+  const handleUnsavedSwitchDiscard = useCallback(() => {
+    if (!pendingSwitch) return;
+    const { kind, id } = pendingSwitch;
+    setPendingSwitch(null);
+    setPendingSwitchSaving(false);
+    cacheCurrentModule();
+    if (kind === "module") {
+      doModuleSwitch(id);
+    } else {
+      doDeviceSwitch(id);
+    }
+  }, [pendingSwitch, cacheCurrentModule, doModuleSwitch, doDeviceSwitch]);
+
+  const handleUnsavedSwitchCancel = useCallback(() => {
+    setPendingSwitch(null);
+    setPendingSwitchSaving(false);
+  }, []);
 
   const openFlowResetConfirm = useCallback(() => {
     setFlowResetConfirmOpen(true);
@@ -665,6 +749,14 @@ export function FlowchartWorkspace({
           />
         </div>
       )}
+
+      <UnsavedSwitchDialog
+        open={pendingSwitch !== null}
+        pending={pendingSwitchSaving}
+        onSave={handleUnsavedSwitchSave}
+        onDiscard={handleUnsavedSwitchDiscard}
+        onCancel={handleUnsavedSwitchCancel}
+      />
 
       {deviceDeleteConfirmOpen && device ? (
         <FlowAlertDialog

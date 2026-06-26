@@ -179,6 +179,15 @@ export const fcModuleLoadingOverlay =
 export const fcStaleRing = "ring-2 ring-flow-warning-ring ring-offset-1";
 export const fcStaleRingInset = "ring-2 ring-inset ring-flow-warning-ring";
 
+/** 未保存バナー — 表ペインヘッダー下に表示 */
+export const fcUnsavedBanner = cn(
+  fcBorderB,
+  "bg-flow-accent-muted px-4 py-1 text-xs font-medium text-flow-accent-muted-text"
+);
+
+/** 保存ボタン強調 — 未保存時 */
+export const fcUnsavedRing = "ring-2 ring-flow-accent ring-offset-1";
+
 export const fcStaleOverlay =
   "pointer-events-none absolute inset-0 flex items-start justify-center bg-flow-warning-bg/70 p-4";
 

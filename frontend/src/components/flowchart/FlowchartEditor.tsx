@@ -81,6 +81,8 @@ import {
   fcStatusDraftHint,
   fcStatusStaleLabel,
   fcStatusText,
+  fcUnsavedBanner,
+  fcUnsavedRing,
   fcWarningBannerHint,
   fcWarningBannerLink,
   fcModuleLoadingOverlay,
@@ -150,6 +152,8 @@ export type FlowchartEditorSnapshot = {
 
 export type FlowchartEditorHandle = {
   getSnapshot: () => FlowchartEditorSnapshot;
+  /** workspaceMode + moduleId 選択中に DB 未保存の編集があるとき true */
+  isUnsaved: boolean;
 };
 
 export type FlowchartEditorProps = {
@@ -347,12 +351,24 @@ export const FlowchartEditor = forwardRef<
         : "準備完了")
   );
   const [samplePreviewActive, setSamplePreviewActive] = useState(false);
+  const MAX_UNDO = 50;
+  const [savedJson, setSavedJson] = useState(initial.committedJson);
+  const [undoStack, setUndoStack] = useState<string[]>([]);
+  const [redoStack, setRedoStack] = useState<string[]>([]);
+  const jsonTextRef = useRef(initial.jsonText);
+  const preEditJsonRef = useRef<string | null>(null);
   const canvasRef = useRef<FlowCanvasHandle>(null);
   const tableEditorRef = useRef<FlowTableEditorHandle>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const headerRegenerateRef = useRef<HTMLButtonElement>(null);
 
   const isStale = jsonText !== committedJson;
+  const isUnsaved =
+    workspaceMode &&
+    !!moduleId &&
+    jsonText !== savedJson &&
+    !moduleSamplePreviewActive &&
+    !samplePreviewActive;
   const moduleSelected = !workspaceMode || moduleId !== null;
   const showEditorPanes =
     moduleSelected ||
@@ -370,8 +386,9 @@ export const FlowchartEditor = forwardRef<
         nodes,
         edges,
       }),
+      isUnsaved,
     }),
-    [jsonText, committedJson, nodes, edges]
+    [jsonText, committedJson, nodes, edges, isUnsaved]
   );
 
   const errorRows = useMemo(
@@ -463,11 +480,19 @@ export const FlowchartEditor = forwardRef<
   );
 
   useEffect(() => {
+    jsonTextRef.current = jsonText;
+  }, [jsonText]);
+
+  useEffect(() => {
     skipSnapshotHydrationRef.current = false;
     userTouchedRef.current = false;
+    preEditJsonRef.current = null;
     clearModuleSamplePreview();
     setSamplePreviewActive(false);
-  }, [moduleId, clearModuleSamplePreview]);
+    setSavedJson(initial.committedJson);
+    setUndoStack([]);
+    setRedoStack([]);
+  }, [moduleId, clearModuleSamplePreview]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (workspaceMode) {
@@ -510,7 +535,8 @@ export const FlowchartEditor = forwardRef<
     notifyUserContentOverride();
     clearModuleSamplePreview();
     refreshWarnings(doc.table);
-    const ok = runGenerate(jsonText, { persist: true });
+    // workspaceMode では再生成 = プレビュー更新のみ（DB保存しない）
+    const ok = runGenerate(jsonText, { persist: !workspaceMode });
     if (ok) {
       setPaneView("canvas");
       window.setTimeout(() => canvasRef.current?.fitView(), 60);
@@ -683,6 +709,10 @@ export const FlowchartEditor = forwardRef<
   const handleTableChange = useCallback(
     (table: FlowchartDocument["table"]) => {
       if (readOnly) return;
+      // 編集セッション開始時点の jsonText を保存（onCommit で undo に push するため）
+      if (preEditJsonRef.current === null) {
+        preEditJsonRef.current = jsonTextRef.current;
+      }
       userTouchedRef.current = true;
       notifyUserContentOverride();
       const next: FlowchartDocument = {
@@ -695,6 +725,98 @@ export const FlowchartEditor = forwardRef<
     },
     [readOnly, notifyUserContentOverride, doc, syncJsonFromDoc, refreshWarnings]
   );
+
+  const applyJsonText = useCallback(
+    (text: string) => {
+      setJsonText(text);
+      const { doc: parsed } = parseFlowchartDocument(text);
+      if (parsed) {
+        setDoc(normalizeFlowchartDocument(parsed));
+        refreshWarnings(parsed.table);
+      }
+    },
+    [refreshWarnings]
+  );
+
+  const handleTableCommit = useCallback(() => {
+    const pre = preEditJsonRef.current;
+    if (pre === null) return;
+    preEditJsonRef.current = null;
+    setUndoStack((prev) => [...prev.slice(-(MAX_UNDO - 1)), pre]);
+    setRedoStack([]);
+  }, [MAX_UNDO]);
+
+  const handleUndo = useCallback(() => {
+    if (readOnly) return;
+    if (preEditJsonRef.current !== null) {
+      const pre = preEditJsonRef.current;
+      preEditJsonRef.current = null;
+      applyJsonText(pre);
+      return;
+    }
+    if (undoStack.length === 0) return;
+    const target = undoStack[undoStack.length - 1];
+    setUndoStack((prev) => prev.slice(0, -1));
+    setRedoStack((prev) => [...prev, jsonTextRef.current]);
+    applyJsonText(target);
+  }, [readOnly, undoStack, applyJsonText]);
+
+  const handleRedo = useCallback(() => {
+    if (readOnly) return;
+    if (redoStack.length === 0) return;
+    const target = redoStack[redoStack.length - 1];
+    setRedoStack((prev) => prev.slice(0, -1));
+    setUndoStack((prev) => [...prev, jsonTextRef.current]);
+    applyJsonText(target);
+  }, [readOnly, redoStack, applyJsonText]);
+
+  const handleSaveModule = useCallback(() => {
+    if (readOnly || !workspaceMode || !moduleId) return;
+    setSavedJson(jsonText);
+    onSnapshotPersist?.();
+    setStatus("保存しました");
+  }, [readOnly, workspaceMode, moduleId, jsonText, onSnapshotPersist]);
+
+  useEffect(() => {
+    if (!workspaceMode || !moduleId || readOnly) return;
+    const onKbd = (e: globalThis.KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const inInput =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.tagName === "SELECT" ||
+        target.isContentEditable;
+
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        handleSaveModule();
+      } else if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key === "z" &&
+        !e.shiftKey &&
+        !inInput
+      ) {
+        e.preventDefault();
+        handleUndo();
+      } else if (
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === "y" || (e.key === "z" && e.shiftKey)) &&
+        !inInput
+      ) {
+        e.preventDefault();
+        handleRedo();
+      }
+    };
+    document.addEventListener("keydown", onKbd);
+    return () => document.removeEventListener("keydown", onKbd);
+  }, [
+    workspaceMode,
+    moduleId,
+    readOnly,
+    handleSaveModule,
+    handleUndo,
+    handleRedo,
+  ]);
 
   const handleCsvApply = (table: FlowchartDocument["table"]) => {
     if (readOnly) return;
@@ -880,6 +1002,42 @@ export const FlowchartEditor = forwardRef<
         >
           再生成
         </button>
+      ) : null}
+
+      {/* 保存ボタン — workspaceMode + moduleId 選択中のみ */}
+      {!readOnly && workspaceMode && moduleId && showEditorPanes ? (
+        <button
+          type="button"
+          onClick={handleSaveModule}
+          className={cn(fcBtnAccent, isUnsaved ? fcUnsavedRing : "")}
+          data-testid="save-module-btn"
+        >
+          保存
+        </button>
+      ) : null}
+
+      {/* Undo/Redo — workspaceMode + moduleId 選択中のみ */}
+      {!readOnly && workspaceMode && moduleId && showEditorPanes ? (
+        <>
+          <button
+            type="button"
+            onClick={handleUndo}
+            disabled={undoStack.length === 0}
+            className={fcBtnSecondary}
+            data-testid="undo-btn"
+          >
+            1個戻る
+          </button>
+          <button
+            type="button"
+            onClick={handleRedo}
+            disabled={redoStack.length === 0}
+            className={fcBtnSecondary}
+            data-testid="redo-btn"
+          >
+            1個進む
+          </button>
+        </>
       ) : null}
 
       {/* §E: T1 行を追加 — デスクトップ workspace のみ（モバイル・スタンドアロンは FlowTableEditor 内） */}
@@ -1074,6 +1232,7 @@ export const FlowchartEditor = forwardRef<
         ref={tableEditorRef}
         table={doc.table}
         onChange={handleTableChange}
+        onCommit={handleTableCommit}
         errorRowIndices={errorRows}
         readOnly={readOnly}
         tableSchema={doc.schema}
@@ -1188,6 +1347,12 @@ export const FlowchartEditor = forwardRef<
                 {toolbarButtons}
               </div>
             </header>
+            {isUnsaved ? (
+              <div className={fcUnsavedBanner} role="status">
+                未保存の変更があります — 「保存」または Ctrl+S
+                で保存してください
+              </div>
+            ) : null}
             <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
               {tablePaneBody}
             </div>
@@ -1266,6 +1431,12 @@ export const FlowchartEditor = forwardRef<
                 {toolbarButtons}
               </div>
             </header>
+            {isUnsaved ? (
+              <div className={fcUnsavedBanner} role="status">
+                未保存の変更があります — 「保存」または Ctrl+S
+                で保存してください
+              </div>
+            ) : null}
             <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
               <h2 className={cn("shrink-0", fcSectionTitle)}>表</h2>
               {tablePaneBody}
