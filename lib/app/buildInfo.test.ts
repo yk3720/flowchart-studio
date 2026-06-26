@@ -24,4 +24,11 @@ describe("buildInfo", () => {
     expect(formatDeployEnvLabel("preview")).toBe("preview");
     expect(formatDeployEnvLabel("local")).toBe("local");
   });
+
+  it("readClientBuildInfo uses static env keys (Vitest では未設定 → default)", async () => {
+    const { readClientBuildInfo } = await import("./buildInfoClient");
+    const info = readClientBuildInfo();
+    expect(info.version).toBeDefined();
+    expect(info.sha).toBeDefined();
+  });
 });

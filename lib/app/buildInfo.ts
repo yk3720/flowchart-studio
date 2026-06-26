@@ -8,7 +8,7 @@ export type BuildInfo = {
 };
 
 export function resolveBuildInfo(
-  env: Record<string, string | undefined> = process.env
+  env: Record<string, string | undefined>
 ): BuildInfo {
   return {
     version: env.NEXT_PUBLIC_APP_VERSION ?? "0.0.0",
