@@ -37,7 +37,7 @@
 1. [00\_目次.md](./01_要求定義/00_目次.md) → [要求定義書.md](./01_要求定義/要求定義書.md) §1–3（必要な節だけ）
 2. [00\_目次.md](./02_機能設計/00_目次.md) → [現状とロードマップ.md](./02_機能設計/現状とロードマップ.md)
 3. [00\_目次.md](./03_技術仕様/00_目次.md) → 疑問に応じて1本（例: [技術方針.md](./03_技術仕様/技術方針.md)）
-4. [HANDOFF](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) §4
+4. [HANDOFF](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) **§6**（検証駆動 · スケジュール白紙）
 
 ---
 

@@ -196,7 +196,7 @@ Supabase → 左ナビ + フロー表
 
 **dev 適用手順:** `005_import_equipment_bundle.sql` を Supabase Dashboard / CLI で 004 の後に適用。
 
-**Web 表ペイン Excel 取込（補足 · 2026-06）:** `CsvPastePanel` の **Excelから取込…** は `parseExcel` 経由で **v1 行のまま表に入る**可能性がある（UI は v2 ヘッダー）。取込直後に v2 列順へ正規化する **アプリ修正は未実装** — 恒久 repair スクリプトは作らない（`REACTFLOW_RULES` §5.6-2b）。当面は Python → `import.json` 経路を正本とする。
+**Web 表ペイン Excel 取込:** `CsvPastePanel` の **Excelから取込…** は `parseExcelBuffer` 経由で取込後 **`ensureParsedTable10ColV2Order`** により v2 列順へ正規化（`REACTFLOW_RULES` §5.6-2b）。恒久 repair スクリプトは作らない。正本経路は引き続き Python → `import.json`。
 
 ---
 

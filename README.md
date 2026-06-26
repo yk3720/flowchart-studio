@@ -30,15 +30,16 @@ npm run test:e2e
 
 構成 SSOT: [`docs/04_リポジトリ構造/構成詳細.md`](./docs/04_リポジトリ構造/構成詳細.md)（入口: [`00_目次.md`](./docs/04_リポジトリ構造/00_目次.md)）
 
-| 層                 | パス                                                            | 内容                             |
-| ------------------ | --------------------------------------------------------------- | -------------------------------- |
-| **フロントエンド** | `app/` · `frontend/src/`                                        | ページ · UI · デモ JSON          |
-| **バックエンド**   | `backend/src/lib/` · `app/**/route.ts`                          | Server Actions · 認証 · Supabase |
-| **データベース**   | `database/migrations/` · `database/sql/` · `database/src/seed/` | DDL · SQL · seed                 |
-| **Python**         | `python/src/excel_normalize/` · `python/testdata/`              | Excel 正規化                     |
-| **共有**           | `lib/flowchart/`                                                | ドメイン純粋関数                 |
-| **仕様**           | `docs/`                                                         | 要求定義〜ADR · Runbook          |
-| **E2E**            | `e2e/`                                                          | Playwright                       |
+| 層                 | パス                                                            | 内容                                  |
+| ------------------ | --------------------------------------------------------------- | ------------------------------------- |
+| **フロントエンド** | `app/` · `frontend/src/`                                        | ページ · UI · デモ JSON               |
+| **バックエンド**   | `backend/src/lib/` · `app/**/route.ts`                          | Server Actions · 認証 · Supabase      |
+| **データベース**   | `database/migrations/` · `database/sql/` · `database/src/seed/` | DDL · SQL · seed                      |
+| **Python**         | `python/src/excel_normalize/` · `python/testdata/fixtures/`     | Excel 正規化 · pytest 用 fixture のみ |
+| **作者データ**     | `data/devices/`                                                 | 装置 xlsx（Git 外）· import.json      |
+| **共有**           | `lib/flowchart/`                                                | ドメイン純粋関数                      |
+| **仕様**           | `docs/`                                                         | 要求定義〜ADR · Runbook               |
+| **E2E**            | `e2e/`                                                          | Playwright                            |
 
 列の意味: [`docs/03_技術仕様/作者ガイド.md`](./docs/03_技術仕様/作者ガイド.md)  
 スタイル索引: [docs/design-system.md](./docs/design-system.md)

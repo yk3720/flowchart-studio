@@ -33,13 +33,13 @@
 └─────────────────────────────────────────────────────────┘
 ```
 
-| レイヤ              | 正本                                                                                                                                                              | 触るタイミング                                   |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **A. 作者向け意味** | [作者ガイド.md](./03_技術仕様/作者ガイド.md)                                                                                                                      | 図形・色の**意味**を変えるとき（先に仕様）       |
-| **B. キャンバス**   | [`lib/flowchart/visual/flowColors.ts`](../lib/flowchart/visual/flowColors.ts) · [`FlowColorLegend.tsx`](../frontend/src/components/flowchart/FlowColorLegend.tsx) | ノード色・矢印色・枠太さ・凡例                   |
-| **C. 操作 UI**      | [`frontend/src/components/flowchart/flowchartUiClasses.ts`](../frontend/src/components/flowchart/flowchartUiClasses.ts)                                           | ボタン・ナビ・バナー・ワークスペース比率         |
-| **D. shadcn 基盤**  | [`app/globals.css`](../app/globals.css) · [`frontend/src/components/ui/`](../frontend/src/components/ui/)                                                         | ログイン・admin 等（**フロー編集 chrome は C**） |
-| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md)                                                                                         | 枠・ストロークの太さ方針                         |
+| レイヤ              | 正本                                                                                                                                                              | 触るタイミング                                                              |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **A. 作者向け意味** | [作者ガイド.md](./03_技術仕様/作者ガイド.md)                                                                                                                      | 図形・色の**意味**を変えるとき（先に仕様）                                  |
+| **B. キャンバス**   | [`lib/flowchart/visual/flowColors.ts`](../lib/flowchart/visual/flowColors.ts) · [`FlowColorLegend.tsx`](../frontend/src/components/flowchart/FlowColorLegend.tsx) | ノード色・矢印色・枠太さ · **凡例は workspace 非表示**（`/dev/style` のみ） |
+| **C. 操作 UI**      | [`frontend/src/components/flowchart/flowchartUiClasses.ts`](../frontend/src/components/flowchart/flowchartUiClasses.ts)                                           | ボタン・ナビ・バナー・ワークスペース比率                                    |
+| **D. shadcn 基盤**  | [`app/globals.css`](../app/globals.css) · [`frontend/src/components/ui/`](../frontend/src/components/ui/)                                                         | ログイン・admin 等（**フロー編集 chrome は C**）                            |
+| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md)                                                                                         | 枠・ストロークの太さ方針                                                    |
 
 ### なぜ 1 ファイルに統合しないか
 
@@ -55,17 +55,17 @@
 
 ## 3. 変更マップ（何を変えたいとき）
 
-| 変えたいもの                   | 更新順                        | 主なファイル                                                                                     |
-| ------------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------ |
-| 表「色」列の意味（黄・橙・青） | 仕様 → コード → 凡例          | `docs/03_技術仕様/作者ガイド.md` → `lib/flowchart/visual/flowColors.ts` → `FlowColorLegend`      |
-| ノード枠・菱形の太さ           | 横断ルール確認 → コード → E2E | `VISUAL_DESIGN_RULES` → `lib/flowchart/visual/flowColors.ts` → `e2e/`                            |
-| 矢印・Yes/No ラベル色          | コード                        | `lib/flowchart/visual/flowColors.ts` · `lib/flowchart/graph/edgeLabelPlacement.ts`               |
-| 再生成ボタン・その他メニュー   | class SSOT                    | `flowchartUiClasses.ts`（新規はここに追加）                                                      |
-| 左ナビ・装置 select            | class SSOT + コンポーネント   | `flowchartUiClasses.ts` · `ModuleNavPane.tsx`                                                    |
-| ナビ配色 · CTA 階層            | レイアウト方針 §B             | [ワークスペースレイアウト方針.md](./02_機能設計/ワークスペースレイアウト方針.md)                 |
-| 表 : プレビュー比率            | レイアウト定数                | `FC_WORKSPACE_MAIN_GRID` · [REACTFLOW §5.6-2a](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md) |
-| ログイン画面                   | shadcn                        | `globals.css` · `frontend/src/components/ui/` · `LoginForm.tsx`                                  |
-| 10 列表の列ヘルプ              | 列定義                        | `lib/flowchart/table/tableColumns.ts` · `docs/03_技術仕様/作者ガイド.md`                         |
+| 変えたいもの                   | 更新順                                       | 主なファイル                                                                                                                                                                          |
+| ------------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 表「色」列の意味（黄・橙・青） | 仕様 → コード → （凡例は `/dev/style` のみ） | `docs/03_技術仕様/作者ガイド.md` → `lib/flowchart/visual/flowColors.ts` · workspace プレビューでは凡例帯なし（[プレビュー上部chrome方針](./02_機能設計/プレビュー上部chrome方針.md)） |
+| ノード枠・菱形の太さ           | 横断ルール確認 → コード → E2E                | `VISUAL_DESIGN_RULES` → `lib/flowchart/visual/flowColors.ts` → `e2e/`                                                                                                                 |
+| 矢印・Yes/No ラベル色          | コード                                       | `lib/flowchart/visual/flowColors.ts` · `lib/flowchart/graph/edgeLabelPlacement.ts`                                                                                                    |
+| 再生成ボタン・その他メニュー   | class SSOT                                   | `flowchartUiClasses.ts`（新規はここに追加）                                                                                                                                           |
+| 左ナビ・装置 select            | class SSOT + コンポーネント                  | `flowchartUiClasses.ts` · `ModuleNavPane.tsx`                                                                                                                                         |
+| ナビ配色 · CTA 階層            | レイアウト方針 §B                            | [ワークスペースレイアウト方針.md](./02_機能設計/ワークスペースレイアウト方針.md)                                                                                                      |
+| 表 : プレビュー比率            | レイアウト定数                               | `FC_WORKSPACE_MAIN_GRID` · [REACTFLOW §5.6-2a](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md)                                                                                      |
+| ログイン画面                   | shadcn                                       | `globals.css` · `frontend/src/components/ui/` · `LoginForm.tsx`                                                                                                                       |
+| 10 列表の列ヘルプ              | 列定義                                       | `lib/flowchart/table/tableColumns.ts` · `docs/03_技術仕様/作者ガイド.md`                                                                                                              |
 
 **禁止（手戻りの元）**
 
@@ -157,11 +157,11 @@ WCAG 2.2 は最小フォント px を規定しない（[SC 1.4.4 200% 拡大](ht
 
 ## 9. Phase 2（完了 · 2026-06-19）
 
-| 項目           | 内容                                                                              |
-| -------------- | --------------------------------------------------------------------------------- |
-| 開発用カタログ | `app/dev/style/page.tsx` — `npm run dev` 時のみ `http://localhost:3000/dev/style` |
-| 表 UI          | `FlowTableEditor` → `fcTable*`（`flowchartUiClasses.ts`）                         |
-| 色凡例 chrome  | `FlowColorLegend` → `fcColorLegendFloating`                                       |
+| 項目           | 内容                                                                                                                                                                          |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 開発用カタログ | `app/dev/style/page.tsx` — `npm run dev` 時のみ `http://localhost:3000/dev/style`                                                                                             |
+| 表 UI          | `FlowTableEditor` → `fcTable*`（`flowchartUiClasses.ts`）                                                                                                                     |
+| 色凡例 chrome  | `FlowColorLegend` → `fcColorLegendFloating`（**workspace プレビューでは非表示** · `/dev/style` のみ · [プレビュー上部chrome方針](./02_機能設計/プレビュー上部chrome方針.md)） |
 
 ## 10. Phase 3（完了 · 2026-06-19）
 
