@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-studio`                                                          |
 | **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-26（§E 実装 · M005/M006 目視 · N8 E2E 完了）                        |
+| **更新**              | 2026-06-26（製品開発フェーズ継続 · 検証駆動 · スケジュール白紙）            |
 
 ---
 
@@ -19,18 +19,20 @@
 
 ## 再開（毎セッション · この順）
 
-1. [`handoffs/flowchart-studio/HANDOFF.md`](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — 最新セッションリンク
-2. **最新セッション MD §4 だけ**実行（ロードマップ全体に広げない）
+1. [`handoffs/flowchart-studio/HANDOFF.md`](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **§6 現フェーズ**（検証駆動 · スケジュール白紙）
+2. 検証メモまたは明示依頼があるときだけ作業（旧セッション §4 の機械消化はしない）
 3. 本ファイル（境界確認）
 
 ```text
 @c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md
-@c:/yk-memo/handoffs/flowchart-studio/2026-06-25_45_ux-improvement-pack-impl-session-end.md
+@c:/yk-application/flowchart-studio/docs/02_機能設計/現状とロードマップ.md
 @c:/yk-application/flowchart-studio/AGENTS.md
-続きから。§4 の A0001 供給部 M004〜 Web 目視だけ。一つずつ順番に進めてください。
+
+検証メモ: （本番/ローカルで操作して気づいたこと）
+この中から優先度を付けてブラッシュアップして。
 ```
 
-> セッション MD が更新されたら、2行目を HANDOFF の「最新セッション」に差し替える。
+> 引き継ぎ終了でセッション MD が増えたときのみ、HANDOFF「最新セッション」を更新する。通常のブラッシュアップでは §6 が正本。
 
 **仕様疑問時のみ追加 Read:** `docs/**/00_目次.md` → 該当フォルダの**1ファイル**だけ（例: `03_技術仕様/00_目次.md` → `データモデル.md`）
 
@@ -38,12 +40,12 @@
 
 ## 引き継ぎ終了時（毎回 · `handoff-session-work`）
 
-| #   | 更新するファイル                                                                    |
-| --- | ----------------------------------------------------------------------------------- |
-| 1   | `handoffs/flowchart-studio/` — 新規セッション MD · HANDOFF「最新セッション」· §6    |
-| 2   | 本ファイル — 再開ブロック2行目の `@`                                                |
-| 3   | `c:/yk-memo/.../新チャット依頼.md` — コピペ2行目（本ファイルと同じセッション MD）   |
-| 4   | `docs/05_開発ガイドライン/decision-log.md` — タイムライン **1行**（本文コピー禁止） |
+| #   | 更新するファイル                                                                      |
+| --- | ------------------------------------------------------------------------------------- |
+| 1   | `handoffs/flowchart-studio/` — 新規セッション MD · HANDOFF「最新セッション」· §6 · §7 |
+| 2   | 本ファイル — 再開ブロック2行目の `@`                                                  |
+| 3   | `c:/yk-memo/.../新チャット依頼.md` — コピペ2行目（本ファイルと同じセッション MD）     |
+| 4   | `docs/05_開発ガイドライン/decision-log.md` — タイムライン **1行**（本文コピー禁止）   |
 
 **RUN 最小:** Phase C は **Bash 1 本/リポ**（add+commit+push）。Post-C 専用 commit 禁止 — `handoff-session-work` · `git-save.md` · `AGENT_SHELL_RULES` D-2。
 
@@ -58,10 +60,10 @@
 | decision-log | `docs/05_開発ガイドライン/decision-log.md`       | 合意 · ADR · セッション終了時に1行 |
 | grill-me     | `docs/archive/01_要求定義/grill-me_*` · `相談_*` | 方針深掘り後                       |
 | ADR          | `docs/03_技術仕様/意思決定記録(ADR).md`          | 採用決定時                         |
-| §4           | handoffs 最新                                    | 毎セッション                       |
+| §4           | handoffs 最新（引き継ぎ終了時）                  | セッション終了時のみ               |
 | 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）                | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **DB2 Runbook M12 追随**（HANDOFF #16 · 低優先）
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **本人による実機検証** → 優先度の再計画（スケジュール白紙）
 
 ---
 
@@ -104,13 +106,13 @@ npm run test:e2e
 
 ## やる / やらない
 
-| やる                                         | やらない                     |
-| -------------------------------------------- | ---------------------------- |
-| 表 → IR → 格子レイアウト → React Flow        | Excel COM · Office Add-in    |
-| JSON / CSV / Excel 取込 · 表 UI · PNG/SVG    | 図解管理 WS との統合         |
-| 1 セッション = §4 の **1 件**                | 要求定義書の全項目の一括実装 |
-| 変更前に ADR → docs → コードの順             | dagre でノード位置決定       |
-| UI ボタン増減時は `ボタン一覧.md` を同時更新 | —                            |
+| やる                                                   | やらない                     |
+| ------------------------------------------------------ | ---------------------------- |
+| 表 → IR → 格子レイアウト → React Flow                  | Excel COM · Office Add-in    |
+| JSON / CSV / Excel 取込 · 表 UI · PNG/SVG              | 図解管理 WS との統合         |
+| 1 セッション = 依頼された **1 件**（検証駆動フェーズ） | 要求定義書の全項目の一括実装 |
+| 変更前に ADR → docs → コードの順                       | dagre でノード位置決定       |
+| UI ボタン増減時は `ボタン一覧.md` を同時更新           | —                            |
 
 ---
 

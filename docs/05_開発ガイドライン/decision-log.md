@@ -2,8 +2,8 @@
 
 **目次:** [00\_目次.md](./00_目次.md)
 
-**更新:** 2026-06-25（ADR-016 PR-B 実装済 · 3ペインリサイズ · ナビ左揃え）  
-**役割:** 開発経緯の **入口**。本ファイルは **リンクと1行要約のみ** — 確定事項の正本は ADR、実行の正本は handoffs §4。
+**更新:** 2026-06-26（製品開発フェーズ継続 · 検証駆動 · スケジュール白紙）  
+**役割:** 開発経緯の **入口**。本ファイルは **リンクと1行要約のみ** — 確定事項の正本は ADR、実行の正本は handoffs §6。
 
 ---
 
@@ -13,7 +13,7 @@
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **経緯を辿りたい**  | **テーマチェーン**（論点単位）または **タイムライン**（日付順）                                                                                  |
 | **最終報告を書く**  | タイムライン → [00\_テーマ/](c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/)（将来 `報告書_2026年度_*.md`）へ要約転記 |
-| **今やる1件**       | [HANDOFF.md](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) → 最新セッション **§4**                                                            |
+| **今やる1件**       | [HANDOFF.md](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) **§6**（検証駆動 · スケジュール白紙）                                              |
 | **1つの決定の全文** | タイムラインのリンク → ADR / grill-me / handoff                                                                                                  |
 
 ---
@@ -49,10 +49,10 @@
 
 ## 戦略 vs 戦術（ズレても正常）
 
-| 軸               | 正本                                                          | 現状（2026-06-26）                                               |
-| ---------------- | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| **戦略優先**     | [要求定義書.md](../01_要求定義/要求定義書.md) §4              | UX · **作る操作の手間削減** 最優先                               |
-| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | **M004〜M006 目視 · N8 E2E 完了**。次: DB2 Runbook M12 — §4 参照 |
+| 軸               | 正本                                                          | 現状（2026-06-26）                                                               |
+| ---------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **戦略優先**     | [要求定義書.md](../01_要求定義/要求定義書.md) §4              | UX · **作る操作の手間削減** 最優先                                               |
+| **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | **スケジュール白紙** — 本人実機検証 → 優先度再計画（旧 #16–17 等は §7 完了済み） |
 
 **開発ログイン（2026-06-24）:** Magic Link は `/auth/confirm` + token_hash テンプレ · OAuth は `/auth/callback` · パスワードは Server Action — **開発 Supabase（`flowchart-dev`）で3方式共存**。Vercel 本番 URL（`-dun`）は現状この dev プロジェクトに接続。**専用本番 Supabase 分離後**は Email 無効 · Google/Azure のみ（`SUPABASE_RULES` §6）。
 
@@ -60,7 +60,7 @@
 
 ## テーマチェーン（論点ごと · 深掘り用）
 
-タイムラインは日付順。同じ論点を **調査 / 合意 → ADR → 実装** の順で辿るときはこちら（本文は各リンク先 · 本節はリンクのみ）。**チェーン内の「次 §4」は当時のスナップショット** — 今やる1件は [HANDOFF §4](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) のみ。
+タイムラインは日付順。同じ論点を **調査 / 合意 → ADR → 実装** の順で辿るときはこちら（本文は各リンク先 · 本節はリンクのみ）。**チェーン内の「次 §4」は当時のスナップショット** — 今やる1件は [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md)（検証駆動 · スケジュール白紙）。
 
 ### 立ち上げ · MVP · Web完成（2026-05-20〜26）
 
@@ -159,7 +159,15 @@
 | 2026-06-26      | UX         | **§E 改定パック** — 固定3段ヘッダー · T1→H5 · T4→N9 · N3→M12 · T5列幅 · 横バー上移 · 色「-」 · selectバグ · fixedメニュー · デスクトップのみ | [表ペインUX方針 §E](../02_機能設計/表ペインUX方針.md) · [ワークスペースレイアウト §F](../02_機能設計/ワークスペースレイアウト方針.md) · [ボタン一覧](../02_機能設計/ボタン一覧.md) · grill-me 2026-06-26                                  | **実装済**（`c92f345`）           | E2E 追従                                                                                                                             |
 | 2026-06-26      | 実装       | 色列 select · v2 normalize 再変換バグ修正 · 本番確認 OK                                                                                      | [handoff \_48 §4](c:/yk-memo/handoffs/flowchart-studio/2026-06-26_48_color-column-v2-normalize-session-end.md) · `REACTFLOW_RULES` §5.7                                                                                                   | 完了（`d2603e5`）                 | M005/M006 目視へ                                                                                                                     |
 | 2026-06-26      | 運用       | A0001 供給部 M004〜M006 本番 Web 目視（表 + 再生成）                                                                                         | HANDOFF §6 #14                                                                                                                                                                                                                            | 完了                              | ユーザー確認済                                                                                                                       |
-| 2026-06-26      | テスト     | ナビ N8 E2E · §E chrome 回帰 spec 修正（56 passed）                                                                                          | `e2e/nav-n8.spec.ts` · `PLAYWRIGHT_RULES` §12-8                                                                                                                                                                                           | 完了                              | 次: Runbook M12                                                                                                                      |
+| 2026-06-26      | テスト     | ナビ N8 E2E · §E chrome 回帰 spec 修正（56 passed）                                                                                          | `e2e/nav-n8.spec.ts` · `PLAYWRIGHT_RULES` §12-8                                                                                                                                                                                           | 完了                              | Runbook M12 追随へ                                                                                                                   |
+| 2026-06-26      | 運用       | DB2 Runbook §13 — M12 装置削除 · N3 廃止 · メニュー文言追随                                                                                  | [DB2_MIGRATION_RUNBOOK §13](../runbooks/DB2_MIGRATION_RUNBOOK.md) · [ボタン一覧](../02_機能設計/ボタン一覧.md)                                                                                                                            | 完了                              | Web Excel v2 migrate へ                                                                                                              |
+| 2026-06-26      | 実装       | Web Excel 取込後 v2 列 migrate — `parseExcelBuffer` · 端子行 v1 判定 · E2E skip 解除                                                         | `parseExcel.ts` · `tableColumns.ts` · `e2e/a0001-excel-import.spec.ts` · `REACTFLOW_RULES` §5.6-2b                                                                                                                                        | 完了                              | U0 動作002 本文へ                                                                                                                    |
+| 2026-06-26      | 作者データ | U0 **動作002** 本文 — M002 全文（14行）· `import.json` 整合 · v2 列順                                                                        | `a0001_v03.py` · `test_normalize.py`                                                                                                                                                                                                      | 完了                              | 動作003 へ                                                                                                                           |
+| 2026-06-26      | 作者データ | U0 **動作003** 本文 — M003 全文（14行）· `import.json` 整合 · v2 列順                                                                        | `a0001_v03.py` · `test_normalize.py`                                                                                                                                                                                                      | 完了                              | 動作004〜006 一括へ                                                                                                                  |
+| 2026-06-26      | 作者データ | U0 **動作004〜006** 本文 — M004(7) · M005(10) · M006(13) · v2 列順 · 007〜009 はプレースホルダ維持                                           | `a0001_v03.py` · `test_normalize.py`                                                                                                                                                                                                      | 完了                              | M007 本文へ                                                                                                                          |
+| 2026-06-26      | 作者データ | U0 **動作007** 本文 — M007 供給搬送1\_戻（8行）· M006 後続の退避シーケンス · v2 列順                                                         | `a0001_v03.py` · `test_normalize.py`                                                                                                                                                                                                      | 完了                              | —                                                                                                                                    |
+| 2026-06-26      | 計画       | **製品開発フェーズ継続** — スケジュール白紙 · 検証駆動ブラッシュアップ（旧番号付き戦術表は §7 へ）                                           | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) · [現状とロードマップ](../02_機能設計/現状とロードマップ.md)                                                                                                                | 合意                              | doc-sync M1a/M1b へ                                                                                                                  |
+| 2026-06-26      | 運用       | **doc-sync M1a/M1b** · Tier C 監査 · P0 適用 · 検証駆動フェーズ資料整合                                                                      | [inbox audit](c:/yk-memo/inbox/doc-sync-audit_2026-06-26_flowchart-studio.md) · [handoff \_50 §4](c:/yk-memo/handoffs/flowchart-studio/2026-06-26_50_doc-sync-m1a-m1b-p0-session-end.md)                                                  | 完了                              | 次: 本人実機検証（§6）                                                                                                               |
 
 ---
 
@@ -208,4 +216,4 @@
 
 - [意思決定記録(ADR).md](<../03_技術仕様/意思決定記録(ADR).md>) — 決定の正本
 - [完成に向けた進め方.md](../archive/01_要求定義/完成に向けた進め方.md) §3 — 課題→調査→ADR→実装サイクル
-- [HANDOFF.md](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — セッション運用 · §4 実行正本
+- [HANDOFF.md](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — セッション運用 · §6 実行正本
