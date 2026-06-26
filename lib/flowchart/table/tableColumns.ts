@@ -411,6 +411,39 @@ export function migrateTable10ColV1ToV2(row: FlowTableRow): FlowTableRow {
   return [r[0], r[1], r[9], r[2], r[3], r[4], r[5], r[6], r[7], r[8]];
 }
 
+/** v2 では index 6 = 列（数値）、v1 では index 6 = Text1（MR…） */
+export function isTableRow10ColV1Order(row: FlowTableRow): boolean {
+  const r = normalizeRow(row, TEN_COL_WIDTH);
+  const text1 = String(r[6] ?? "").trim();
+  return /^MR\d/i.test(text1);
+}
+
+/**
+ * schema が v2 なのに行が v1 列順のまま残っている表を検出する。
+ * （保存時 desync や v2 schema だけ先に更新されたデータ向け）
+ */
+export function tableNeedsV1ToV2Migration(
+  table: FlowTableRow[],
+  schema?: string
+): boolean {
+  if (!isTenColV2Schema(schema) || table.length === 0) return false;
+  const v1Rows = table.filter(isTableRow10ColV1Order).length;
+  return v1Rows > table.length / 2;
+}
+
+/**
+ * v2 schema なら行を v2 列順に揃える（v1 列順のまま残っていれば変換）。
+ */
+export function ensureTable10ColV2Order<
+  T extends { schema?: string; table: FlowTableRow[] },
+>(doc: T): T {
+  if (!tableNeedsV1ToV2Migration(doc.table, doc.schema)) return doc;
+  return {
+    ...doc,
+    table: doc.table.map(migrateTable10ColV1ToV2),
+  };
+}
+
 /**
  * table-10col-v1 ドキュメントを v2 に変換して返す。
  * schema が v1 でなければそのまま返す。
@@ -418,12 +451,14 @@ export function migrateTable10ColV1ToV2(row: FlowTableRow): FlowTableRow {
 export function migrateDocToV2<
   T extends { schema?: string; table: FlowTableRow[] },
 >(doc: T): T {
-  if (doc.schema !== TIER10_V1_SCHEMA) return doc;
-  return {
+  if (doc.schema !== TIER10_V1_SCHEMA) {
+    return ensureTable10ColV2Order(doc);
+  }
+  return ensureTable10ColV2Order({
     ...doc,
     schema: TIER10_SCHEMA,
     table: doc.table.map(migrateTable10ColV1ToV2),
-  };
+  });
 }
 
 /** 数値 ID の最大値 + 10（新規行用） */

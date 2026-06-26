@@ -237,14 +237,19 @@ function resolveInitialState(props: FlowchartEditorProps): {
       };
     }
     const doc = normalizeFlowchartDocument(parsed);
+    const text = serializeDocument(doc);
+    const { doc: committedDoc } = parseFlowchartDocument(
+      snap.committedJson || snap.jsonText
+    );
+    const committedText = committedDoc ? serializeDocument(committedDoc) : text;
     const rf =
       snap.nodes.length > 0
         ? { nodes: snap.nodes, edges: snap.edges }
         : rfFromDocument(doc);
     return {
       doc,
-      jsonText: snap.jsonText,
-      committedJson: snap.committedJson,
+      jsonText: text,
+      committedJson: committedText,
       nodes: rf.nodes,
       edges: rf.edges,
     };

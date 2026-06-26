@@ -4,10 +4,10 @@ import { flowchartDocumentPayloadSchema } from "../import/importBundleSchema";
 import {
   ensureNineColumnTable,
   inferTableLayout,
+  isTenColV2Schema,
   migrateDocToV2,
   TIER10_SCHEMA,
   TIER10_V1_SCHEMA,
-  TIER9_SCHEMA,
 } from "../table/tableColumns";
 
 export function createDocument(
@@ -67,12 +67,13 @@ export function normalizeFlowchartDocument(
   doc: FlowchartDocument
 ): FlowchartDocument {
   const layout = inferTableLayout(doc.table, doc.schema);
-  // 9列→10列パディングは v1 形式（色 = index 9）で揃える
-  const schemaForPad = layout === "tier9" ? TIER10_V1_SCHEMA : doc.schema;
+  const alreadyV2 = isTenColV2Schema(doc.schema);
+  const tier10Schema = alreadyV2 ? TIER10_SCHEMA : TIER10_V1_SCHEMA;
+  const schemaForPad = layout === "tier9" ? tier10Schema : doc.schema;
   const table = ensureNineColumnTable(doc.table, schemaForPad);
-  const schema = layout === "tier9" ? TIER10_V1_SCHEMA : doc.schema;
+  const schema = layout === "tier9" ? tier10Schema : doc.schema;
   const padded = { ...doc, table, ...(schema ? { schema } : {}) };
-  // v1 → v2 マイグレーション（ADR-016）
+  // v1 → v2 マイグレーション + v2 schema なのに v1 列順が残る desync 修復（ADR-016）
   return migrateDocToV2(padded);
 }
 

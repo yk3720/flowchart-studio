@@ -17,7 +17,10 @@ import {
   TIER10_V1_SCHEMA,
   TIER9_SCHEMA,
   isColorTableColumn,
+  isTableRow10ColV1Order,
+  migrateDocToV2,
   migrateTable10ColV1ToV2,
+  tableNeedsV1ToV2Migration,
 } from "./tableColumns";
 
 describe("tableColumns", () => {
@@ -171,5 +174,46 @@ describe("tableColumns", () => {
       "B",
       "C",
     ]);
+  });
+
+  it("isTableRow10ColV1Order: v2 では index 6 = 列、v1 では index 6 = Text1(MR…)", () => {
+    const v1row = [
+      "1",
+      "端子",
+      "2",
+      "",
+      "1",
+      "0",
+      "MR42000",
+      "供給_SUS板搬送_取_開始",
+      "",
+      "",
+    ];
+    const v2row = migrateTable10ColV1ToV2(v1row);
+    expect(isTableRow10ColV1Order(v1row)).toBe(true);
+    expect(isTableRow10ColV1Order(v2row)).toBe(false);
+  });
+
+  it("tableNeedsV1ToV2Migration: schema v2 + v1 列順の desync を検出", () => {
+    const v1Table = [
+      ["1", "端子", "2", "", "1", "0", "MR42000", "text", "", ""],
+    ];
+    expect(tableNeedsV1ToV2Migration(v1Table, TIER10_SCHEMA)).toBe(true);
+    expect(tableNeedsV1ToV2Migration(v1Table, TIER10_V1_SCHEMA)).toBe(false);
+    const v2Table = v1Table.map(migrateTable10ColV1ToV2);
+    expect(tableNeedsV1ToV2Migration(v2Table, TIER10_SCHEMA)).toBe(false);
+  });
+
+  it("migrateDocToV2: schema v2 のまま v1 列順が残っていれば修復", () => {
+    const desync = {
+      schema: TIER10_SCHEMA,
+      table: [["1", "端子", "2", "", "1", "0", "MR42000", "text", "", ""]],
+    };
+    const fixed = migrateDocToV2(desync);
+    expect(fixed.schema).toBe(TIER10_SCHEMA);
+    expect(fixed.table[0]?.[2]).toBe("");
+    expect(fixed.table[0]?.[3]).toBe("2");
+    expect(fixed.table[0]?.[6]).toBe("0");
+    expect(fixed.table[0]?.[7]).toBe("MR42000");
   });
 });
