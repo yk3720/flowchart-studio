@@ -91,6 +91,10 @@ import {
 } from "./flowchartUiClasses";
 import { CsvPastePanel } from "./CsvPastePanel";
 import { ReviewNotesPanel } from "./ReviewNotesPanel";
+import {
+  DesignMemoPanels,
+  type DesignMemoPanelsProps,
+} from "./DesignMemoPanels";
 import { FlowTableEditor, type FlowTableEditorHandle } from "./FlowTableEditor";
 import {
   WORKSPACE_INNER_LAYOUT_ID,
@@ -191,6 +195,8 @@ export type FlowchartEditorProps = {
   onRequestDeleteDevice?: () => void;
   /** 回覧メモの著者表示（workspaceMode · moduleId 選択時） */
   authorEmail?: string;
+  /** 設計メモ 3 階層（workspaceMode · moduleId 選択時 · 装置階層と同時読込） */
+  designMemoContext?: Omit<DesignMemoPanelsProps, "readOnly">;
 };
 
 const EMPTY_MODULE_MESSAGE = "モジュールを選択してください";
@@ -309,6 +315,7 @@ export const FlowchartEditor = forwardRef<
     onResetPaneWidths,
     onRequestDeleteDevice,
     authorEmail = "",
+    designMemoContext,
   } = props;
 
   const innerLayout = useDefaultLayout({
@@ -1244,11 +1251,20 @@ export const FlowchartEditor = forwardRef<
         warningPane={warningBanner}
         reviewPane={
           workspaceMode && moduleId ? (
-            <ReviewNotesPanel
-              key={moduleId}
-              moduleId={moduleId}
-              authorEmail={authorEmail}
-            />
+            <>
+              <ReviewNotesPanel
+                key={moduleId}
+                moduleId={moduleId}
+                authorEmail={authorEmail}
+              />
+              {designMemoContext ? (
+                <DesignMemoPanels
+                  key={moduleId}
+                  {...designMemoContext}
+                  readOnly={readOnly}
+                />
+              ) : null}
+            </>
           ) : undefined
         }
         onResetPaneWidths={onResetPaneWidths}

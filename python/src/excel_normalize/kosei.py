@@ -19,6 +19,7 @@ class KoseiRow:
     sort_index: int
     uin_id: int | None = None
     module_id: int | None = None
+    module_memo: str = ""
 
 
 @dataclass
@@ -28,6 +29,7 @@ class KoseiSheet:
     internal_code: str
     format_version: Literal["v02", "v03"] = "v02"
     unit_bands: dict[int, UnitBand] = field(default_factory=dict)
+    device_memo: str = ""
 
     @property
     def unit_labels(self) -> list[str]:
@@ -107,6 +109,7 @@ def _finalize_kosei(
     rows: list[KoseiRow],
     format_version: Literal["v02", "v03"],
     unit_bands: dict[int, UnitBand] | None = None,
+    device_memo: str = "",
 ) -> KoseiSheet:
     if not rows:
         raise ValueError(f"シート「{KOSEI_SHEET}」にデータ行がありません")
@@ -130,6 +133,7 @@ def _finalize_kosei(
         display_name=rows[0].display_name,
         format_version=format_version,
         unit_bands=unit_bands or {},
+        device_memo=device_memo,
     )
 
 
@@ -169,13 +173,18 @@ def _parse_int_optional(value: object, *, field: str, row_num: int) -> int | Non
 
 
 def _parse_kosei_v03(workbook: Workbook, matrix: list[list[str]]) -> KoseiSheet:
-    default_code, default_name, units_map, modules_map = read_v03_masters(workbook)
+    default_code, default_name, device_memo, units_map, modules_map = read_v03_masters(
+        workbook
+    )
     rows: list[KoseiRow] = []
     for idx, raw in enumerate(matrix[1:]):
-        cells = (raw + ["", "", "", "", "", ""])[:6]
+        cells = (raw + ["", "", "", "", "", "", ""])[:7]
         row_num = idx + 2
 
-        internal_code, display_name, uin_raw, unit_label, mid_raw, module_label = cells
+        internal_code, display_name, uin_raw, unit_label, mid_raw, module_label = cells[
+            :6
+        ]
+        module_memo = cells[6]
 
         uin_id = _parse_int_optional(uin_raw, field="UinID", row_num=row_num)
         if uin_id is None:
@@ -215,6 +224,12 @@ def _parse_kosei_v03(workbook: Workbook, matrix: list[list[str]]) -> KoseiSheet:
                 sort_index=idx,
                 uin_id=uin_id,
                 module_id=module_id,
+                module_memo=module_memo,
             )
         )
-    return _finalize_kosei(rows, "v03", unit_bands=units_map)
+    return _finalize_kosei(
+        rows,
+        "v03",
+        unit_bands=units_map,
+        device_memo=device_memo,
+    )

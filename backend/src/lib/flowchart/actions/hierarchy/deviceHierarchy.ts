@@ -19,6 +19,7 @@ type DbModuleRow = {
   label: string;
   sort_order: number;
   legacy_key: string | null;
+  memo: string | null;
   flow_documents: DbFlowDocumentRow[] | DbFlowDocumentRow | null;
 };
 
@@ -27,6 +28,7 @@ type DbUnitRow = {
   label: string;
   sort_order: number;
   created_by: string | null;
+  memo: string | null;
   modules: DbModuleRow[] | null;
 };
 
@@ -36,6 +38,7 @@ type DbDeviceRow = {
   display_name: string;
   sort_order: number;
   created_by: string | null;
+  memo: string | null;
   units: DbUnitRow[] | null;
 };
 
@@ -46,12 +49,14 @@ function mapDbDevices(rows: DbDeviceRow[]): Device[] {
       id: d.id,
       internalCode: d.internal_code,
       name: d.display_name,
+      memo: d.memo ?? "",
       ...(d.created_by ? { createdBy: d.created_by } : {}),
       units: [...(d.units ?? [])]
         .sort((a, b) => a.sort_order - b.sort_order)
         .map((u) => ({
           id: u.id,
           label: u.label,
+          memo: u.memo ?? "",
           ...(u.created_by ? { createdBy: u.created_by } : {}),
           modules: [...(u.modules ?? [])]
             .sort((a, b) => a.sort_order - b.sort_order)
@@ -65,6 +70,7 @@ function mapDbDevices(rows: DbDeviceRow[]): Device[] {
               return {
                 id: m.id,
                 label: m.label,
+                memo: m.memo ?? "",
                 legacyKey: m.legacy_key ?? undefined,
                 ...(flowRow
                   ? {
@@ -94,16 +100,19 @@ export async function fetchDeviceHierarchy(): Promise<DeviceHierarchyResult> {
         internal_code,
         display_name,
         sort_order,
+        memo,
         created_by,
         units (
           id,
           label,
           sort_order,
+          memo,
           created_by,
           modules (
             id,
             label,
             sort_order,
+            memo,
             legacy_key,
             flow_documents (
               created_by

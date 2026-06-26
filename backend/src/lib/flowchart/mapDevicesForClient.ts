@@ -24,15 +24,18 @@ export function mapDevicesForClient(
     id: device.id,
     internalCode: device.internalCode,
     name: device.name,
+    memo: device.memo ?? "",
     canDelete: canDeleteDevice(role, userId, device),
     units: device.units.map((unit) => ({
       id: unit.id,
       label: unit.label,
+      memo: unit.memo ?? "",
       modules: unit.modules.map((mod) => {
         const serverMod = mod as ServerModule;
         return {
           id: mod.id,
           label: mod.label,
+          memo: mod.memo ?? "",
           legacyKey: mod.legacyKey,
           canReset: canResetFlowContent(role, userId, {
             hasFlow: serverMod.hasFlow ?? false,

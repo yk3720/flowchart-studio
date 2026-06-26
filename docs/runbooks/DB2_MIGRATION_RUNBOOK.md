@@ -296,6 +296,18 @@ select to_regclass('public.review_notes') as review_notes_table;
 select policyname from pg_policies where tablename = 'review_notes' order by policyname;
 ```
 
+### 12-2e. 設計メモ 3 階層（`devices` / `units` / `modules.memo` · 018 · v1.1）
+
+**方針:** 装置 · ユニット · 動作それぞれ 1 件の設計メモ。Excel 再取込で上書き · Web は editor が **[保存]** で即 DB。回覧メモ（`review_notes`）とは別テーブル。  
+**対処:** **`018_design_memos.sql` の全文** → **Run**（017 の後 · 1 回のみ）。
+
+検証:
+
+```sql
+select column_name from information_schema.columns
+where table_schema = 'public' and table_name = 'devices' and column_name = 'memo';
+```
+
 ### 12-3. 本番 URL 確認（Vercel Production — 移行後は flowchart-studio プロジェクトに接続）
 
 ログイン後、次を 1 件ずつ:

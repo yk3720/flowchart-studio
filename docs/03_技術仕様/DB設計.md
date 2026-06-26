@@ -3,7 +3,7 @@
 **目次:** [00\_目次.md](./00_目次.md)
 
 **作成:** 2026-05-31  
-**状態:** **設計書（migration 003〜017 適用済 · dev/本番）**  
+**状態:** **設計書（migration 003〜018 適用済 · dev/本番）**  
 **関連:** [データモデル.md](./データモデル.md) · [ADR-014](<./意思決定記録(ADR).md>) · [ADR-013](<./意思決定記録(ADR).md>) · [001_db1_schema.sql](c:/yk-application/flowchart-studio/database/migrations/001_db1_schema.sql)
 
 ---
@@ -87,20 +87,22 @@ erDiagram
 | `id`            | `uuid`        | **PK** DEFAULT gen_random_uuid() | 内部 ID（FK 用 · 将来 API）                                         |
 | `internal_code` | `text`        | **UNIQUE NOT NULL**              | 社内番号（旧 `equipment_codes.internal_code` · 客先特定名は避ける） |
 | `display_name`  | `text`        | NOT NULL                         | 表示名（Web で名称変更可 · 客先特定名は避ける）                     |
+| `memo`          | `text`        | NOT NULL DEFAULT ''              | **設計メモ**（1/装置 · v1.1 · Excel 装置名シート）                  |
 | `sort_order`    | `int`         | NOT NULL DEFAULT 0               | Nav 並び（将来複数一覧用）                                          |
 | `created_at`    | `timestamptz` | NOT NULL DEFAULT now()           |                                                                     |
 | `updated_at`    | `timestamptz` | NOT NULL DEFAULT now()           |                                                                     |
 
 ### 4.3 `units` — ユニット
 
-| 列           | 型            | 制約                                | 説明                           |
-| ------------ | ------------- | ----------------------------------- | ------------------------------ |
-| `id`         | `uuid`        | **PK**                              |                                |
-| `device_id`  | `uuid`        | **FK → devices ON DELETE RESTRICT** |                                |
-| `label`      | `text`        | NOT NULL                            | ユニット名（Excel / Nav 表示） |
-| `sort_order` | `int`         | NOT NULL DEFAULT 0                  | 同一装置内の並び               |
-| `created_at` | `timestamptz` | NOT NULL DEFAULT now()              |                                |
-| `updated_at` | `timestamptz` | NOT NULL DEFAULT now()              |                                |
+| 列           | 型            | 制約                                | 説明                              |
+| ------------ | ------------- | ----------------------------------- | --------------------------------- |
+| `id`         | `uuid`        | **PK**                              |                                   |
+| `device_id`  | `uuid`        | **FK → devices ON DELETE RESTRICT** |                                   |
+| `label`      | `text`        | NOT NULL                            | ユニット名（Excel / Nav 表示）    |
+| `memo`       | `text`        | NOT NULL DEFAULT ''                 | **設計メモ**（1/ユニット · v1.1） |
+| `sort_order` | `int`         | NOT NULL DEFAULT 0                  | 同一装置内の並び                  |
+| `created_at` | `timestamptz` | NOT NULL DEFAULT now()              |                                   |
+| `updated_at` | `timestamptz` | NOT NULL DEFAULT now()              |                                   |
 
 - **ユニーク:** `UNIQUE (device_id, label)` — 同一装置内で同名ユニット禁止（Excel 往復の行特定用）
 - 10 ユニット上限等の業務ルールは **アプリ/取込バリデーション**（DB 制約は初版スキップ · 保留）
@@ -112,6 +114,7 @@ erDiagram
 | `id`         | `uuid`        | **PK**                            | **`flow_documents.module_id` の参照先**                                    |
 | `unit_id`    | `uuid`        | **FK → units ON DELETE RESTRICT** |                                                                            |
 | `label`      | `text`        | NOT NULL                          | 動作名                                                                     |
+| `memo`       | `text`        | NOT NULL DEFAULT ''               | **設計メモ**（1/モジュール · v1.1 · Excel 構成シート）                     |
 | `sort_order` | `int`         | NOT NULL DEFAULT 0                | 同一ユニット内の並び                                                       |
 | `legacy_key` | `text`        | NULL                              | **移行用** · 旧 `moduleDraftKey` / DB-1 `module_id text`（移行後 NULL 可） |
 | `created_at` | `timestamptz` | NOT NULL DEFAULT now()            |                                                                            |
@@ -177,6 +180,18 @@ export type FlowchartDocument = {
 - **RLS:** editor / viewer / admin — SELECT · INSERT · UPDATE · DELETE 可（v1: 全ログを誰でも編集・削除可）
 - **保存タイミング:** 投稿・編集・削除は **即 DB**（表の手動保存とは独立）
 - SQL: `017_review_notes.sql`
+
+### 4.5.2 設計メモ（`devices` / `units` / `modules.memo` · v1.1 · 2026-06-27）
+
+| 階層     | 列             | 件数         | Excel SSOT                                | Web                         |
+| -------- | -------------- | ------------ | ----------------------------------------- | --------------------------- |
+| 装置     | `devices.memo` | 1/装置       | `装置名` シート C 列「メモ」              | editor 編集可 · viewer 読取 |
+| ユニット | `units.memo`   | 1/ユニット   | `ユニット` シート F 列「メモ」            | 同上                        |
+| 動作     | `modules.memo` | 1/モジュール | `構成` シート G 列「メモ」（任意 7 列目） | 同上                        |
+
+- **回覧メモ（`review_notes`）とは分離** — 設計メモは Excel 再取込で上書き · 回覧は Web 専用
+- **保存:** Web はフィールド単位の **[保存]** で即 DB（表の Undo / 手動保存とは独立）
+- SQL: `018_design_memos.sql`
 
 ---
 

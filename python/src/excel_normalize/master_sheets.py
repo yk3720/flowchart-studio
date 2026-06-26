@@ -18,6 +18,7 @@ class UnitBand:
     mid_count: int  # 0 = 未使用ユニット（プレースホルダ）またはバンド情報なし
     mid_start: int | None  # mid_count=0 のとき None
     mid_end: int | None  # mid_count=0 のとき None
+    memo: str = ""
 
 
 def _cell_str(value: object) -> str:
@@ -37,11 +38,11 @@ def _parse_int_cell(value: object) -> int | None:
 
 def read_v03_masters(
     workbook: Workbook,
-) -> tuple[str, str, dict[int, UnitBand], dict[int, str]]:
+) -> tuple[str, str, str, dict[int, UnitBand], dict[int, str]]:
     """装置名・ユニット（MID帯含む）・モジュールマスタを読む。
 
     Returns:
-        (internal_code, display_name, units_map, modules_map)
+        (internal_code, display_name, device_memo, units_map, modules_map)
         units_map: uid → UnitBand（MID数/開始/終了が揃っていればバンド情報あり）
         modules_map: MID → モジュール名
     """
@@ -55,6 +56,7 @@ def read_v03_masters(
 
     internal_code = _cell_str(device_rows[0][0])
     display_name = _cell_str(device_rows[0][1])
+    device_memo = _cell_str(device_rows[0][2] if len(device_rows[0]) > 2 else None)
     if not internal_code or not display_name:
         raise ValueError("シート「装置名」2行目に装置製番・装置名を入力してください")
 
@@ -74,12 +76,14 @@ def read_v03_masters(
             if mid_count > 0:
                 mid_start = _parse_int_cell(row[3] if len(row) > 3 else None)
                 mid_end = _parse_int_cell(row[4] if len(row) > 4 else None)
+            unit_memo = _cell_str(row[5] if len(row) > 5 else None)
             units[uid] = UnitBand(
                 uid=uid,
                 label=label,
                 mid_count=mid_count,
                 mid_start=mid_start,
                 mid_end=mid_end,
+                memo=unit_memo,
             )
 
     modules: dict[int, str] = {}
@@ -90,4 +94,4 @@ def read_v03_masters(
             if mid is not None and label:
                 modules[mid] = sanitize_module_label(label)
 
-    return internal_code, display_name, units, modules
+    return internal_code, display_name, device_memo, units, modules

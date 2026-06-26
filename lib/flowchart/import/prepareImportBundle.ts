@@ -38,6 +38,7 @@ export function prepareImportBundleForRpc(
     bundle: {
       internal_code: bundle.internal_code,
       display_name: bundle.display_name,
+      ...(bundle.memo !== undefined ? { memo: bundle.memo } : {}),
       units: bundle.units,
       flows,
     },

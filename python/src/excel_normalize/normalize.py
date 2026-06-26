@@ -15,27 +15,41 @@ def _build_units(kosei) -> list[dict]:
     units: list[dict] = []
     unit_sort: dict[str, int] = {}
     module_sort: dict[tuple[str, str], int] = {}
+    module_memos: dict[tuple[str, str], str] = {}
+    unit_memos: dict[str, str] = {}
 
     for row in kosei.rows:
         if row.unit_label not in unit_sort:
             unit_sort[row.unit_label] = len(unit_sort)
         module_sort[(row.unit_label, row.module_label)] = row.sort_index
+        if row.module_memo:
+            module_memos[(row.unit_label, row.module_label)] = row.module_memo
+
+    if kosei.unit_bands:
+        for band in kosei.unit_bands.values():
+            if band.memo:
+                unit_memos[band.label] = band.memo
 
     for unit_label in kosei.unit_labels:
-        modules = [
-            {
+        modules = []
+        for mod in kosei.modules_for_unit(unit_label):
+            entry: dict = {
                 "label": mod,
                 "sort_order": module_sort[(unit_label, mod)],
             }
-            for mod in kosei.modules_for_unit(unit_label)
-        ]
-        units.append(
-            {
-                "label": unit_label,
-                "sort_order": unit_sort[unit_label],
-                "modules": modules,
-            }
-        )
+            memo = module_memos.get((unit_label, mod))
+            if memo:
+                entry["memo"] = memo
+            modules.append(entry)
+        unit_entry: dict = {
+            "label": unit_label,
+            "sort_order": unit_sort[unit_label],
+            "modules": modules,
+        }
+        unit_memo = unit_memos.get(unit_label)
+        if unit_memo:
+            unit_entry["memo"] = unit_memo
+        units.append(unit_entry)
     return units
 
 
@@ -84,4 +98,6 @@ def normalize_workbook(workbook_path: Path) -> NormalizeResult:
         "units": _build_units(kosei),
         "flows": flows,
     }
+    if kosei.device_memo:
+        bundle["memo"] = kosei.device_memo
     return NormalizeResult(bundle=bundle, warnings=warnings)

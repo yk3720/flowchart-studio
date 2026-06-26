@@ -2,6 +2,8 @@ export type FlowModule = {
   /** modules.id (uuid) — flow_documents FK */
   id: string;
   label: string;
+  /** 設計メモ（1/動作 · v1.1） */
+  memo?: string;
   /** DB modules.legacy_key — 旧 localStorage / offline キー解決用 */
   legacyKey?: string;
   /** サーバーで算出したフロー中身リセット可否（クライアント表示用） */
@@ -13,6 +15,8 @@ export type FlowModule = {
 export type FlowUnit = {
   id: string;
   label: string;
+  /** 設計メモ（1/ユニット · v1.1） */
+  memo?: string;
   modules: FlowModule[];
   /** import 時の登録者（units.created_by）— サーバー内部のみ。クライアントには渡さない */
   createdBy?: string;
@@ -25,6 +29,8 @@ export type Device = {
   /** devices.internal_code — 社内番号（1 装置 = 1 コード · 012 で equipment_codes 統合） */
   internalCode?: string;
   name: string;
+  /** 設計メモ（1/装置 · v1.1） */
+  memo?: string;
   units: FlowUnit[];
   /** import 時の登録者（devices.created_by） */
   createdBy?: string;
@@ -202,6 +208,34 @@ export function hasModuleInDevices(
   moduleId: string
 ): boolean {
   return findModuleInDevices(devices, moduleId) !== null;
+}
+
+/** 設計メモ保存後にクライアント側の装置ツリーを更新する */
+export function patchDesignMemoInDevices(
+  devices: readonly Device[],
+  target: "device" | "unit" | "module",
+  id: string,
+  memo: string
+): Device[] {
+  return devices.map((device) => {
+    if (target === "device" && device.id === id) {
+      return { ...device, memo };
+    }
+    return {
+      ...device,
+      units: device.units.map((unit) => {
+        if (target === "unit" && unit.id === id) {
+          return { ...unit, memo };
+        }
+        return {
+          ...unit,
+          modules: unit.modules.map((mod) =>
+            target === "module" && mod.id === id ? { ...mod, memo } : mod
+          ),
+        };
+      }),
+    };
+  });
 }
 
 /** 削除直後のナビ反映用 — 指定モジュールを除外した装置ツリーを返す */

@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   IMPORT_BUNDLE_MAX_FLOWS,
   IMPORT_BUNDLE_MAX_LABEL_LEN,
+  IMPORT_BUNDLE_MAX_MEMO_LEN,
   IMPORT_BUNDLE_MAX_MODULES_PER_UNIT,
   IMPORT_BUNDLE_MAX_TABLE_ROWS,
   IMPORT_BUNDLE_MAX_UNITS,
@@ -16,6 +17,7 @@ const flowTableCell = z.union([
 ]);
 
 const boundedLabel = z.string().min(1).max(IMPORT_BUNDLE_MAX_LABEL_LEN);
+const optionalMemo = z.string().max(IMPORT_BUNDLE_MAX_MEMO_LEN).optional();
 
 export const flowchartDocumentPayloadSchema = z.object({
   version: z.literal(1),
@@ -40,16 +42,19 @@ export const flowchartDocumentPayloadSchema = z.object({
 export const importBundleSchema = z.object({
   internal_code: boundedLabel,
   display_name: boundedLabel,
+  memo: optionalMemo,
   units: z
     .array(
       z.object({
         label: boundedLabel,
         sort_order: z.number().int().nonnegative(),
+        memo: optionalMemo,
         modules: z
           .array(
             z.object({
               label: boundedLabel,
               sort_order: z.number().int().nonnegative(),
+              memo: optionalMemo,
             })
           )
           .max(IMPORT_BUNDLE_MAX_MODULES_PER_UNIT),
@@ -73,6 +78,7 @@ export type ImportBundle = z.infer<typeof importBundleSchema>;
 export type RpcImportBundle = {
   internal_code: string;
   display_name: string;
+  memo?: string;
   units: ImportBundle["units"];
   flows: Array<{
     unit_label: string;

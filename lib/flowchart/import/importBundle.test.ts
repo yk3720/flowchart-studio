@@ -50,6 +50,24 @@ describe("importBundleSchema", () => {
     expect(prepared.bundle.flows[0]?.payload.edges.length).toBeGreaterThan(0);
   });
 
+  it("accepts optional memo fields on hierarchy", () => {
+    const result = importBundleSchema.safeParse({
+      internal_code: "X",
+      display_name: "Test",
+      memo: "device note",
+      units: [
+        {
+          label: "U1",
+          sort_order: 0,
+          memo: "unit note",
+          modules: [{ label: "M1", sort_order: 0, memo: "module note" }],
+        },
+      ],
+      flows: [],
+    });
+    expect(result.success).toBe(true);
+  });
+
   it("rejects invalid bundle shape", () => {
     const result = importBundleSchema.safeParse({ internal_code: "X" });
     expect(result.success).toBe(false);

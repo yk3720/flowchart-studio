@@ -37,7 +37,9 @@ import {
   findModule,
   hasModuleInDevices,
   moduleStorageKey,
+  patchDesignMemoInDevices,
 } from "@/lib/flowchart/equipment/moduleHierarchy";
+import type { DesignMemoTarget } from "@/lib/flowchart/actions/design/designMemos";
 import {
   getOfflineModuleCache,
   setOfflineModulePinned,
@@ -131,6 +133,9 @@ export function FlowchartWorkspace({
   const [optimisticRemovedModuleIds, setOptimisticRemovedModuleIds] = useState(
     () => new Set<string>()
   );
+  const [memoOverrides, setMemoOverrides] = useState<
+    Partial<Record<string, string>>
+  >({});
 
   const isDesktop = useIsDesktop();
   const navPanelRef = usePanelRef();
@@ -164,9 +169,29 @@ export function FlowchartWorkspace({
     return changed ? next : optimisticRemovedModuleIds;
   }, [devices, optimisticRemovedModuleIds]);
 
+  const patchedDevices = useMemo(() => {
+    if (Object.keys(memoOverrides).length === 0) {
+      return devices;
+    }
+    let next = devices;
+    for (const [key, memo] of Object.entries(memoOverrides)) {
+      if (memo === undefined) continue;
+      const sep = key.indexOf(":");
+      if (sep < 0) continue;
+      const target = key.slice(0, sep) as DesignMemoTarget;
+      const id = key.slice(sep + 1);
+      next = patchDesignMemoInDevices(next, target, id, memo);
+    }
+    return next;
+  }, [devices, memoOverrides]);
+
   const visibleDevices = useMemo(
-    () => excludeModulesFromDevices(devices, activeOptimisticRemovedModuleIds),
-    [devices, activeOptimisticRemovedModuleIds]
+    () =>
+      excludeModulesFromDevices(
+        patchedDevices,
+        activeOptimisticRemovedModuleIds
+      ),
+    [patchedDevices, activeOptimisticRemovedModuleIds]
   );
 
   const activeDeviceId = useMemo(() => {
@@ -181,6 +206,23 @@ export function FlowchartWorkspace({
 
   const moduleInfo =
     selectedModuleId && device ? findModule(device, selectedModuleId) : null;
+
+  const handleDesignMemoSaved = useCallback(
+    (target: DesignMemoTarget, memo: string) => {
+      const id =
+        target === "device"
+          ? device?.id
+          : target === "unit"
+            ? moduleInfo?.unit.id
+            : moduleInfo?.module.id;
+      if (!id) return;
+      setMemoOverrides((prev) => ({
+        ...prev,
+        [`${target}:${id}`]: memo,
+      }));
+    },
+    [device, moduleInfo]
+  );
 
   const persistCurrentModule = useCallback(() => {
     if (!moduleInfo || !editorRef.current || !device) return;
@@ -338,7 +380,7 @@ export function FlowchartWorkspace({
 
   useEffect(() => {
     if (!selectDeviceAfterImport) return;
-    const imported = devices.find(
+    const imported = patchedDevices.find(
       (d) => d.internalCode === selectDeviceAfterImport
     );
     if (imported) {
@@ -348,7 +390,7 @@ export function FlowchartWorkspace({
       // eslint-disable-next-line react-hooks/set-state-in-effect -- import キュークリアの意図的パターン
       setSelectDeviceAfterImport(null);
     }
-  }, [devices, selectDeviceAfterImport, handleSelectDevice]);
+  }, [patchedDevices, selectDeviceAfterImport, handleSelectDevice]);
 
   const unitDeleteTarget = unitDeleteTargetId
     ? (device?.units.find((u) => u.id === unitDeleteTargetId) ?? null)
@@ -677,6 +719,22 @@ export function FlowchartWorkspace({
     initialSnapshot,
     workspaceMode: true,
     readOnly: !isEditor,
+    designMemoContext:
+      moduleInfo && device
+        ? {
+            deviceId: device.id,
+            deviceName: device.name,
+            unitId: moduleInfo.unit.id,
+            unitLabel: moduleInfo.unit.label,
+            moduleId: moduleInfo.module.id,
+            initialMemos: {
+              deviceMemo: device.memo ?? "",
+              unitMemo: moduleInfo.unit.memo ?? "",
+              moduleMemo: moduleInfo.module.memo ?? "",
+            },
+            onMemoSaved: handleDesignMemoSaved,
+          }
+        : undefined,
     onSnapshotPersist: persistCurrentModule,
     onInvalidatePendingModuleLoad: invalidatePendingModuleLoad,
     pinOffline: pinOfflineProps,
