@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 import {
   ensureNavExpanded,
   ensureWorkspaceLoaded,
+  headerRegenerate,
   loadSampleFromMenu,
   selectModule,
 } from "./helpers/flowchart";
@@ -15,7 +16,7 @@ test.describe("サンプルプレビューと上書き防止", () => {
     const editCell = page.getByLabel("行2 Text1");
     await expect(editCell).toBeVisible({ timeout: 15_000 });
     await editCell.fill("自作フロー");
-    await page.getByRole("button", { name: "再生成" }).click();
+    await headerRegenerate(page).click();
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
 
     await loadSampleFromMenu(page, "例: カレーの作り方");
@@ -36,7 +37,7 @@ test.describe("サンプルプレビューと上書き防止", () => {
     await ensureNavExpanded(page);
     await selectModule(page, "供給動作");
     await page.getByLabel("行2 Text1").fill("残したい");
-    await page.getByRole("button", { name: "再生成" }).click();
+    await headerRegenerate(page).click();
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
 
     await loadSampleFromMenu(page, "雛形: 直線フロー");

@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import {
   ensureNavExpanded,
+  ensureUnitsExpanded,
   ensureWorkspaceLoaded,
   MODULE_SUPPLY_FEED_A_ID,
 } from "./helpers/flowchart";
@@ -13,6 +14,7 @@ test.describe("モジュール削除", () => {
   });
 
   test("ゴミ箱 → 確認 → 削除成功バナーとナビから消える", async ({ page }) => {
+    await ensureUnitsExpanded(page);
     const deleteButton = page.getByTestId(
       `delete-module-${MODULE_SUPPLY_FEED_A_ID}`
     );

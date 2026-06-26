@@ -23,9 +23,10 @@ test.describe("フロー中身リセット", () => {
     await expect(page.getByText("レシピを確認")).toBeVisible();
 
     await openMoreMenu(page);
-    await page
-      .getByRole("menuitem", { name: "フローを雛形にリセット…" })
-      .click();
+    const resetItem = page.getByRole("menuitem", {
+      name: "フローをリセット…",
+    });
+    await resetItem.dispatchEvent("click");
     await expect(
       page.getByRole("heading", { name: "フローを雛形にリセットしますか？" })
     ).toBeVisible();

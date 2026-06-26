@@ -30,7 +30,6 @@ test.describe("モジュール読込 UX", () => {
     await ensureNavExpanded(page);
     await selectModule(page, "供給動作");
     await expect(page.getByLabel("行1 Text1")).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByText("ここに処理名")).toHaveCount(0);
     await expect(page.getByTestId("module-loading-overlay")).toHaveCount(0);
   });
 

@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-studio`                                                          |
 | **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-25（UX改善パック §D〜§E 実装済）                                    |
+| **更新**              | 2026-06-26（§E 実装 · M005/M006 目視 · N8 E2E 完了）                        |
 
 ---
 
@@ -61,7 +61,7 @@
 | §4           | handoffs 最新                                    | 毎セッション                       |
 | 運用手順     | `docs/`（LOCAL_DEV · Runbook 等）                | 実装隣接                           |
 
-**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **A0001 供給部 M004〜 Web 目視**（HANDOFF #14）
+**現状 · 次の1件:** [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) — **DB2 Runbook M12 追随**（HANDOFF #16 · 低優先）
 
 ---
 

@@ -15,7 +15,7 @@ test.describe("a11y keyboard（手動 E2E · Phase 3）", () => {
     const menu = page.getByRole("menu", { name: "その他の操作" });
     await expect(menu).toBeVisible();
 
-    const items = page.getByRole("menuitem");
+    const items = page.getByRole("menuitem", { disabled: false });
     await expect(items.first()).toBeFocused();
 
     await page.keyboard.press("ArrowDown");

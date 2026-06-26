@@ -190,11 +190,13 @@ Supabase → 左ナビ + フロー表
 ## 6. Web 取込（v0.1 実装済み）
 
 - **読むもの:** `import.json` のみ（Python 正規化出力）
-- **入口:** その他メニュー → **「import.json を取込…」**（workspace · editor のみ）
+- **入口:** その他メニュー → **「import.jsonを取込…」**（workspace · editor のみ）
 - **保存:** Server Action `importEquipmentBundle` → RPC **`import_equipment_bundle`**（`005_import_equipment_bundle.sql`）
 - **初版 upsert:** 名称マッチ · `sort_order` 更新 · 新規 INSERT — **prune / rename 非対応**
 
 **dev 適用手順:** `005_import_equipment_bundle.sql` を Supabase Dashboard / CLI で 004 の後に適用。
+
+**Web 表ペイン Excel 取込（補足 · 2026-06）:** `CsvPastePanel` の **Excelから取込…** は `parseExcel` 経由で **v1 行のまま表に入る**可能性がある（UI は v2 ヘッダー）。取込直後に v2 列順へ正規化する **アプリ修正は未実装** — 恒久 repair スクリプトは作らない（`REACTFLOW_RULES` §5.6-2b）。当面は Python → `import.json` 経路を正本とする。
 
 ---
 

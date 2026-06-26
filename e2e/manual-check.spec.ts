@@ -57,10 +57,9 @@ test.describe("M2 AC + P0 UX 手動確認（自動化）", () => {
     await expect(
       page.getByRole("combobox", { name: "装置を選択" })
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "表" })).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "プレビュー" })
-    ).toBeVisible();
+    await expect(page.locator("#table")).toBeVisible();
+    await expect(page.locator("#canvas")).toBeVisible();
+    await expect(page.locator(".react-flow__node").first()).toBeVisible();
   });
 
   test("Phase 3: 装置切替でナビのユニットが変わる", async ({ page }) => {
@@ -68,20 +67,21 @@ test.describe("M2 AC + P0 UX 手動確認（自動化）", () => {
     await page
       .getByRole("combobox", { name: "装置を選択" })
       .selectOption(DEVICE_PRESS_B_ID);
+    await page.getByTestId("toggle-all-units").click();
     await expect(page.getByText("供給ユニット")).toBeVisible();
     await expect(moduleNavButton(page, "供給動作")).toBeVisible();
     await page
       .getByRole("combobox", { name: "装置を選択" })
       .selectOption(DEVICE_PRESS_A_ID);
+    await page.getByTestId("toggle-all-units").click();
     await expect(page.getByText("供給ユニット")).toBeVisible();
     await expect(moduleNavButton(page, "供給動作")).toBeVisible();
   });
 
   test("AC-8: 1画面で表とプレビュー", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "表" })).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "プレビュー" })
-    ).toBeVisible();
+    await expect(page.locator("#table")).toBeVisible();
+    await expect(page.locator("#canvas")).toBeVisible();
+    await expect(page.locator(".react-flow__node").first()).toBeVisible();
     await expect(
       page.getByText(/例をプレビュー中（未保存）/).first()
     ).toBeVisible();

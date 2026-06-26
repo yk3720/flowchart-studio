@@ -4,6 +4,7 @@ import path from "node:path";
 
 import {
   ensureWorkspaceLoaded,
+  IMPORT_JSON_MENU_ITEM,
   importBundleJsonFile,
   openMoreMenu,
 } from "./helpers/flowchart";
@@ -26,13 +27,13 @@ test.describe("import.json 装置一括取込", () => {
   test("その他メニューに import.json 取込項目がある", async ({ page }) => {
     await openMoreMenu(page);
     await expect(
-      page.getByRole("menuitem", { name: "import.json を取込…" })
+      page.getByRole("menuitem", { name: IMPORT_JSON_MENU_ITEM })
     ).toBeVisible();
   });
 
   test("AUTH_DISABLED 時はメニュー項目が無効", async ({ page }) => {
     await openMoreMenu(page);
-    const item = page.getByRole("menuitem", { name: "import.json を取込…" });
+    const item = page.getByRole("menuitem", { name: IMPORT_JSON_MENU_ITEM });
     await expect(item).toBeDisabled();
     await expect(item).toHaveAttribute(
       "title",

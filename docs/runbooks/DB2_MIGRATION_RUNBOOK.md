@@ -123,7 +123,7 @@ select proname from pg_proc where proname = 'import_equipment_bundle';
 
 ## 4. 005 — import.json 一括取込
 
-**Web:** その他 → **「import.json を取込…」**（editor · workspace のみ）
+**Web:** その他 → **「import.jsonを取込…」**（editor · workspace のみ）
 
 **正規化（ローカル）:**
 
@@ -198,7 +198,7 @@ where table_schema = 'public' and table_name = 'flow_documents' and column_name 
 -- 期待: RPC 1 行 · created_by 列あり
 ```
 
-**アプリ確認:** 自分が作成したフローを選択 → その他 →「フローを雛形にリセット…」
+**アプリ確認:** 自分が作成したフローを選択 → その他 →「フローをリセット…」
 
 ---
 
@@ -289,7 +289,7 @@ select proname from pg_proc where proname = 'rpc_delete_module';
 ログイン後、次を 1 件ずつ:
 
 1. **クラウド保存** — 表編集 →「表を保存」（014 適用後 · admin でも OK）
-2. **フローリセット** — その他 →「フローを雛形にリセット…」
+2. **フローリセット** — その他 →「フローをリセット…」
 3. **装置削除** — ナビ「装置を削除…」（テスト用装置で）
 4. **動作削除** — 左ナビ · 動作行のゴミ箱
 

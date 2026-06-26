@@ -28,9 +28,12 @@ export async function selectModule(page: Page, label: string) {
   await moduleNavButton(page, label).click();
 }
 
+/** §E: 表ペイン header 内の再生成（canvas 内テキストリンクと区別） */
 export function headerRegenerate(page: Page) {
-  return page.locator("header").getByRole("button", { name: "再生成" });
+  return page.locator("#table header").getByRole("button", { name: "再生成" });
 }
+
+export const IMPORT_JSON_MENU_ITEM = "import.jsonを取込…";
 
 export async function openMoreMenu(page: Page) {
   await page.getByRole("button", { name: "その他" }).click();
