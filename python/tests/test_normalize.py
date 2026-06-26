@@ -118,6 +118,63 @@ def test_a0001_v03_builds_in_memory(tmp_path: Path) -> None:
     assert len(flow001["payload"]["table"]) == 4
     assert flow001["payload"]["table"][1][8] == "RC008_供給ﾏｶﾞｼﾞﾝz"  # v2: Text2=index8
 
+    flow002 = next(
+        f
+        for f in bundle["flows"]
+        if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作002"
+    )
+    assert len(flow002["payload"]["table"]) == 14
+    assert flow002["payload"]["table"][0][8] == "供給_SUS板搬送_取_開始"
+    assert flow002["payload"]["table"][1][9] == "P03_SUS取出下"
+    assert flow002["payload"]["table"][-1][8] == "供給_SUS板搬送_取_終了"
+    assert flow002["payload"]["table"][2][6] == "1"  # v2: 列=index6 · 横並び分岐
+
+    flow003 = next(
+        f
+        for f in bundle["flows"]
+        if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作003"
+    )
+    assert len(flow003["payload"]["table"]) == 14
+    assert flow003["payload"]["table"][0][8] == "供給_SUS板搬送_置_開始"
+    assert flow003["payload"]["table"][1][9] == "P02_SUS取出上"
+    assert flow003["payload"]["table"][5][8] == "SUS板置"
+    assert flow003["payload"]["table"][-1][8] == "供給_SUS板搬送_置_終了"
+
+    u0_author_flows = {
+        "動作004": (7, "供給_SUS板搬送_検査_開始", "判断"),
+        "動作005": (10, "供給_個片搬送1(取出)_取_開始", "個片取"),
+        "動作006": (13, "供給搬送1_置_x001F__開始", "吸着ミス"),
+    }
+    for mod, (row_count, start_label, mid_label) in u0_author_flows.items():
+        flow = next(
+            f
+            for f in bundle["flows"]
+            if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == mod
+        )
+        table = flow["payload"]["table"]
+        assert len(table) == row_count
+        assert table[0][8] == start_label
+        assert any(mid_label in str(cell) for row in table for cell in row)
+
+    flow007 = next(
+        f
+        for f in bundle["flows"]
+        if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作007"
+    )
+    assert len(flow007["payload"]["table"]) == 8
+    assert flow007["payload"]["table"][0][8] == "供給_個片搬送1(戻)_開始"
+    assert flow007["payload"]["table"][1][9] == "_解放"
+    assert flow007["payload"]["table"][-1][8] == "供給_個片搬送1(戻)_終了"
+
+    for mod in ("動作008", "動作009"):
+        flow = next(
+            f
+            for f in bundle["flows"]
+            if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == mod
+        )
+        assert len(flow["payload"]["table"]) == 3
+        assert flow["payload"]["table"][1][7] == mod
+
     wb = load_workbook(path, data_only=False)
     ws = wb["構成"]
     assert str(ws["D2"].value).startswith("=XLOOKUP(")

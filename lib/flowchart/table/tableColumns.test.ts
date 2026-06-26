@@ -18,6 +18,7 @@ import {
   TIER9_SCHEMA,
   isColorTableColumn,
   isTableRow10ColV1Order,
+  isTableRow10ColV2Order,
   migrateDocToV2,
   migrateTable10ColV1ToV2,
   tableNeedsV1ToV2Migration,
@@ -192,6 +193,33 @@ describe("tableColumns", () => {
     const v2row = migrateTable10ColV1ToV2(v1row);
     expect(isTableRow10ColV1Order(v1row)).toBe(true);
     expect(isTableRow10ColV1Order(v2row)).toBe(false);
+  });
+
+  it("isTableRow10ColV1Order: A0001 scratch 手書き Text1（MR なし）", () => {
+    const scratchRow = [
+      "20",
+      "処理",
+      "30",
+      "",
+      "2",
+      "0",
+      "ワーク取出",
+      "",
+      "",
+      "",
+    ];
+    expect(isTableRow10ColV1Order(scratchRow)).toBe(true);
+    expect(isTableRow10ColV2Order(migrateTable10ColV1ToV2(scratchRow))).toBe(
+      true
+    );
+  });
+
+  it("isTableRow10ColV1Order: 端子行（接続先なし · Text1=終了）", () => {
+    const terminalRow = ["30", "端子", "", "", "3", "0", "終了", "", "", ""];
+    expect(isTableRow10ColV1Order(terminalRow)).toBe(true);
+    expect(isTableRow10ColV2Order(migrateTable10ColV1ToV2(terminalRow))).toBe(
+      true
+    );
   });
 
   it("tableNeedsV1ToV2Migration: schema v2 + v1 列順の desync を検出", () => {

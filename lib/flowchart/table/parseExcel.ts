@@ -1,5 +1,6 @@
 import * as XLSX from "xlsx";
 import { parseTableRows } from "./parseCsv";
+import { ensureParsedTable10ColV2Order } from "./tableColumns";
 
 /** zip bomb 対策 — 展開前のファイルサイズ上限 */
 export const MAX_EXCEL_BYTES = 5 * 1024 * 1024;
@@ -94,5 +95,9 @@ export function parseExcelBuffer(buffer: ArrayBuffer): ParseExcelResult {
 
   const rows = sheetToStringRows(workbook.Sheets[sheetName]);
   const { table, errors } = parseTableRows(rows);
-  return { table, errors, sheetName };
+  return {
+    table: ensureParsedTable10ColV2Order(table),
+    errors,
+    sheetName,
+  };
 }

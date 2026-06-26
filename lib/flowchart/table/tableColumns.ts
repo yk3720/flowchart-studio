@@ -411,11 +411,68 @@ export function migrateTable10ColV1ToV2(row: FlowTableRow): FlowTableRow {
   return [r[0], r[1], r[9], r[2], r[3], r[4], r[5], r[6], r[7], r[8]];
 }
 
-/** v2 では index 6 = 列（数値）、v1 では index 6 = Text1（MR…） */
-export function isTableRow10ColV1Order(row: FlowTableRow): boolean {
+const KNOWN_COLOR_CELL = new Set([
+  "",
+  "-",
+  "黄",
+  "橙",
+  "青",
+  "赤",
+  "緑",
+  "通常",
+  "白",
+  "灰",
+]);
+
+function isLayoutColumnValue(value: unknown): boolean {
+  if (value === null || value === undefined || value === "") return true;
+  if (typeof value === "number" && Number.isFinite(value)) return true;
+  return /^\d+$/.test(String(value).trim());
+}
+
+function isColorColumnValue(value: unknown): boolean {
+  return KNOWN_COLOR_CELL.has(String(value ?? "").trim());
+}
+
+function isConnectionIdLike(value: unknown): boolean {
+  if (value === null || value === undefined || value === "") return false;
+  if (typeof value === "number" && Number.isFinite(value)) return true;
+  const s = String(value).trim();
+  return s !== "" && /^\d+$/.test(s);
+}
+
+/** v2: index 2 = 色 · index 6 = 列（数値） */
+export function isTableRow10ColV2Order(row: FlowTableRow): boolean {
   const r = normalizeRow(row, TEN_COL_WIDTH);
-  const text1 = String(r[6] ?? "").trim();
-  return /^MR\d/i.test(text1);
+  if (!isLayoutColumnValue(r[6])) return false;
+  if (isConnectionIdLike(r[2])) return false;
+  return isColorColumnValue(r[2]);
+}
+
+/**
+ * v1: index 2 = 接続先(下) · index 6 = Text1
+ * （MR… だけでなく A0001 scratch 等の手書き Text1 も含む）
+ */
+export function isTableRow10ColV1Order(row: FlowTableRow): boolean {
+  if (isTableRow10ColV2Order(row)) return false;
+  const r = normalizeRow(row, TEN_COL_WIDTH);
+  const textAt6 = String(r[6] ?? "").trim();
+  if (/^MR\d/i.test(textAt6)) return true;
+  const textLikeAt6 = textAt6 !== "" && !/^\d+$/.test(textAt6);
+  if (isConnectionIdLike(r[2]) && textLikeAt6) return true;
+  const colorAt9 = String(r[9] ?? "").trim();
+  if (
+    isConnectionIdLike(r[2]) &&
+    colorAt9 !== "" &&
+    KNOWN_COLOR_CELL.has(colorAt9)
+  ) {
+    return true;
+  }
+  // 端子行など接続先(下)が空でも 段·列·Text1 が v1 位置なら v1
+  if (textLikeAt6 && isLayoutColumnValue(r[4]) && isLayoutColumnValue(r[5])) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -442,6 +499,19 @@ export function ensureTable10ColV2Order<
     ...doc,
     table: doc.table.map(migrateTable10ColV1ToV2),
   };
+}
+
+/**
+ * Excel / 貼り付け直後の生表 — 10 列かつ v1 行だけ v2 列順へ揃える。
+ * （UI は v2 ヘッダー · `REACTFLOW_RULES` §5.6-2b）
+ */
+export function ensureParsedTable10ColV2Order(
+  table: FlowTableRow[]
+): FlowTableRow[] {
+  return table.map((row) => {
+    if (row.length < TEN_COL_WIDTH) return row;
+    return isTableRow10ColV1Order(row) ? migrateTable10ColV1ToV2(row) : row;
+  });
 }
 
 /**

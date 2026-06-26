@@ -70,7 +70,7 @@ describe("parseExcelBuffer", () => {
     );
   });
 
-  it("reads A0001 _scratch/取出.xlsx (10列 · 3行)", () => {
+  it("reads A0001 _scratch/取出.xlsx (10列 · 3行 · v2 列順)", () => {
     if (!fs.existsSync(A0001_SCRATCH_XLSX)) {
       throw new Error("fixture missing — run: npm run excel:a0001:scratch");
     }
@@ -79,6 +79,44 @@ describe("parseExcelBuffer", () => {
     expect(errors).toHaveLength(0);
     expect(sheetName).toBe("表");
     expect(table).toHaveLength(3);
-    expect(table[1][6]).toBe("ワーク取出");
+    // v2: index 7 = Text1（v1 では index 6）
+    expect(table[1][7]).toBe("ワーク取出");
+    expect(table[1][6]).toBe(0);
+    expect(table[2][7]).toBe("終了");
+    expect(table[2][6]).toBe(0);
+  });
+
+  it("migrates 10-column v1 Excel rows to v2 column order", () => {
+    const buffer = buildWorkbookBuffer({
+      表: [
+        [
+          "ID",
+          "図形種別",
+          "接続先(下)",
+          "接続先(右)",
+          "段",
+          "列",
+          "Text1",
+          "Text2",
+          "Text3",
+          "色",
+        ],
+        [10, "端子", 20, "", 1, 0, "MR42000", "開始", "", "黄"],
+      ],
+    });
+    const { table, errors } = parseExcelBuffer(buffer);
+    expect(errors).toHaveLength(0);
+    expect(table[0]).toEqual([
+      10,
+      "端子",
+      "黄",
+      "20",
+      "",
+      1,
+      0,
+      "MR42000",
+      "開始",
+      "",
+    ]);
   });
 });

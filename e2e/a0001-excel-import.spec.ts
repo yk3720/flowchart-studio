@@ -49,10 +49,6 @@ test.describe("A0001 1 動作 Excel Web 取込", () => {
       !fs.existsSync(A0001_SCRATCH_XLSX),
       "npm run excel:a0001:scratch で xlsx を生成してください"
     );
-    test.skip(
-      true,
-      "取出.xlsx は v2 列順未対応（接続先エラー）— scratch 再生成後に有効化"
-    );
 
     await importScratchExcel(page);
     await headerRegenerate(page).click();
@@ -68,10 +64,6 @@ test.describe("A0001 1 動作 Excel Web 取込", () => {
     test.skip(
       !fs.existsSync(A0001_SCRATCH_XLSX),
       "npm run excel:a0001:scratch で xlsx を生成してください"
-    );
-    test.skip(
-      true,
-      "取出.xlsx は v2 列順未対応（接続先エラー）— scratch 再生成後に有効化"
     );
 
     await importScratchExcel(page);
