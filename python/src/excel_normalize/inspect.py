@@ -10,6 +10,7 @@ from openpyxl import load_workbook
 from .constants import RESERVED_SHEET_NAMES
 from .kosei import parse_kosei_sheet
 from .tables import extract_unit_sheet_tables, list_unit_sheets
+from .validate import validate_unit_bands
 
 
 @dataclass(frozen=True)
@@ -100,6 +101,11 @@ def inspect_workbook(workbook_path: Path) -> InspectReport:
         unit_sheets_present=present_titles,
         unit_sheets_missing=missing_titles,
     )
+
+    # 帯検証 V-B1〜B4
+    band_errors, band_warnings = validate_unit_bands(kosei)
+    report.blockers.extend(band_errors)
+    report.warnings.extend(band_warnings)
 
     if missing_titles:
         report.warnings.append(

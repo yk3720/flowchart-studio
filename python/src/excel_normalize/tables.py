@@ -10,6 +10,15 @@ from openpyxl.worksheet.worksheet import Worksheet
 from .constants import FLOW_COLUMN_COUNT, FLOW_HEADERS, RESERVED_SHEET_NAMES
 from .kosei import KoseiSheet
 
+# A0001 等の短縮列ヘッダー → 正規化コード列名（§6.3）
+FLOW_HEADER_ALIASES: dict[str, str] = {
+    "種別": "図形種別",
+    "下先": "接続先(下)",
+    "文1": "Text1",
+    "文2": "Text2",
+    "文3": "Text3",
+}
+
 
 @dataclass(frozen=True)
 class FlowTableBlock:
@@ -32,11 +41,23 @@ def _unit_short_label(unit_label: str) -> str:
     return unit_label
 
 
+def _normalize_header(h: str) -> str:
+    """短縮ヘッダーを正規化コード列名に変換。"""
+    return FLOW_HEADER_ALIASES.get(h, h)
+
+
+def _mid_from_label(label: str) -> int | None:
+    """'M016 供給...' や 'M000' 等のモジュールラベルから MID を抽出。"""
+    m = re.match(r"^M(\d+)(?:\s|$)", label)
+    return int(m.group(1)) if m else None
+
+
 def resolve_table_module_label(
     table_name: str,
     unit_label: str,
     expected_modules: list[str],
 ) -> str | None:
+    # 完全一致
     if table_name in expected_modules:
         return table_name
 
@@ -51,12 +72,14 @@ def resolve_table_module_label(
         if table_name == f"{unit_label}_{mod}":
             return mod
 
-    # v0.3 移行期: テーブル名 動作000〜動作009 → ユニット内の n 番目モジュール
-    legacy = re.match(r"^動作(\d{3})$", table_name)
-    if legacy:
-        mod_index = int(legacy.group(1)) % 100
-        if 0 <= mod_index < len(expected_modules):
-            return expected_modules[mod_index]
+    # v0.3: テーブル名 動作N+ の数値部分を MID として解釈しラベルプレフィックスと照合
+    # 例: 動作000 → MID=0 → M000 供給...; 動作00018 → MID=18 → M018 塗布...
+    mid_match = re.match(r"^動作(\d+)$", table_name)
+    if mid_match:
+        target_mid = int(mid_match.group(1))
+        for mod in expected_modules:
+            if _mid_from_label(mod) == target_mid:
+                return mod
 
     return None
 
@@ -64,7 +87,7 @@ def resolve_table_module_label(
 def _is_header_row(row: list[str]) -> bool:
     if len(row) < FLOW_COLUMN_COUNT:
         return False
-    head = [c.strip() for c in row[:FLOW_COLUMN_COUNT]]
+    head = [_normalize_header(c.strip()) for c in row[:FLOW_COLUMN_COUNT]]
     if head == list(FLOW_HEADERS):
         return True
     first = head[0].lower()

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from openpyxl import Workbook
 
 from .constants import KOSEI_HEADERS, KOSEI_HEADERS_V03, KOSEI_SHEET
-from .master_sheets import read_v03_masters
+from .master_sheets import UnitBand, read_v03_masters
 
 
 @dataclass(frozen=True)
@@ -26,6 +26,7 @@ class KoseiSheet:
     display_name: str
     internal_code: str
     format_version: Literal["v02", "v03"] = "v02"
+    unit_bands: dict[int, UnitBand] = field(default_factory=dict)
 
     @property
     def unit_labels(self) -> list[str]:
@@ -102,7 +103,9 @@ def parse_kosei_sheet(workbook: Workbook) -> KoseiSheet:
 
 
 def _finalize_kosei(
-    rows: list[KoseiRow], format_version: Literal["v02", "v03"]
+    rows: list[KoseiRow],
+    format_version: Literal["v02", "v03"],
+    unit_bands: dict[int, UnitBand] | None = None,
 ) -> KoseiSheet:
     if not rows:
         raise ValueError(f"シート「{KOSEI_SHEET}」にデータ行がありません")
@@ -123,12 +126,13 @@ def _finalize_kosei(
         internal_code=rows[0].internal_code,
         display_name=rows[0].display_name,
         format_version=format_version,
+        unit_bands=unit_bands or {},
     )
 
 
 def _parse_kosei_v02(matrix: list[list[str]]) -> KoseiSheet:
     rows: list[KoseiRow] = []
-    for idx, raw in enumerate(matrix[1:], start=0):
+    for idx, raw in enumerate(matrix[1:]):
         cells = (raw + ["", "", "", ""])[:4]
         if not any(cells):
             continue
@@ -163,21 +167,21 @@ def _parse_int_optional(value: object, *, field: str, row_num: int) -> int | Non
 
 def _parse_kosei_v03(workbook: Workbook, matrix: list[list[str]]) -> KoseiSheet:
     default_code, default_name, units_map, modules_map = read_v03_masters(workbook)
-    ws = workbook[KOSEI_SHEET]
-    data_row_count = max(ws.max_row - 1, len(matrix) - 1)
     rows: list[KoseiRow] = []
-    for idx in range(data_row_count):
-        raw = matrix[idx + 1] if idx + 1 < len(matrix) else []
+    for idx, raw in enumerate(matrix[1:]):
         cells = (raw + ["", "", "", "", "", ""])[:6]
         row_num = idx + 2
+
         internal_code, display_name, uin_raw, unit_label, mid_raw, module_label = cells
 
         uin_id = _parse_int_optional(uin_raw, field="UinID", row_num=row_num)
         if uin_id is None:
+            # XLOOKUP 数式がキャッシュされていない場合のフォールバック（インメモリビルダー用）
             uin_id = idx // 10
 
         module_id = _parse_int_optional(mid_raw, field="MID", row_num=row_num)
         if module_id is None:
+            # XLOOKUP 数式がキャッシュされていない場合のフォールバック（インメモリビルダー用）
             module_id = uin_id * 100 + (idx % 10)
 
         if not internal_code:
@@ -185,11 +189,15 @@ def _parse_kosei_v03(workbook: Workbook, matrix: list[list[str]]) -> KoseiSheet:
         if not display_name:
             display_name = default_name
         if not unit_label:
-            unit_label = units_map.get(uin_id, "")
+            band = units_map.get(uin_id)
+            unit_label = band.label if band else ""
         if not module_label:
             module_label = modules_map.get(module_id, "")
 
         if not all([internal_code, display_name, unit_label, module_label]):
+            # セルが元々空の場合（末尾余白行）はスキップ、それ以外はエラー
+            if not any(cells):
+                continue
             raise ValueError(
                 f"シート「{KOSEI_SHEET}」{row_num}行目: "
                 f"装置製番・装置名・ユニット・モジュールを解決できませんでした"
@@ -205,4 +213,4 @@ def _parse_kosei_v03(workbook: Workbook, matrix: list[list[str]]) -> KoseiSheet:
                 module_id=module_id,
             )
         )
-    return _finalize_kosei(rows, "v03")
+    return _finalize_kosei(rows, "v03", unit_bands=units_map)

@@ -528,9 +528,13 @@ def _populate_master_sheets(wb: Workbook) -> None:
     ws_device.append([INTERNAL_CODE, DISPLAY_NAME])
 
     ws_units = wb.create_sheet("ユニット")
-    ws_units.append(["ID", "ユニット名"])
+    ws_units.append(["ID", "ユニット名", "MID数", "MID開始", "MID終了"])
     for uin_id in range(UNIT_COUNT):
-        ws_units.append([uin_id, unit_label(uin_id)])
+        mid_start = uin_id * 100
+        mid_end = mid_start + MODULES_PER_UNIT - 1
+        ws_units.append(
+            [uin_id, unit_label(uin_id), MODULES_PER_UNIT, mid_start, mid_end]
+        )
 
     ws_modules = wb.create_sheet("モジュール")
     ws_modules.append(["ID", "動作"])
