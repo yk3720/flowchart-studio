@@ -19,9 +19,9 @@ const A0001_IMPORT_JSON = join(
 );
 
 const A0001_M004_M006 = [
-  "M004供給SUS板_検査_x001F_",
-  "M005供給搬送1_取_x001F_",
-  "M006供給搬送1_置_x001F_",
+  "M004供給SUS板_検査",
+  "M005供給搬送1_取",
+  "M006供給搬送1_置",
 ] as const;
 
 describe("importBundleSchema", () => {

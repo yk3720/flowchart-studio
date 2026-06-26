@@ -6,6 +6,8 @@ from dataclasses import dataclass
 
 from openpyxl import Workbook
 
+from .labels import sanitize_module_label
+
 
 @dataclass(frozen=True)
 class UnitBand:
@@ -86,6 +88,6 @@ def read_v03_masters(
             mid = _parse_int_cell(row[0] if row else None)
             label = _cell_str(row[1] if row and len(row) > 1 else None)
             if mid is not None and label:
-                modules[mid] = label
+                modules[mid] = sanitize_module_label(label)
 
     return internal_code, display_name, units, modules

@@ -6,6 +6,7 @@ from typing import Literal
 from openpyxl import Workbook
 
 from .constants import KOSEI_HEADERS, KOSEI_HEADERS_V03, KOSEI_SHEET
+from .labels import is_placeholder_module_label, sanitize_module_label
 from .master_sheets import UnitBand, read_v03_masters
 
 
@@ -121,8 +122,10 @@ def _finalize_kosei(
             f"装置名がファイル内で一意ではありません: {sorted(display_names)}"
         )
 
+    nav_rows = [r for r in rows if not is_placeholder_module_label(r.module_label)]
+
     return KoseiSheet(
-        rows=rows,
+        rows=nav_rows,
         internal_code=rows[0].internal_code,
         display_name=rows[0].display_name,
         format_version=format_version,
@@ -146,7 +149,7 @@ def _parse_kosei_v02(matrix: list[list[str]]) -> KoseiSheet:
                 internal_code=internal_code,
                 display_name=display_name,
                 unit_label=unit_label,
-                module_label=module_label,
+                module_label=sanitize_module_label(module_label),
                 sort_index=idx,
             )
         )
@@ -193,6 +196,7 @@ def _parse_kosei_v03(workbook: Workbook, matrix: list[list[str]]) -> KoseiSheet:
             unit_label = band.label if band else ""
         if not module_label:
             module_label = modules_map.get(module_id, "")
+        module_label = sanitize_module_label(module_label)
 
         if not all([internal_code, display_name, unit_label, module_label]):
             # セルが元々空の場合（末尾余白行）はスキップ、それ以外はエラー

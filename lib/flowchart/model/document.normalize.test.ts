@@ -15,8 +15,7 @@ describe("normalizeFlowchartDocument — 色列 desync 修復", () => {
   it("A0001 M002 v1 読込後は v2 列順になり、色を index 2 に書ける", () => {
     const bundle = JSON.parse(readFileSync(A0001_IMPORT_JSON, "utf-8"));
     const flow = bundle.flows.find(
-      (f: { module_label: string }) =>
-        f.module_label === "M002供給SUS板_取_x001F_"
+      (f: { module_label: string }) => f.module_label === "M002供給SUS板_取"
     );
     expect(flow).toBeDefined();
 

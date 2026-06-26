@@ -8,6 +8,7 @@ from openpyxl import Workbook, load_workbook
 
 from excel_normalize.constants import KOSEI_HEADERS, KOSEI_SHEET
 from excel_normalize.device_paths import resolve_device_workbook
+from excel_normalize.devices_root import DEVICES_DIR
 from excel_normalize.normalize import normalize_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +16,7 @@ FIXTURES = ROOT / "testdata" / "fixtures"
 TEMPLATES = ROOT / "templates"
 INPUT_XLSX = FIXTURES / "input-device-z00001.xlsx"
 TEMPLATE_XLSX = TEMPLATES / "入力用テンプレ_v0.2.xlsx"
-A0001_DEVICE_DIR = FIXTURES / "devices" / "A0001_塗布装置"
+A0001_DEVICE_DIR = DEVICES_DIR / "A0001_塗布装置"
 
 
 @pytest.fixture(scope="session")
@@ -75,28 +76,42 @@ def test_a0001_master_normalizes(a0001_master_xlsx: Path) -> None:
 
     assert bundle["internal_code"] == "A0001"
     assert bundle["display_name"] == "塗布装置"
-    assert len(bundle["units"]) == 10
-    assert len(bundle["flows"]) == 100
+    assert len(bundle["units"]) == 5
+    assert len(bundle["flows"]) == 16
 
-    unit0 = next(u for u in bundle["units"] if u["label"] == "ﾕﾆｯﾄ0")
-    assert len(unit0["modules"]) == 10
-    assert unit0["modules"][0]["label"] == "動作000"
+    unit_labels = [u["label"] for u in bundle["units"]]
+    assert unit_labels == ["供給部", "塗布1部", "塗布2部", "塗布3部", "収納部"]
 
-    flow000 = next(
+    supply = next(u for u in bundle["units"] if u["label"] == "供給部")
+    assert len(supply["modules"]) == 8
+    assert supply["modules"][0]["label"].startswith("M000")
+    assert supply["modules"][-1]["label"].startswith("M007")
+    assert all(
+        "_x001F_" not in m["label"] for u in bundle["units"] for m in u["modules"]
+    )
+    assert all("XXXX" not in m["label"] for u in bundle["units"] for m in u["modules"])
+
+    flow_counts = {}
+    for flow in bundle["flows"]:
+        flow_counts[flow["unit_label"]] = flow_counts.get(flow["unit_label"], 0) + 1
+    assert flow_counts == {"供給部": 8, "塗布1部": 8}
+
+    flow002 = next(
         f
         for f in bundle["flows"]
-        if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作000"
+        if f["unit_label"] == "供給部" and f["module_label"].startswith("M002")
     )
-    assert flow000["payload"]["table"][1][7] == "ワーク取出"  # v2: Text1=index7
+    assert len(flow002["payload"]["table"]) == 14
+    assert flow002["payload"]["table"][0][8] == "供給_SUS板搬送_取_開始"
+    assert flow002["payload"]["table"][1][9] == "P03_SUS取出下"
 
     flow001 = next(
         f
         for f in bundle["flows"]
-        if f["unit_label"] == "ﾕﾆｯﾄ0" and f["module_label"] == "動作001"
+        if f["unit_label"] == "供給部" and f["module_label"].startswith("M001")
     )
     assert len(flow001["payload"]["table"]) == 4
-    assert flow001["payload"]["table"][1][9] == "P01_下降"  # v2: Text3=index9
-    assert flow001["payload"]["table"][2][9] == "P02_SUS取出"
+    assert flow001["payload"]["table"][1][9] == "P01_下降"
 
 
 def test_a0001_v03_builds_in_memory(tmp_path: Path) -> None:

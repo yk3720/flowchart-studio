@@ -47,8 +47,8 @@ def _normalize_header(h: str) -> str:
 
 
 def _mid_from_label(label: str) -> int | None:
-    """'M016 供給...' や 'M000' 等のモジュールラベルから MID を抽出。"""
-    m = re.match(r"^M(\d+)(?:\s|$)", label)
+    """'M016 供給...' · 'M000供給...' 等のモジュールラベルから MID を抽出。"""
+    m = re.match(r"^M(\d+)", label)
     return int(m.group(1)) if m else None
 
 
@@ -72,14 +72,18 @@ def resolve_table_module_label(
         if table_name == f"{unit_label}_{mod}":
             return mod
 
-    # v0.3: テーブル名 動作N+ の数値部分を MID として解釈しラベルプレフィックスと照合
-    # 例: 動作000 → MID=0 → M000 供給...; 動作00018 → MID=18 → M018 塗布...
+    # v0.3: テーブル名 動作N の数値部分を MID として解釈しラベルプレフィックスと照合
+    # 例: 動作000 → 0 · 動作00018 → 18 · 動作00119 → 19（%100 フォールバック）
     mid_match = re.match(r"^動作(\d+)$", table_name)
     if mid_match:
-        target_mid = int(mid_match.group(1))
-        for mod in expected_modules:
-            if _mid_from_label(mod) == target_mid:
-                return mod
+        n = int(mid_match.group(1))
+        mid_candidates = [n]
+        if n >= 100:
+            mid_candidates.append(n % 100)
+        for target_mid in mid_candidates:
+            for mod in expected_modules:
+                if _mid_from_label(mod) == target_mid:
+                    return mod
 
     return None
 

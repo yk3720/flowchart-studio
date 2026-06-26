@@ -12,10 +12,7 @@ const A0001_IMPORT_JSON = join(
   "data/devices/A0001_塗布装置/import.json"
 );
 
-const A0001_M005_M006 = [
-  "M005供給搬送1_取_x001F_",
-  "M006供給搬送1_置_x001F_",
-] as const;
+const A0001_M005_M006 = ["M005供給搬送1_取", "M006供給搬送1_置"] as const;
 
 describe("A0001 M005/M006 — 再生成（snapshotFromFlowchartDocument）", () => {
   const bundle = JSON.parse(readFileSync(A0001_IMPORT_JSON, "utf-8"));
