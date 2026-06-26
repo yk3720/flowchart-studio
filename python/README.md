@@ -136,7 +136,7 @@ npm run excel:test
 
 1. 上記で `testdata/fixtures/import-z00001.json` を生成（または `-o` で任意パス）
 2. dev Supabase に **`005_import_equipment_bundle.sql`** を適用（`docs/runbooks/DB2_MIGRATION_RUNBOOK.md`）
-3. Web アプリ（editor ログイン）→ **その他 → import.json を取込…**
+3. Web アプリ（editor ログイン）→ **その他 → import.jsonを取込…**
 4. 左ナビに装置が追加され、各動作のフローが読み込めること
 
 **再取込:** 追加・更新のみ。構成から行を消しても DB からは自動削除されない（ADR-014）。
