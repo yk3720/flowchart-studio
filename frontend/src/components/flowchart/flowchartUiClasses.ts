@@ -262,6 +262,13 @@ export const fcNavToggleAllBtn = cn(
   "rounded-md p-1.5 text-flow-text-muted hover:bg-flow-surface-subtle"
 );
 
+/** 表ペイン内の小さめアイコンボタン（T5・列幅リセット等） */
+export const fcTableIconBtn = cn(
+  fcFocusRing,
+  fcTargetMin,
+  "shrink-0 rounded-md p-1.5 text-flow-text-muted hover:bg-flow-surface-subtle"
+);
+
 export const fcNavAside = cn(
   "flex h-full min-h-0 w-full flex-col bg-flow-surface-muted"
 );
@@ -300,8 +307,9 @@ export const fcNavLabel = cn(fcTextHint, "font-medium text-flow-text-muted");
 
 /* ── その他メニュー ── */
 
+/** §E: position:fixed でナビペインの overflow を抜ける。top/right は JS で注入 */
 export const fcMenuDropdown = cn(
-  "absolute right-0 top-full z-30 mt-1 min-w-[16rem] rounded-md border border-flow-border bg-flow-surface py-1 text-left shadow-lg"
+  "fixed z-30 min-w-[16rem] rounded-md border border-flow-border bg-flow-surface py-1 text-left shadow-lg"
 );
 
 export const fcMenuItem = cn(

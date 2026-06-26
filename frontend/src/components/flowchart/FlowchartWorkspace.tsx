@@ -581,10 +581,6 @@ export function FlowchartWorkspace({
     onSelectModule: handleSelectModule,
     onRequestDeleteUnit: setUnitDeleteTargetId,
     onRequestDeleteModule: setModuleDeleteTargetId,
-    onRequestDeleteDevice:
-      device.canDelete && device.internalCode
-        ? () => setDeviceDeleteConfirmOpen(true)
-        : undefined,
   } as const;
 
   const editorKey = selectedModuleId
@@ -604,6 +600,11 @@ export function FlowchartWorkspace({
     resetFlow: resetFlowProps,
     moduleLoading: loadingModule && Boolean(selectedModuleId),
     tableTopSlot,
+    /** §E M12: 装置削除 — その他メニュー 危険 */
+    onRequestDeleteDevice:
+      device.canDelete && device.internalCode
+        ? () => setDeviceDeleteConfirmOpen(true)
+        : undefined,
   } as const;
 
   return (
@@ -630,7 +631,11 @@ export function FlowchartWorkspace({
               setNavCollapsed(navPanelRef.current?.isCollapsed() ?? false);
             }}
           >
-            <ModuleNavPane {...navPaneProps} />
+            {/* §E N9: ペイン幅リセット icon はデスクトップ nav のみ */}
+            <ModuleNavPane
+              {...navPaneProps}
+              onResetPaneWidths={handleResetPaneWidths}
+            />
           </Panel>
           <Separator id="nav-sep" className={fcPaneResizeHandle}>
             <div className={fcPaneResizeHandleBar} />
@@ -646,7 +651,6 @@ export function FlowchartWorkspace({
               {...editorProps}
               isDesktop
               innerGroupRef={innerGroupRef}
-              onResetPaneWidths={handleResetPaneWidths}
             />
           </Panel>
         </Group>

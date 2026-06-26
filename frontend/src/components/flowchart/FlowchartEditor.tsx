@@ -182,6 +182,8 @@ export type FlowchartEditorProps = {
   innerGroupRef?: RefObject<GroupImperativeHandle | null>;
   /** デスクトップ: 表｜図 + ナビ｜エディタのペイン幅を v2 デフォルトへ */
   onResetPaneWidths?: () => void;
+  /** §E M12: その他メニュー 危険 — 装置を削除 */
+  onRequestDeleteDevice?: () => void;
 };
 
 const EMPTY_MODULE_MESSAGE = "モジュールを選択してください";
@@ -289,6 +291,7 @@ export const FlowchartEditor = forwardRef<
     isDesktop = false,
     innerGroupRef,
     onResetPaneWidths,
+    onRequestDeleteDevice,
   } = props;
 
   const innerLayout = useDefaultLayout({
@@ -870,6 +873,18 @@ export const FlowchartEditor = forwardRef<
         </button>
       ) : null}
 
+      {/* §E: T1 行を追加 — デスクトップ workspace のみ（モバイル・スタンドアロンは FlowTableEditor 内） */}
+      {!readOnly && isDesktop && workspaceMode && showEditorPanes ? (
+        <button
+          type="button"
+          onClick={() => tableEditorRef.current?.addRow()}
+          className={fcBtnSecondary}
+          data-testid="add-row-header"
+        >
+          行を追加
+        </button>
+      ) : null}
+
       <EditorMoreMenu
         readOnly={readOnly}
         workspaceMode={workspaceMode}
@@ -896,6 +911,7 @@ export const FlowchartEditor = forwardRef<
         onCopyColumnFormat={() => void handleCopyColumnFormat()}
         importBundle={importBundle}
         resetFlow={resetFlow}
+        onRequestDeleteDevice={onRequestDeleteDevice}
       />
 
       {((moduleSamplePreviewActive && moduleSelected) ||
@@ -1055,6 +1071,7 @@ export const FlowchartEditor = forwardRef<
         errorPane={errorBanner}
         warningPane={warningBanner}
         onResetPaneWidths={onResetPaneWidths}
+        isDesktopWorkspace={workspaceMode && isDesktop}
         csvPane={
           !readOnly ? (
             <details className={fcTableHelpDetails}>
@@ -1143,20 +1160,13 @@ export const FlowchartEditor = forwardRef<
             minSize="400px"
           >
             {tableTopSlot}
+            {/* §E: デスクトップ — h1・バッジ・h2「表」削除、文脈+操作2段ヘッダー */}
             <header className={fcPaneHeader}>
               <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
                 <div className="flex min-w-0 flex-col gap-0.5">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="text-base font-semibold tracking-tight">
-                      Flowchart Studio
-                    </h1>
-                    <span className={fcBadgeAccent}>実用版</span>
-                  </div>
                   {contextLabel ? (
-                    <p className={cn("text-sm", fcStatusText)}>
-                      <span className="font-medium text-flow-text-body">
-                        {contextLabel}
-                      </span>
+                    <p className={cn("text-sm font-medium", fcStatusText)}>
+                      {contextLabel}
                     </p>
                   ) : null}
                   {previewModeHint ? (
@@ -1170,7 +1180,6 @@ export const FlowchartEditor = forwardRef<
               </div>
             </header>
             <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
-              <h2 className={cn("shrink-0", fcSectionTitle)}>表</h2>
               {tablePaneBody}
             </div>
           </Panel>

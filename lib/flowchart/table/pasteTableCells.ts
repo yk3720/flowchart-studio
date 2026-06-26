@@ -26,9 +26,10 @@ export function parseClipboardGrid(text: string): string[][] {
 export function parsePasteCellValue(
   colIndex: number,
   colCount: number,
-  raw: string
+  raw: string,
+  schema?: string
 ): string | number {
-  if (!isNumericTableColumn(colIndex, colCount)) return raw;
+  if (!isNumericTableColumn(colIndex, colCount, schema)) return raw;
   if (colIndex === 0) {
     const trimmed = raw.trim();
     if (trimmed === "") return "";
@@ -50,7 +51,8 @@ export function applyPartialPaste(
   startRow: number,
   startCol: number,
   pasted: string[][],
-  colCount: number
+  colCount: number,
+  schema?: string
 ): FlowTableRow[] {
   if (pasted.length === 0) return table;
 
@@ -58,7 +60,7 @@ export function applyPartialPaste(
   const endRow = startRow + pasted.length;
 
   while (result.length < endRow) {
-    result.push(createEmptyRow(colCount, suggestNextId(result)));
+    result.push(createEmptyRow(colCount, suggestNextId(result), schema));
   }
 
   for (let pr = 0; pr < pasted.length; pr++) {
@@ -70,7 +72,8 @@ export function applyPartialPaste(
       result[rowIndex][colIndex] = parsePasteCellValue(
         colIndex,
         colCount,
-        pasteRow[pc] ?? ""
+        pasteRow[pc] ?? "",
+        schema
       );
     }
   }

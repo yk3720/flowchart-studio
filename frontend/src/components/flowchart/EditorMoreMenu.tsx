@@ -57,6 +57,8 @@ type EditorMoreMenuProps = {
   resetFlow?: {
     onRequestReset: () => void;
   };
+  /** §E M12: 装置を削除 — device.canDelete && device.internalCode のときのみ渡される */
+  onRequestDeleteDevice?: () => void;
 };
 
 function MenuItem({
@@ -141,8 +143,12 @@ export function EditorMoreMenu({
   onCopyColumnFormat,
   importBundle,
   resetFlow,
+  onRequestDeleteDevice,
 }: EditorMoreMenuProps) {
   const [open, setOpen] = useState(false);
+  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(
+    null
+  );
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -247,15 +253,28 @@ export function EditorMoreMenu({
     ? "例はプレビューのみ。保存する場合は「例を適用」"
     : "保存せずに例の表と図を表示";
 
+  const handleTriggerClick = useCallback(() => {
+    if (!open) {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (rect) {
+        setMenuPos({
+          top: rect.bottom + 4,
+          right: window.innerWidth - rect.right,
+        });
+      }
+    }
+    setOpen((v) => !v);
+  }, [open]);
+
   return (
-    <div className="relative" ref={rootRef}>
+    <div ref={rootRef}>
       <button
         ref={triggerRef}
         type="button"
         aria-expanded={open}
         aria-haspopup="menu"
         aria-controls={menuId}
-        onClick={() => setOpen((value) => !value)}
+        onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
         className={cn(fcBtnSecondary, "inline-flex items-center gap-1")}
       >
@@ -273,6 +292,9 @@ export function EditorMoreMenu({
           role="menu"
           aria-label="その他の操作"
           className={fcMenuDropdown}
+          style={
+            menuPos ? { top: menuPos.top, right: menuPos.right } : undefined
+          }
           onKeyDown={handleMenuKeyDown}
         >
           {/* 取込: import.json（workspace のみ） */}
@@ -388,6 +410,7 @@ export function EditorMoreMenu({
 
           {/* 危険 */}
           {(!readOnly && workspaceMode && moduleSelected && resetFlow) ||
+          (!readOnly && workspaceMode && onRequestDeleteDevice) ||
           !workspaceMode ? (
             <>
               <MenuSection label="危険" />
@@ -397,6 +420,15 @@ export function EditorMoreMenu({
                   onClick={() => closeAnd(resetFlow.onRequestReset)}
                 >
                   フローをリセット…
+                </MenuItem>
+              ) : null}
+              {/* §E M12: 装置を削除 */}
+              {!readOnly && workspaceMode && onRequestDeleteDevice ? (
+                <MenuItem
+                  destructive
+                  onClick={() => closeAnd(onRequestDeleteDevice)}
+                >
+                  装置を削除…
                 </MenuItem>
               ) : null}
               {!workspaceMode ? (

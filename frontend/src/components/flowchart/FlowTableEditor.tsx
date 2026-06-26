@@ -46,6 +46,7 @@ import {
   fcTableHeadCellIndex,
   fcTableHelpDetails,
   fcTableHelpSummary,
+  fcTableIconBtn,
   fcTableMeta,
   fcTableRow,
   fcTableRowError,
@@ -58,6 +59,7 @@ import {
 
 export type FlowTableEditorHandle = {
   scrollToRow: (rowIndex: number) => void;
+  addRow: () => void;
 };
 
 type Props = {
@@ -75,6 +77,8 @@ type Props = {
   csvPane?: React.ReactNode;
   /** デスクトップ: ペイン幅を v2 デフォルトへ戻す（T4） */
   onResetPaneWidths?: () => void;
+  /** §E: デスクトップ 3 ペイン — 行を追加/ペイン幅リセットを非表示・横バーを上に固定 */
+  isDesktopWorkspace?: boolean;
 };
 
 function cellToString(value: unknown): string {
@@ -94,6 +98,7 @@ export const FlowTableEditor = memo(
       warningPane,
       csvPane,
       onResetPaneWidths,
+      isDesktopWorkspace,
     },
     ref
   ) {
@@ -103,10 +108,8 @@ export const FlowTableEditor = memo(
     const tableMinWidth = getTotalDefaultWidth(colCount, tableSchema);
     const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
     const focusCellRef = useRef<{ row: number; col: number } | null>(null);
-    const { colWidths, startResize, adjustWidth } = useTableColumnSizing(
-      colCount,
-      tableSchema
-    );
+    const { colWidths, startResize, adjustWidth, resetWidths } =
+      useTableColumnSizing(colCount, tableSchema);
     const { viewportRef, dockRef, innerRef, syncInnerWidth } =
       useSyncedHorizontalScroll();
     const [keyboardResizingIdx, setKeyboardResizingIdx] = useState<
@@ -141,15 +144,6 @@ export const FlowTableEditor = memo(
       }
     };
 
-    useImperativeHandle(ref, () => ({
-      scrollToRow: (rowIndex: number) => {
-        rowRefs.current[rowIndex]?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      },
-    }));
-
     const updateTable = (next: FlowTableRow[]) => {
       onChange(next.map((row) => normalizeRow(row, colCount)));
     };
@@ -158,7 +152,12 @@ export const FlowTableEditor = memo(
       const next = table.map((row, ri) => {
         if (ri !== rowIndex) return normalizeRow(row, colCount);
         const cells = normalizeRow(row, colCount);
-        cells[colIndex] = parsePasteCellValue(colIndex, colCount, raw);
+        cells[colIndex] = parsePasteCellValue(
+          colIndex,
+          colCount,
+          raw,
+          tableSchema
+        );
         return cells;
       });
       updateTable(next);
@@ -168,6 +167,16 @@ export const FlowTableEditor = memo(
       const id = suggestNextId(table);
       updateTable([...table, createEmptyRow(colCount, id, tableSchema)]);
     };
+
+    useImperativeHandle(ref, () => ({
+      scrollToRow: (rowIndex: number) => {
+        rowRefs.current[rowIndex]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      },
+      addRow,
+    }));
 
     const deleteRow = (rowIndex: number) => {
       if (table.length <= 1) return;
@@ -190,7 +199,16 @@ export const FlowTableEditor = memo(
       e.preventDefault();
       const startRow = focusCellRef.current?.row ?? 0;
       const startCol = focusCellRef.current?.col ?? 0;
-      updateTable(applyPartialPaste(table, startRow, startCol, grid, colCount));
+      updateTable(
+        applyPartialPaste(
+          table,
+          startRow,
+          startCol,
+          grid,
+          colCount,
+          tableSchema
+        )
+      );
     };
 
     const bindCellFocus = (rowIndex: number, colIndex: number) => ({
@@ -202,6 +220,44 @@ export const FlowTableEditor = memo(
     return (
       <div className="flex min-h-0 flex-1 flex-col gap-2">
         {errorPane}
+
+        {/* §E: デスクトップ workspace — 横バー + T5列幅 auto-fit をビューポート上に固定配置 */}
+        {isDesktopWorkspace ? (
+          <div className="flex shrink-0 items-center gap-1">
+            <FlowTableDockScrollbar
+              dockRef={dockRef}
+              innerRef={innerRef}
+              className="min-w-0 flex-1"
+            />
+            {!readOnly ? (
+              <button
+                type="button"
+                onClick={resetWidths}
+                className={fcTableIconBtn}
+                title="列幅を内容に合わせる"
+                aria-label="列幅を内容に合わせる"
+                data-testid="reset-col-widths"
+              >
+                {/* ↔ auto-fit icon */}
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M1 7h12M1 4l3-3M1 4l3 3M13 10l-3 3M13 10l-3-3"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            ) : null}
+          </div>
+        ) : null}
 
         <div
           ref={viewportRef}
@@ -335,15 +391,20 @@ export const FlowTableEditor = memo(
             </tbody>
           </table>
         </div>
-        <FlowTableDockScrollbar dockRef={dockRef} innerRef={innerRef} />
 
+        {/* §E: 非デスクトップのみ横バーをビューポート下に表示 */}
+        {!isDesktopWorkspace ? (
+          <FlowTableDockScrollbar dockRef={dockRef} innerRef={innerRef} />
+        ) : null}
+
+        {/* §E: デスクトップ workspace は T1・T4 を非表示（ヘッダー側へ移動済み）、行数メタのみ */}
         <div className="flex flex-wrap items-center gap-2">
-          {!readOnly ? (
+          {!readOnly && !isDesktopWorkspace ? (
             <button type="button" onClick={addRow} className={fcTableAddRowBtn}>
               行を追加
             </button>
           ) : null}
-          {onResetPaneWidths ? (
+          {onResetPaneWidths && !isDesktopWorkspace ? (
             <button
               type="button"
               onClick={onResetPaneWidths}

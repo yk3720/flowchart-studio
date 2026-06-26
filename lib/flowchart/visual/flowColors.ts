@@ -15,9 +15,9 @@ export const FLOW_EDGE_LABEL_GAP = 14;
 /** 表「色」列 → 内部 hint（parse / 描画 SSOT） */
 export type ColorHint = "normal" | "yellow" | "orange" | "blue";
 
-/** 表 UI セレクト用（セル値 = 日本語キーワード） */
+/** 表 UI セレクト用（セル値 = 日本語キーワード）§E: 空値ラベルを「-」に短縮 */
 export const COLOR_HINT_SELECT_OPTIONS = [
-  { value: "", label: "（通常）" },
+  { value: "", label: "-" },
   { value: "黄", label: "黄" },
   { value: "橙", label: "橙" },
   { value: "青", label: "青" },

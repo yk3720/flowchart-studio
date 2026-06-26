@@ -6,6 +6,7 @@ import {
   FoldVertical,
   PanelLeftClose,
   PanelLeftOpen,
+  RefreshCw,
   Trash2,
   UnfoldVertical,
 } from "lucide-react";
@@ -20,7 +21,6 @@ import {
 import { cn } from "@/lib/utils";
 
 import {
-  fcBtnDangerOutline,
   fcNavAside,
   fcNavAsideCollapsed,
   fcBorderB,
@@ -54,7 +54,8 @@ type ModuleNavPaneProps = {
   onSelectModule: (moduleId: string) => void;
   onRequestDeleteUnit?: (unitId: string) => void;
   onRequestDeleteModule?: (moduleId: string) => void;
-  onRequestDeleteDevice?: () => void;
+  /** §E N9: デスクトップのみ渡す — ペイン幅を v2 デフォルトへリセット */
+  onResetPaneWidths?: () => void;
 };
 
 function getNavFocusables(nav: HTMLElement | null): HTMLElement[] {
@@ -191,7 +192,7 @@ export function ModuleNavPane({
   onSelectModule,
   onRequestDeleteUnit,
   onRequestDeleteModule,
-  onRequestDeleteDevice,
+  onResetPaneWidths,
 }: ModuleNavPaneProps) {
   const navRef = useRef<HTMLElement>(null);
 
@@ -276,7 +277,8 @@ export function ModuleNavPane({
   return (
     <aside className={fcNavAside}>
       <div className={fcNavHeader}>
-        <h2 className={fcNavTitle}>フロー</h2>
+        {/* §E: タイトル「フロー」→「Flowchart Studio」 */}
+        <h2 className={cn(fcNavTitle, "truncate")}>Flowchart Studio</h2>
         <div className="flex shrink-0 items-center gap-0.5">
           <button
             type="button"
@@ -300,6 +302,19 @@ export function ModuleNavPane({
               <UnfoldVertical className="size-4" aria-hidden />
             )}
           </button>
+          {/* §E N9: ペイン幅リセット — デスクトップのみ渡される */}
+          {onResetPaneWidths ? (
+            <button
+              type="button"
+              onClick={onResetPaneWidths}
+              className={fcNavToggleAllBtn}
+              title="ペイン幅をリセット"
+              aria-label="ペイン幅をリセット"
+              data-testid="reset-pane-widths"
+            >
+              <RefreshCw className="size-4" aria-hidden />
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={onToggleCollapsed}
@@ -312,7 +327,7 @@ export function ModuleNavPane({
         </div>
       </div>
 
-      <div className={cn("space-y-2", fcBorderB, "px-3 py-2")}>
+      <div className={cn(fcBorderB, "px-3 py-2")}>
         <label className="flex flex-col gap-1">
           <span className={fcNavLabel}>装置</span>
           <select
@@ -328,20 +343,6 @@ export function ModuleNavPane({
             ))}
           </select>
         </label>
-        {device.canDelete && onRequestDeleteDevice ? (
-          <button
-            type="button"
-            onClick={onRequestDeleteDevice}
-            data-testid="delete-device-request"
-            className={cn(
-              fcBtnDangerOutline,
-              "flex w-full items-center justify-center gap-1.5"
-            )}
-          >
-            <Trash2 className="size-4" aria-hidden />
-            装置を削除…
-          </button>
-        ) : null}
       </div>
 
       <nav

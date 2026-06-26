@@ -5,7 +5,7 @@ import {
   selectModule,
 } from "./helpers/flowchart";
 
-test.describe("表ペイン UX（フェーズ1〜5 · §D）", () => {
+test.describe("表ペイン UX（§D 継続 + §E デスクトップ）", () => {
   test.beforeEach(async ({ page }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
@@ -38,12 +38,15 @@ test.describe("表ペイン UX（フェーズ1〜5 · §D）", () => {
     ).toBeVisible();
   });
 
-  test("表グリッドは「行を追加」ボタンより上に表示される", async ({ page }) => {
+  // §E: デスクトップでは「行を追加」がヘッダーに移動し、表グリッドより上になる
+  test("§E デスクトップ: 「行を追加」ボタンは表グリッドより上（ヘッダー内）に表示される", async ({
+    page,
+  }) => {
     const firstCell = page.getByLabel("行1 Text1");
     const addRowBtn = page.getByRole("button", { name: "行を追加" });
     const cellY = (await firstCell.boundingBox())!.y;
     const addRowY = (await addRowBtn.boundingBox())!.y;
-    expect(cellY).toBeLessThan(addRowY);
+    expect(addRowY).toBeLessThan(cellY);
   });
 
   test("「行を追加」ボタンは CSV details の上に表示される", async ({
@@ -85,5 +88,28 @@ test.describe("表ペイン UX（フェーズ1〜5 · §D）", () => {
     await expect(
       page.getByRole("button", { name: "列幅をリセット" })
     ).not.toBeVisible();
+  });
+
+  // §E: T5 列幅を内容に合わせるボタン（デスクトップ横バー行）
+  test("§E: 「列幅を内容に合わせる」ボタンが表示される", async ({ page }) => {
+    await expect(
+      page.getByRole("button", { name: "列幅を内容に合わせる" })
+    ).toBeVisible();
+  });
+
+  // §E: N9 ペイン幅リセットがナビに存在する
+  test("§E: ペイン幅リセットボタンがナビに表示される", async ({ page }) => {
+    await expect(
+      page.getByRole("button", { name: "ペイン幅をリセット" })
+    ).toBeVisible();
+  });
+
+  // §E: select バグ再現テスト — 色選択後も他列の値が保持される
+  test("§E: 色列で「黄」を選択しても他列の値が維持される", async ({ page }) => {
+    const text1Before = await page.getByLabel("行1 Text1").inputValue();
+    await page.getByLabel("行1 色").selectOption("黄");
+    await expect(page.getByLabel("行1 色")).toHaveValue("黄");
+    const text1After = await page.getByLabel("行1 Text1").inputValue();
+    expect(text1After).toBe(text1Before);
   });
 });
