@@ -20,6 +20,8 @@ import {
 } from "@/lib/flowchart/equipment/moduleHierarchy";
 import { cn } from "@/lib/utils";
 
+import { BuildVersionFootnote } from "./BuildVersionFootnote";
+
 import {
   fcNavAside,
   fcNavAsideCollapsed,
@@ -369,6 +371,7 @@ export function ModuleNavPane({
           />
         ))}
       </nav>
+      <BuildVersionFootnote />
     </aside>
   );
 }

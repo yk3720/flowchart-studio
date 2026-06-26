@@ -61,7 +61,9 @@ export async function loadSampleFromMenu(page: Page, label: string) {
 export async function ensureWorkspaceLoaded(page: Page) {
   await page.goto("/");
   await expect(page).not.toHaveURL(/\/login/);
-  await expect(page.getByRole("heading", { name: "フロー" })).toBeVisible({
+  await expect(
+    page.getByRole("heading", { name: "Flowchart Studio" })
+  ).toBeVisible({
     timeout: 15_000,
   });
 }

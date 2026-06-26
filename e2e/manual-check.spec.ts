@@ -51,7 +51,9 @@ test.describe("M2 AC + P0 UX 手動確認（自動化）", () => {
   });
 
   test("Phase 3: 3ペイン（ナビ・表・プレビュー）", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "フロー" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Flowchart Studio" })
+    ).toBeVisible();
     await expect(
       page.getByRole("combobox", { name: "装置を選択" })
     ).toBeVisible();

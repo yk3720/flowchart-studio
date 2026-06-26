@@ -219,7 +219,9 @@ function resolveInitialState(props: FlowchartEditorProps): {
     const raw = snap.committedJson || snap.jsonText;
     const { doc: parsed, errors } = parseFlowchartDocument(raw);
     if (errors.length > 0 || !parsed) {
-      const fallback = SAMPLES.templateStarter;
+      const fallback = normalizeFlowchartDocument(
+        SAMPLES.templateStarter as FlowchartDocument
+      );
       const text = serializeDocument(fallback);
       const rf =
         snap.nodes.length > 0
@@ -248,7 +250,9 @@ function resolveInitialState(props: FlowchartEditorProps): {
     };
   }
   if (props.workspaceMode && props.moduleId) {
-    const starter = SAMPLES.templateStarter;
+    const starter = normalizeFlowchartDocument(
+      SAMPLES.templateStarter as FlowchartDocument
+    );
     const text = serializeDocument(starter);
     const rf = rfFromDocument(starter);
     return {

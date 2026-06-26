@@ -305,6 +305,11 @@ export const fcNavChevron = "size-4 shrink-0 text-flow-text-muted";
 
 export const fcNavLabel = cn(fcTextHint, "font-medium text-flow-text-muted");
 
+export const fcNavBuildFootnote = cn(
+  fcTextHint,
+  "shrink-0 border-t border-flow-border px-3 py-2 text-[10px] leading-snug text-flow-text-muted tabular-nums"
+);
+
 /* ── その他メニュー ── */
 
 /** §E: position:fixed でナビペインの overflow を抜ける。top/right は JS で注入 */

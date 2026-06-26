@@ -13,12 +13,10 @@ test.describe("ワークスペース ペイン幅（§E）", () => {
     await expect(page.getByLabel("行1 Text1")).toBeVisible({ timeout: 15_000 });
   });
 
-  test("ペイン幅をリセットボタンが表ツールバーに表示される", async ({
-    page,
-  }) => {
-    await expect(page.getByTestId("reset-pane-widths")).toHaveText(
-      "ペイン幅をリセット"
-    );
+  test("§E: ペイン幅リセット icon がナビに表示される", async ({ page }) => {
+    const resetBtn = page.getByTestId("reset-pane-widths");
+    await expect(resetBtn).toBeVisible();
+    await expect(resetBtn).toHaveAttribute("aria-label", "ペイン幅をリセット");
   });
 
   test("ペイン幅をリセットをクリックしてもエラーにならない", async ({
