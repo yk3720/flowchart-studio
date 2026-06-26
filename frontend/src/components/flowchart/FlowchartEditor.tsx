@@ -90,6 +90,7 @@ import {
   fcTableHelpSummary,
 } from "./flowchartUiClasses";
 import { CsvPastePanel } from "./CsvPastePanel";
+import { ReviewNotesPanel } from "./ReviewNotesPanel";
 import { FlowTableEditor, type FlowTableEditorHandle } from "./FlowTableEditor";
 import {
   WORKSPACE_INNER_LAYOUT_ID,
@@ -188,6 +189,8 @@ export type FlowchartEditorProps = {
   onResetPaneWidths?: () => void;
   /** §E M12: その他メニュー 危険 — 装置を削除 */
   onRequestDeleteDevice?: () => void;
+  /** 回覧メモの著者表示（workspaceMode · moduleId 選択時） */
+  authorEmail?: string;
 };
 
 const EMPTY_MODULE_MESSAGE = "モジュールを選択してください";
@@ -305,6 +308,7 @@ export const FlowchartEditor = forwardRef<
     innerGroupRef,
     onResetPaneWidths,
     onRequestDeleteDevice,
+    authorEmail = "",
   } = props;
 
   const innerLayout = useDefaultLayout({
@@ -1238,6 +1242,15 @@ export const FlowchartEditor = forwardRef<
         tableSchema={doc.schema}
         errorPane={errorBanner}
         warningPane={warningBanner}
+        reviewPane={
+          workspaceMode && moduleId ? (
+            <ReviewNotesPanel
+              key={moduleId}
+              moduleId={moduleId}
+              authorEmail={authorEmail}
+            />
+          ) : undefined
+        }
         onResetPaneWidths={onResetPaneWidths}
         isDesktopWorkspace={workspaceMode && isDesktop}
         csvPane={

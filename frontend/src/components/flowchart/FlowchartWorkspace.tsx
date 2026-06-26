@@ -689,6 +689,7 @@ export function FlowchartWorkspace({
       device.canDelete && device.internalCode
         ? () => setDeviceDeleteConfirmOpen(true)
         : undefined,
+    authorEmail: email,
   } as const;
 
   return (

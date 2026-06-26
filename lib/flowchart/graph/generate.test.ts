@@ -134,6 +134,32 @@ describe("generateFlowchart (ADR-012 tier-based layout)", () => {
     // Regression guard for ADR-012 / M002 fixture.
     expect(into6).toHaveLength(3);
     expect(into6.every((e) => e.route === "elbow")).toBe(true);
+    const offsets = into6
+      .map((e) => e.pathOffset)
+      .sort((a, b) => (a ?? 0) - (b ?? 0));
+    expect(offsets).toEqual([-12, 0, 12]);
+  });
+
+  it("offsets fan-out elbow edges from decision node 2 to 3/4/5", () => {
+    const doc = loadFixture("sample-m002-9col.json");
+    const result = generateFlowchart(doc.table, doc.layout);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+
+    const fanout = result.edges.filter(
+      (e) =>
+        e.sourceId === "2" &&
+        e.direction === "down" &&
+        ["3", "4", "5"].includes(e.targetId)
+    );
+    expect(fanout).toHaveLength(3);
+
+    const elbowOffsets = fanout
+      .filter((e) => e.route === "elbow")
+      .map((e) => e.pathOffset)
+      .filter((o): o is number => o !== undefined);
+    expect(elbowOffsets.length).toBeGreaterThanOrEqual(2);
+    expect(new Set(elbowOffsets).size).toBeGreaterThanOrEqual(2);
   });
 });
 

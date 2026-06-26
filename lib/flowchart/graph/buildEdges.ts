@@ -1,4 +1,5 @@
 import { isDecisionType } from "../model/normalizeShapeType";
+import { assignEdgePathOffsets } from "./assignEdgePathOffsets";
 import type {
   ConnectorSite,
   FlowEdge,
@@ -102,5 +103,6 @@ export function buildEdges(
     }
   }
 
+  assignEdgePathOffsets(edges);
   return edges;
 }

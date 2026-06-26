@@ -8,6 +8,7 @@ import {
   type EdgeProps,
 } from "@xyflow/react";
 import { memo } from "react";
+import { smoothStepCenterWithPathOffset } from "@/lib/flowchart/graph/edgePathOffset";
 import {
   branchFromEdgeLabel,
   placementForEdgeLabel,
@@ -29,6 +30,7 @@ function LabeledEdgeComponent({
 }: EdgeProps) {
   const edgeData = data as FlowEdgeData | undefined;
   const route = edgeData?.route ?? "elbow";
+  const pathOffset = edgeData?.pathOffset ?? 0;
   const [edgePath, labelX, labelY] =
     route === "straight"
       ? getStraightPath({
@@ -45,6 +47,15 @@ function LabeledEdgeComponent({
           targetY,
           targetPosition,
           borderRadius: 8,
+          ...smoothStepCenterWithPathOffset(
+            sourceX,
+            sourceY,
+            targetX,
+            targetY,
+            sourcePosition,
+            targetPosition,
+            pathOffset
+          ),
         });
 
   const text =

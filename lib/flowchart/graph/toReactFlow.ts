@@ -9,6 +9,7 @@ export type FlowEdgeData = {
   branch?: ReturnType<typeof branchFromEdgeLabel>;
   /** 表示文言（edge.label は使わず二重描画を防ぐ） */
   edgeLabel?: FlowEdge["label"];
+  pathOffset?: number;
 };
 
 export type FlowNodeData = {
@@ -57,6 +58,9 @@ export function toReactFlow(
       direction: e.direction,
       branch: branchFromEdgeLabel(e.label),
       edgeLabel: e.label,
+      ...(e.pathOffset !== undefined && e.pathOffset !== 0
+        ? { pathOffset: e.pathOffset }
+        : {}),
     } satisfies FlowEdgeData,
     style: { stroke: FLOW_EDGE_STROKE, strokeWidth: 2.25 },
     markerEnd: {

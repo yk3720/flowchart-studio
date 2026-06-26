@@ -3,7 +3,7 @@
 **目次:** [00\_目次.md](./00_目次.md)
 
 **作成:** 2026-05-31  
-**状態:** **設計書（migration 003〜016 適用済 · dev/本番）**  
+**状態:** **設計書（migration 003〜017 適用済 · dev/本番）**  
 **関連:** [データモデル.md](./データモデル.md) · [ADR-014](<./意思決定記録(ADR).md>) · [ADR-013](<./意思決定記録(ADR).md>) · [001_db1_schema.sql](c:/yk-application/flowchart-studio/database/migrations/001_db1_schema.sql)
 
 ---
@@ -160,6 +160,23 @@ export type FlowchartDocument = {
 
 - フロー **行ごとの正規化テーブルは作らない**（A 確定）
 - jsonb 部分インデックス / GIN は **横断検索要件が出るまで不要**
+
+### 4.5.1 `review_notes` — 回覧メモ（v1 #3 · 2026-06-26）
+
+| 列             | 型            | 制約                               | 説明                             |
+| -------------- | ------------- | ---------------------------------- | -------------------------------- |
+| `id`           | `uuid`        | **PK** DEFAULT gen_random_uuid()   | 1 ログ = 1 行                    |
+| `module_id`    | `uuid`        | **FK → modules ON DELETE CASCADE** | 動作（モジュール）単位           |
+| `body`         | `text`        | NOT NULL · `trim` 非空             | 質問・回答本文                   |
+| `author_id`    | `uuid`        | FK → auth.users ON DELETE SET NULL | 投稿者                           |
+| `author_email` | `text`        | NOT NULL                           | 表示用（投稿時スナップショット） |
+| `created_at`   | `timestamptz` | NOT NULL DEFAULT now()             |                                  |
+| `updated_at`   | `timestamptz` | NOT NULL DEFAULT now()             | 編集時更新                       |
+
+- **Web 専用** — Excel 再取込で消えない（`flow_documents.payload` とは分離）
+- **RLS:** editor / viewer / admin — SELECT · INSERT · UPDATE · DELETE 可（v1: 全ログを誰でも編集・削除可）
+- **保存タイミング:** 投稿・編集・削除は **即 DB**（表の手動保存とは独立）
+- SQL: `017_review_notes.sql`
 
 ---
 

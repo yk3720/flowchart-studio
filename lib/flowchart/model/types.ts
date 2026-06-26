@@ -64,6 +64,8 @@ export type FlowEdge = {
   targetSide: ConnectorSite;
   route: "straight" | "elbow";
   label?: "Yes" | "No";
+  /** 同一バスを共有する並列エッジの描画ずらし（px · 負=左/上 · 正=右/下） */
+  pathOffset?: number;
 };
 
 export type FlowchartDocument = {

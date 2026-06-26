@@ -77,6 +77,8 @@ type Props = {
   warningPane?: React.ReactNode;
   /** 表ペイン内ツールバー下に挿入するスロット（CSV 取込 details 等） */
   csvPane?: React.ReactNode;
+  /** 警告の下 · 取込の上（回覧メモ details 等） */
+  reviewPane?: React.ReactNode;
   /** デスクトップ: ペイン幅を v2 デフォルトへ戻す（T4） */
   onResetPaneWidths?: () => void;
   /** §E: デスクトップ 3 ペイン — 行を追加/ペイン幅リセットを非表示・横バーを上に固定 */
@@ -99,6 +101,7 @@ export const FlowTableEditor = memo(
       tableSchema,
       errorPane,
       warningPane,
+      reviewPane,
       csvPane,
       onResetPaneWidths,
       isDesktopWorkspace,
@@ -427,6 +430,7 @@ export const FlowTableEditor = memo(
         </div>
 
         {warningPane}
+        {reviewPane}
         {csvPane}
 
         <details className={fcTableHelpDetails}>

@@ -284,6 +284,18 @@ select proname from pg_proc where proname = 'rpc_delete_module';
 **方針:** editor は **他人のフロー中身も編集可**（クラウド保存 · import 再取込）。**削除**（動作削除 · フローリセット · 装置/ユニット削除）は従来どおり所有者/admin のみ。  
 **対処:** **`016_flow_documents_collaborative_edit.sql` の全文** → **Run**（014 または 015 の後 · 1 回のみ）。
 
+### 12-2d. 回覧メモ（`review_notes` · 017 · v1 #3）
+
+**方針:** 動作（モジュール）単位の双方向回覧ログ。editor / viewer とも投稿・編集・削除可。表の手動保存とは独立して即 DB 保存。  
+**対処:** **`017_review_notes.sql` の全文** → **Run**（016 の後 · 1 回のみ）。
+
+検証:
+
+```sql
+select to_regclass('public.review_notes') as review_notes_table;
+select policyname from pg_policies where tablename = 'review_notes' order by policyname;
+```
+
 ### 12-3. 本番 URL 確認（Vercel Production — 移行後は flowchart-studio プロジェクトに接続）
 
 ログイン後、次を 1 件ずつ:
