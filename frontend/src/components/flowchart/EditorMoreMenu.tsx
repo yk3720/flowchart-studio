@@ -61,6 +61,10 @@ type EditorMoreMenuProps = {
   };
   /** §E M12: 装置を削除 — device.canDelete && device.internalCode のときのみ渡される */
   onRequestDeleteDevice?: () => void;
+  /** CSV / Excel 取込モーダルを開く（本番: 読込セクション · デモ: 専用セクション） */
+  onShowCsv?: () => void;
+  /** 列の意味モーダルを開く（デモのみ） */
+  onShowColumnInfo?: () => void;
 };
 
 function MenuItem({
@@ -147,6 +151,8 @@ export function EditorMoreMenu({
   importBundle,
   resetFlow,
   onRequestDeleteDevice,
+  onShowCsv,
+  onShowColumnInfo,
 }: EditorMoreMenuProps) {
   const [open, setOpen] = useState(false);
   const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(
@@ -368,18 +374,23 @@ export function EditorMoreMenu({
             SVGをダウンロード
           </MenuItem>
 
-          {/* 読込（編集者のみ · デモ非表示） */}
+          {/* 読込（本番 · 編集者のみ） */}
           {!authDisabled && !readOnly ? (
             <>
               <MenuSection label="読込" />
               <MenuItem onClick={() => closeAnd(onImportJson)}>
                 JSONから読込…
               </MenuItem>
+              {onShowCsv ? (
+                <MenuItem onClick={() => closeAnd(() => onShowCsv())}>
+                  CSV / Excel 取込…
+                </MenuItem>
+              ) : null}
             </>
           ) : null}
 
-          {/* 雛形・例（編集者のみ） */}
-          {!readOnly ? (
+          {/* 雛形・例（編集者のみ · スターター/サンプルがある場合のみ） */}
+          {!readOnly && (starters.length > 0 || samples.length > 0) ? (
             <>
               <MenuSection label="雛形・例" hint={sampleHint} />
               {starters.map((starter) => (
@@ -447,6 +458,25 @@ export function EditorMoreMenu({
                   下書きを削除
                 </MenuItem>
               ) : null}
+            </>
+          ) : null}
+          {/* デモ専用: 列の意味（authDisabled のみ） */}
+          {authDisabled && onShowColumnInfo ? (
+            <>
+              <MenuSection label="ヘルプ" />
+              <MenuItem onClick={() => closeAnd(() => onShowColumnInfo())}>
+                列の意味…
+              </MenuItem>
+            </>
+          ) : null}
+
+          {/* デモ専用: CSV / Excel 取込（authDisabled のみ） */}
+          {authDisabled && onShowCsv ? (
+            <>
+              <MenuSection label="CSV / Excel" />
+              <MenuItem onClick={() => closeAnd(() => onShowCsv())}>
+                CSV / Excel 取込…
+              </MenuItem>
             </>
           ) : null}
         </div>

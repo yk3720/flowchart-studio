@@ -231,6 +231,23 @@ export const fcMobileTabIdle = cn(
   "text-flow-text-muted hover:bg-flow-surface-muted"
 );
 
+/* ── 右ペイン line tabs（ADR-018 第2弾） ── */
+
+/** line tab バー — ペイン3 sticky chrome の最上段 */
+export const fcLineTabBar = cn(fcBorderB, "flex shrink-0 bg-flow-surface");
+
+export const fcLineTabActive = cn(
+  fcFocusRing,
+  fcTargetMin,
+  "-mb-px flex-1 border-b-2 border-flow-accent px-4 py-2 text-sm font-medium text-flow-accent"
+);
+
+export const fcLineTabIdle = cn(
+  fcFocusRing,
+  fcTargetMin,
+  "-mb-px flex-1 border-b-2 border-transparent px-4 py-2 text-sm font-medium text-flow-text-muted hover:border-flow-border-strong hover:text-flow-text-body"
+);
+
 /* ── 左ナビ ── */
 
 export const fcNavSelect = cn(

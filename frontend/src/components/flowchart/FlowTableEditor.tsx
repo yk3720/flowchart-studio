@@ -5,7 +5,6 @@ import {
   getColumnHelp,
   getDisplayHeaders,
   getHeaders,
-  getHelpEntries,
   isColorTableColumn,
   normalizeRow,
   resolveColumnCount,
@@ -44,8 +43,6 @@ import {
   fcTableHeadCell,
   fcTableHeadCellAction,
   fcTableHeadCellIndex,
-  fcTableHelpDetails,
-  fcTableHelpSummary,
   fcTableIconBtn,
   fcTableMeta,
   fcTableRow,
@@ -75,9 +72,7 @@ type Props = {
   errorPane?: React.ReactNode;
   /** 表ツールバー直下（警告 details 等） */
   warningPane?: React.ReactNode;
-  /** 表ペイン内ツールバー下に挿入するスロット（CSV 取込 details 等） */
-  csvPane?: React.ReactNode;
-  /** 警告の下 · 取込の上（回覧メモ details 等） */
+  /** 警告の下（回覧メモ等） */
   reviewPane?: React.ReactNode;
   /** デスクトップ: ペイン幅を v2 デフォルトへ戻す（T4） */
   onResetPaneWidths?: () => void;
@@ -102,7 +97,6 @@ export const FlowTableEditor = memo(
       errorPane,
       warningPane,
       reviewPane,
-      csvPane,
       onResetPaneWidths,
       isDesktopWorkspace,
     },
@@ -431,31 +425,6 @@ export const FlowTableEditor = memo(
 
         {warningPane}
         {reviewPane}
-        {csvPane}
-
-        <details className={fcTableHelpDetails}>
-          <summary className={fcTableHelpSummary}>列の意味（ヘルプ）</summary>
-          {colCount >= 8 ? (
-            <ul className="mt-1 list-inside list-disc space-y-0.5">
-              {getHelpEntries(colCount, tableSchema).map(({ header, help }) => (
-                <li key={header}>
-                  <strong>{header}</strong> — {help}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-1">
-              9 列形式（段・列）を推奨します。判断の No
-              分岐には接続先(右)が必要です。
-            </p>
-          )}
-          {!readOnly ? (
-            <p className="mt-2 text-flow-text-muted">
-              Excel からコピーした範囲は、貼り付け先のセルを選んで Ctrl+V
-              で部分貼り付けできます。
-            </p>
-          ) : null}
-        </details>
       </div>
     );
   })
