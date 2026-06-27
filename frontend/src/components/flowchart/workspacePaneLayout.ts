@@ -1,11 +1,12 @@
-/** localStorage キー（v2 が現行デフォルト） */
+/** localStorage キー（outer v2 / inner v3 が現行デフォルト） */
 export const WORKSPACE_OUTER_LAYOUT_ID = "flowchart-studio:workspace-outer-v2";
-export const WORKSPACE_INNER_LAYOUT_ID = "flowchart-studio:workspace-inner-v2";
+export const WORKSPACE_INNER_LAYOUT_ID = "flowchart-studio:workspace-inner-v3";
 
 /** リセット時に併せてクリアする旧キー */
 const LEGACY_LAYOUT_IDS = [
   "flowchart-studio:workspace-outer-v1",
   "flowchart-studio:workspace-inner-v1",
+  "flowchart-studio:workspace-inner-v2",
 ] as const;
 
 /** 外側 Group（nav | editor）— ナビ 18% 維持 */
@@ -14,10 +15,10 @@ export const DEFAULT_OUTER_LAYOUT = {
   editor: 82,
 } as const;
 
-/** 内側 Group（table | canvas）— §E: 52 : 48 */
+/** 内側 Group（canvas | table）— ADR-018: 4 : 6 */
 export const DEFAULT_INNER_LAYOUT = {
-  table: 52,
-  canvas: 48,
+  canvas: 40,
+  table: 60,
 } as const;
 
 export type WorkspacePaneLayoutGroup = {

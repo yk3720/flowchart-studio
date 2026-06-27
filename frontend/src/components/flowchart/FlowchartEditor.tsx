@@ -1355,9 +1355,23 @@ export const FlowchartEditor = forwardRef<
           onLayoutChanged={innerLayout.onLayoutChanged}
         >
           <Panel
-            id="table"
+            id="canvas"
             className={cn("flex min-h-0 min-w-0 flex-col", fcBorderR)}
-            defaultSize="52%"
+            defaultSize="40%"
+            minSize="280px"
+          >
+            <h2 className="sr-only">プレビュー</h2>
+            <div className="flex min-h-0 flex-1 flex-col">
+              {renderPreviewCanvas(true)}
+            </div>
+          </Panel>
+          <Separator id="canvas-table-sep" className={fcPaneResizeHandle}>
+            <div className={fcPaneResizeHandleBar} />
+          </Separator>
+          <Panel
+            id="table"
+            className="flex min-h-0 min-w-0 flex-col"
+            defaultSize="60%"
             minSize="400px"
           >
             {tableTopSlot}
@@ -1388,20 +1402,6 @@ export const FlowchartEditor = forwardRef<
             ) : null}
             <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
               {tablePaneBody}
-            </div>
-          </Panel>
-          <Separator id="table-canvas-sep" className={fcPaneResizeHandle}>
-            <div className={fcPaneResizeHandleBar} />
-          </Separator>
-          <Panel
-            id="canvas"
-            className="flex min-h-0 min-w-0 flex-col"
-            defaultSize="48%"
-            minSize="280px"
-          >
-            <h2 className="sr-only">プレビュー</h2>
-            <div className="flex min-h-0 flex-1 flex-col">
-              {renderPreviewCanvas(true)}
             </div>
           </Panel>
         </Group>
