@@ -1345,7 +1345,7 @@ export const FlowchartEditor = forwardRef<
     ) : null;
 
   if (workspaceMode && isDesktop) {
-    const showRightTabs = !!moduleId && !!designMemoContext;
+    const showRightTabs = !!moduleId && !!designMemoContext && !authDisabled;
 
     return (
       <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
