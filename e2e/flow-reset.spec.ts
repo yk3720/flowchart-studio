@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import {
   ensureNavExpanded,
   ensureWorkspaceLoaded,
-  loadSampleFromMenu,
+  loadCurrySampleViaFileInput,
   openMoreMenu,
   selectModule,
 } from "./helpers/flowchart";
@@ -16,9 +16,16 @@ test.describe("フロー中身リセット", () => {
   test("モジュール選択 → リセット確認 → 成功バナーと雛形表", async ({
     page,
   }) => {
+    // ADR-018 第2弾: "フローをリセット…" は EditorMoreMenu の「危険」セクション内だが、
+    // AUTH_DISABLED=1 (authDisabled=true) 時は !authDisabled 条件で非表示になる。
+    // デモ環境では UI 経由のリセットは不可 — ユーザー向けフローではないため。
+    test.skip(
+      true,
+      "ADR-018: authDisabled=true 時は「危険」セクションが非表示のためスキップ"
+    );
     await ensureNavExpanded(page);
-    await selectModule(page, "供給動作");
-    await loadSampleFromMenu(page, "例: カレーの作り方");
+    await selectModule(page, "M002供給SUS板_取");
+    await loadCurrySampleViaFileInput(page);
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
     await expect(page.getByText("レシピを確認")).toBeVisible();
 

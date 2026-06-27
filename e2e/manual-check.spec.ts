@@ -3,14 +3,11 @@ import path from "node:path";
 import fs from "node:fs";
 
 import {
-  DEVICE_PRESS_A_ID,
-  DEVICE_PRESS_B_ID,
   EMPTY_MODULE_MSG,
   ensureNavExpanded,
   ensureWorkspaceLoaded,
   headerRegenerate,
-  loadSampleFromMenu,
-  moduleNavButton,
+  loadCurrySampleViaFileInput,
   openMoreMenu,
   openPreviewWithSample,
 } from "./helpers/flowchart";
@@ -27,11 +24,13 @@ async function addTableRow(page: import("@playwright/test").Page) {
 }
 
 test.describe("サンプル表示（モジュール未選択）", () => {
-  test("カレーサンプルを選ぶと表とプレビューが表示される", async ({ page }) => {
+  test("カレーサンプルを読み込むと表とプレビューが表示される", async ({
+    page,
+  }) => {
     await ensureWorkspaceLoaded(page);
 
     await expect(page.getByText(EMPTY_MODULE_MSG)).toHaveCount(2);
-    await loadSampleFromMenu(page, "例: カレーの作り方");
+    await loadCurrySampleViaFileInput(page);
 
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
     await expect(page.getByText(EMPTY_MODULE_MSG)).toHaveCount(0);
@@ -63,19 +62,12 @@ test.describe("M2 AC + P0 UX 手動確認（自動化）", () => {
   });
 
   test("Phase 3: 装置切替でナビのユニットが変わる", async ({ page }) => {
+    // ADR-018 第2弾: DEMO_DEVICES = [塗布装置] (単一装置) — 装置切替テスト不可
+    test.skip(
+      true,
+      "ADR-018: DEMO_DEVICES が単一装置 (塗布装置) のため装置切替テストをスキップ"
+    );
     await ensureNavExpanded(page);
-    await page
-      .getByRole("combobox", { name: "装置を選択" })
-      .selectOption(DEVICE_PRESS_B_ID);
-    await page.getByTestId("toggle-all-units").click();
-    await expect(page.getByText("供給ユニット")).toBeVisible();
-    await expect(moduleNavButton(page, "供給動作")).toBeVisible();
-    await page
-      .getByRole("combobox", { name: "装置を選択" })
-      .selectOption(DEVICE_PRESS_A_ID);
-    await page.getByTestId("toggle-all-units").click();
-    await expect(page.getByText("供給ユニット")).toBeVisible();
-    await expect(moduleNavButton(page, "供給動作")).toBeVisible();
   });
 
   test("AC-8: 1画面で表とプレビュー", async ({ page }) => {
@@ -138,13 +130,27 @@ test.describe("M2 AC + P0 UX 手動確認（自動化）", () => {
     const json = fs.readFileSync(FIXTURE_SIMPLE_YES, "utf-8");
     const nodeCountBefore = await page.locator(".react-flow__node").count();
 
-    await openMoreMenu(page);
-    await page.getByRole("menuitem", { name: "JSONから読込…" }).click();
-    await page.locator('input[type="file"][accept*="json"]').setInputFiles({
-      name: "sample-simple-yes.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(json),
-    });
+    // ADR-018 第2弾: display:none の hidden input に page.evaluate 経由で注入
+    await page.evaluate(
+      ({ content }) => {
+        const input = document.querySelector(
+          '[data-testid="import-json-file"]'
+        ) as HTMLInputElement | null;
+        if (!input) throw new Error("import-json-file input not found in DOM");
+        const blob = new Blob([content], { type: "application/json" });
+        const file = new File([blob], "sample-simple-yes.json", {
+          type: "application/json",
+        });
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        Object.defineProperty(input, "files", {
+          value: dt.files,
+          configurable: true,
+        });
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      },
+      { content: json }
+    );
 
     await expect(page.getByText(/生成完了 — ノード 13/)).toBeVisible({
       timeout: 15_000,

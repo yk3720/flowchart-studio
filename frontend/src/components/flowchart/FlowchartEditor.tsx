@@ -1150,6 +1150,7 @@ export const FlowchartEditor = forwardRef<
         type="file"
         accept="application/json,.json"
         className="hidden"
+        data-testid="import-json-file"
         onChange={(e) => {
           const f = e.target.files?.[0];
           if (f) handleImportFile(f);

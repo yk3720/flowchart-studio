@@ -9,7 +9,7 @@ test.describe("ワークスペース ペイン幅（§E）", () => {
   test.beforeEach(async ({ page }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await selectModule(page, "供給動作");
+    await selectModule(page, "M002供給SUS板_取");
     await expect(page.getByLabel("行1 Text1")).toBeVisible({ timeout: 15_000 });
   });
 

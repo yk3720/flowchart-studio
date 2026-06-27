@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 import {
   ensureNavExpanded,
   ensureWorkspaceLoaded,
-  loadSampleFromMenu,
+  loadCurrySampleViaFileInput,
   openPreviewWithSample,
   selectModule,
 } from "./helpers/flowchart";
@@ -104,8 +104,8 @@ test.describe("分岐ラベル配置（Yes と縦線）", () => {
   }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await selectModule(page, "供給動作");
-    await loadSampleFromMenu(page, "例: カレーの作り方");
+    await selectModule(page, "M002供給SUS板_取");
+    await loadCurrySampleViaFileInput(page);
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
     await expect(page.locator('[data-edge-label-text="Yes"]')).toHaveCount(3);
     await expect(page.locator('[data-edge-label-text="No"]')).toHaveCount(3);
@@ -119,8 +119,8 @@ test.describe("分岐ラベル配置（Yes と縦線）", () => {
   }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await selectModule(page, "供給動作");
-    await loadSampleFromMenu(page, "例: カレーの作り方");
+    await selectModule(page, "M002供給SUS板_取");
+    await loadCurrySampleViaFileInput(page);
     await expect(page.getByText(/生成完了/)).toBeVisible({ timeout: 15_000 });
     const curryCell = page.getByText("レシピを確認");
     await expect(curryCell).toBeVisible();

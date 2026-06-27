@@ -6,6 +6,7 @@ import {
   ensureNavExpanded,
   ensureWorkspaceLoaded,
   headerRegenerate,
+  openMoreMenu,
   selectModule,
 } from "./helpers/flowchart";
 
@@ -21,8 +22,13 @@ function excelFileInput(page: import("@playwright/test").Page) {
     .locator('input[type="file"]');
 }
 
+/**
+ * ADR-018 第2弾: CSV/Excel 取込はその他▼ → "CSV / Excel 取込…" → モーダル経由
+ * （旧: 表ペイン内 <details> クリック）
+ */
 async function importScratchExcel(page: import("@playwright/test").Page) {
-  await page.locator("summary").filter({ hasText: "CSV / Excel 取込" }).click();
+  await openMoreMenu(page);
+  await page.getByRole("menuitem", { name: "CSV / Excel 取込…" }).click();
 
   const buffer = fs.readFileSync(A0001_SCRATCH_XLSX);
   await excelFileInput(page).setInputFiles({
@@ -32,7 +38,9 @@ async function importScratchExcel(page: import("@playwright/test").Page) {
     buffer,
   });
 
-  await expect(page.getByText(/3 行を表に反映/)).toBeAttached();
+  // モーダルは onApply 直後に閉じるため CsvPastePanel のメッセージは消える。
+  // editor のステータス行に出る "CSV を表に反映しました" で代替確認する。
+  await expect(page.getByText(/CSV を表に反映しました/)).toBeVisible();
   await expect(page.locator("tbody tr")).toHaveCount(3);
 }
 
@@ -40,7 +48,7 @@ test.describe("A0001 1 動作 Excel Web 取込", () => {
   test.beforeEach(async ({ page }) => {
     await ensureWorkspaceLoaded(page);
     await ensureNavExpanded(page);
-    await selectModule(page, "供給動作");
+    await selectModule(page, "M002供給SUS板_取");
     await expect(page.getByLabel("行1 Text1")).toBeVisible({ timeout: 15_000 });
   });
 
