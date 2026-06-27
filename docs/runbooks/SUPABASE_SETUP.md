@@ -98,8 +98,14 @@ AUTH_DISABLED=1
 
 ## 5. Vercel
 
-- Production: 本番 Supabase の URL / anon key
-- Preview: 開発 Supabase の URL / anon key（本番 DB に書かない）
+**現行（ADR-017 · 2026-06-27）:** **Supabase = 本番**。本番 Vercel プロジェクトの Production env に URL / anon key。
+
+| 公開 URL                 | Supabase                            | 手順                                         |
+| ------------------------ | ----------------------------------- | -------------------------------------------- |
+| 本番 1 本                | **本番プロジェクト**                | 本節 env · §3 許可リスト                     |
+| デモ 2 本（技術 · 一般） | **接続しない**（`AUTH_DISABLED=1`） | [PUBLIC_URL_SETUP.md](./PUBLIC_URL_SETUP.md) |
+
+**履歴（ADR-013 草案）:** Preview → 別 Supabase — **本番/デモ 3 URL 構成ではデモ側 DB 不要**。将来の開発用 Supabase 2 個目は ADR-017 未決。
 
 ## 6. DB-1 完了チェック（ADR-013）
 

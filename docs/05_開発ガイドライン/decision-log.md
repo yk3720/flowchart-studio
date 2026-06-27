@@ -2,7 +2,7 @@
 
 **目次:** [00\_目次.md](./00_目次.md)
 
-**更新:** 2026-06-26（製品開発フェーズ継続 · 検証駆動 · スケジュール白紙）  
+**更新:** 2026-06-27（ADR-017 公開 URL 3 本 · grill-me 終了）  
 **役割:** 開発経緯の **入口**。本ファイルは **リンクと1行要約のみ** — 確定事項の正本は ADR、実行の正本は handoffs §6。
 
 ---
@@ -54,7 +54,9 @@
 | **戦略優先**     | [要求定義書.md](../01_要求定義/要求定義書.md) §4              | UX · **作る操作の手間削減** 最優先                                               |
 | **戦術次タスク** | [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | **スケジュール白紙** — 本人実機検証 → 優先度再計画（旧 #16–17 等は §7 完了済み） |
 
-**開発ログイン（2026-06-24）:** Magic Link は `/auth/confirm` + token_hash テンプレ · OAuth は `/auth/callback` · パスワードは Server Action — **開発 Supabase（`flowchart-dev`）で3方式共存**。Vercel 本番 URL（`-dun`）は現状この dev プロジェクトに接続。**専用本番 Supabase 分離後**は Email 無効 · Google/Azure のみ（`SUPABASE_RULES` §6）。
+**Supabase 認識（2026-06-27 · ADR-017）:** **現行 Supabase = 本番**。本番 URL（`-dun`）はこれに接続。デモ URL 2 本は DB 不要（`AUTH_DISABLED`）。**開発用 Supabase 2 個目** · OAuth Microsoft · Email 無効化はバックログ（[ADR-017](<../03_技術仕様/意思決定記録(ADR).md#adr-017-公開-url-3-本--vercel-b-案--デモ階層>)）。
+
+**開発ログイン（2026-06-24 · 履歴）:** Magic Link / OAuth / パスワード — 手順 [SUPABASE_SETUP.md](../runbooks/SUPABASE_SETUP.md) §1-1 · §3-1。
 
 ---
 
@@ -85,6 +87,10 @@
 ### DB-2 装置階層（2026-05-31〜）
 
 [grill-me_2026-05-31](../archive/01_要求定義/grill-me_2026-05-31_DB-2装置階層.md) → [DB設計](../03_技術仕様/DB設計.md) → [ADR-014](<../03_技術仕様/意思決定記録(ADR).md#adr-014-永続化--装置階層-db-2草案--2026-05-31>) → [handoff \_10](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-05-31_10_db2-schema-design-session-end.md) · [\_11](c:/yk-memo/handoffs/flowchart-studio/archive/2026/2026-05-31_11_db2-dev-migration-docs-session-end.md)
+
+### 公開 URL 3 本 · デモ分離（2026-06-27）
+
+[grill-me_2026-06-27](../01_要求定義/grill-me_2026-06-27_公開URL3本.md) → [ADR-017](<../03_技術仕様/意思決定記録(ADR).md#adr-017-公開-url-3-本--vercel-b-案--デモ階層>) → [PUBLIC_URL_SETUP.md](../runbooks/PUBLIC_URL_SETUP.md)（実装 · 初回デプロイ）
 
 ### 企画 SSOT 整理（2026-05-31）
 
@@ -178,6 +184,7 @@
 | 2026-06-26      | 実装       | **v1 #3 回覧メモ** — `review_notes` · `ReviewNotesPanel` · migration 017                                                                     | [検証メモ](../01_要求定義/検証メモ_2026-06-26_ブラッシュアップ3件.md) §3 · [DB設計 §4.5.1](../03_技術仕様/DB設計.md)                                                                                                                          | 完了                              | 本番 DB 017 適用済                                                                                                                   |
 | 2026-06-26      | 実装       | **v1.1 #1 エッジオフセット** — `assignEdgePathOffsets` · `pathOffset` → `centerX/Y`                                                          | [検証メモ](../01_要求定義/検証メモ_2026-06-26_ブラッシュアップ3件.md) §1 · `REACTFLOW_RULES` §5.6-7                                                                                                                                           | 完了                              | v1.1 設計メモ 3 階層へ                                                                                                               |
 | 2026-06-27      | 実装       | **v1.1 設計メモ 3 階層** — `018` · `DesignMemoPanels` · Excel `memo` 列 · hierarchy 先読み                                                   | [DB設計 §4.5.2](../03_技術仕様/DB設計.md) · [handoff \_59](c:/yk-memo/handoffs/flowchart-studio/2026-06-27_59_design-memo-v11-session-end.md)                                                                                                 | 実装完了                          | 実機検証へ                                                                                                                           |
+| 2026-06-27      | grill-me   | **公開 URL 3 本** — Vercel B 案 · デモ AUTH_DISABLED · 一般=日常の作業/料理/カレー · Supabase=本番                                           | [grill-me_2026-06-27](../01_要求定義/grill-me_2026-06-27_公開URL3本.md) · [ADR-017](<../03_技術仕様/意思決定記録(ADR).md#adr-017-公開-url-3-本--vercel-b-案--デモ階層>)                                                                       | Accepted                          | Runbook · ホスト名解決実装                                                                                                           |
 
 ---
 
@@ -196,6 +203,7 @@
 | 014     | 装置階層 DB-2                  | Accepted · dev/本番適用済         |
 | 015     | フロー共同編集 RLS             | Accepted · 本番適用済（`016`）    |
 | 016     | 10列 v2 · 3ペインリサイズ      | Accepted · **PR-A · PR-B 実装済** |
+| 017     | 公開 URL 3 本 · Vercel B 案    | Accepted · **実装前**             |
 
 全文: [意思決定記録(ADR).md](<../03_技術仕様/意思決定記録(ADR).md>)
 
@@ -203,14 +211,15 @@
 
 ## 未決論点（1行）
 
-| 論点                                                            | 出所                                                                                                                                                       | 備考                                                                        |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| OAuth（Microsoft）· 本番 Supabase 分離 · Email 無効化（分離後） | [相談\_2026-05-30 §4](../archive/01_要求定義/相談_2026-05-30_Web版ブラッシュアップ方針.md) · [HANDOFF §6](c:/yk-memo/handoffs/flowchart-studio/HANDOFF.md) | Google OAuth（dev）は #17 完了 · Microsoft · 専用本番 Supabase はバックログ |
-| Excel 1ファイル=1社内番号 · シートレイアウト                    | ADR-014 · DB-2 草案                                                                                                                                        | 試作は後回し                                                                |
-| `legacy_key` NULL 化タイミング                                  | ADR-014                                                                                                                                                    | 移行完了後                                                                  |
-| `admin` ロール · 管理 UI（M-3）                                 | ADR-014                                                                                                                                                    | M-1 Runbook 先行                                                            |
-| ADR-010 比較後の一本化                                          | ADR-010                                                                                                                                                    | Mermaid 版は比較用                                                          |
-| オンライン同時編集 · 競合                                       | ADR-013 · ADR-015                                                                                                                                          | **編集は共同可**（015）· 競合解決（ロック等）は未決                         |
+| 論点                                                      | 出所                                                                                                                                                                                       | 備考                                                        |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| OAuth（Microsoft）· 開発用 Supabase 2 個目 · Email 無効化 | [相談\_2026-05-30 §4](../archive/01_要求定義/相談_2026-05-30_Web版ブラッシュアップ方針.md) · [ADR-017](<../03_技術仕様/意思決定記録(ADR).md#adr-017-公開-url-3-本--vercel-b-案--デモ階層>) | **現行 Supabase = 本番**（2026-06-27）· デモ URL は DB 不要 |
+| デモ固定 URL · 一般/技術の初期フロー JSON · ホスト名実装  | [ADR-017](<../03_技術仕様/意思決定記録(ADR).md#adr-017-公開-url-3-本--vercel-b-案--デモ階層>) · [PUBLIC_URL_SETUP.md](../runbooks/PUBLIC_URL_SETUP.md)                                     | grill-me 2026-06-27 未決                                    |
+| Excel 1ファイル=1社内番号 · シートレイアウト              | ADR-014 · DB-2 草案                                                                                                                                                                        | 試作は後回し                                                |
+| `legacy_key` NULL 化タイミング                            | ADR-014                                                                                                                                                                                    | 移行完了後                                                  |
+| `admin` ロール · 管理 UI（M-3）                           | ADR-014                                                                                                                                                                                    | M-1 Runbook 先行                                            |
+| ADR-010 比較後の一本化                                    | ADR-010                                                                                                                                                                                    | Mermaid 版は比較用                                          |
+| オンライン同時編集 · 競合                                 | ADR-013 · ADR-015                                                                                                                                                                          | **編集は共同可**（015）· 競合解決（ロック等）は未決         |
 
 ---
 
