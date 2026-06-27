@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 
 import { getAuthState } from "@/lib/auth/session";
 import { FlowchartWorkspace } from "@/components/flowchart/FlowchartWorkspace";
@@ -13,6 +14,24 @@ import {
   GENERAL_DEMO_DEVICES,
 } from "@/lib/flowchart/equipment/moduleHierarchy";
 import { getDemoProfile } from "@/lib/demo/demoProfile";
+
+const PAGE_TITLES = {
+  allowed: "Flowchart Studio",
+  technical: "Flowchart Studio（技術デモ）",
+  general: "Flowchart Studio（一般デモ）",
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const hostname = headersList.get("host") ?? "";
+  const profile = getDemoProfile(hostname);
+  const authState = await import("@/lib/auth/session").then((m) =>
+    m.getAuthState()
+  );
+  const title =
+    authState.kind === "allowed" ? PAGE_TITLES.allowed : PAGE_TITLES[profile];
+  return { title };
+}
 
 export default async function HomePage() {
   const state = await getAuthState();
