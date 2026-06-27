@@ -20,6 +20,7 @@ import {
 import type { ModuleSnapshot } from "@/lib/flowchart/browser/moduleDraftRepository";
 import { moduleDraftRepository } from "@/lib/flowchart/browser/moduleDraftRepository";
 import { isAuthDisabled } from "@/lib/supabase/env";
+import { getDemoSeed } from "@/client/demoSeedRegistry";
 
 export type ModuleLoadSource = "cloud" | "offline" | "local" | "none";
 
@@ -198,6 +199,11 @@ export async function loadModuleDraft(
       setWarmCache(device.id, module.id, result);
       return result;
     }
+  }
+
+  if (isAuthDisabled()) {
+    const seed = getDemoSeed(module.id);
+    if (seed) return { snapshot: seed, source: "local" };
   }
 
   return { snapshot: null, source: "none" };

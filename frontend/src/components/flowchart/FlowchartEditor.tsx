@@ -169,6 +169,8 @@ export type FlowchartEditorProps = {
   workspaceMode?: boolean;
   /** 閲覧者: 表編集・取込・再生成を不可（ADR-013） */
   readOnly?: boolean;
+  /** AUTH_DISABLED デモモード — 未保存バナーを非表示（ADR-018） */
+  authDisabled?: boolean;
   onSnapshotPersist?: () => void;
   /** モジュール選択中にユーザーが内容を上書きしたとき — 遅延 loadModule を無効化 */
   onInvalidatePendingModuleLoad?: () => void;
@@ -303,6 +305,7 @@ export const FlowchartEditor = forwardRef<
     initialSnapshot,
     workspaceMode = false,
     readOnly = false,
+    authDisabled = false,
     onSnapshotPersist,
     onInvalidatePendingModuleLoad,
     pinOffline,
@@ -1075,9 +1078,10 @@ export const FlowchartEditor = forwardRef<
             ? "モジュール単位の下書きは切替時に自動保存されます"
             : "ブラウザに保存した下書きを削除"
         }
+        authDisabled={authDisabled}
         pinOffline={pinOffline}
-        starters={STARTER_OPTIONS}
-        samples={DEMO_SAMPLE_OPTIONS}
+        starters={authDisabled ? [] : STARTER_OPTIONS}
+        samples={authDisabled ? [] : DEMO_SAMPLE_OPTIONS}
         onApplyStarter={handleApplyStarter}
         onPreviewSample={handlePreviewSample}
         onExportPng={() => void handleExportPng()}
@@ -1376,7 +1380,7 @@ export const FlowchartEditor = forwardRef<
                 {toolbarButtons}
               </div>
             </header>
-            {isUnsaved ? (
+            {isUnsaved && !authDisabled ? (
               <div className={fcUnsavedBanner} role="status">
                 未保存の変更があります — 「保存」または Ctrl+S
                 で保存してください
@@ -1460,7 +1464,7 @@ export const FlowchartEditor = forwardRef<
                 {toolbarButtons}
               </div>
             </header>
-            {isUnsaved ? (
+            {isUnsaved && !authDisabled ? (
               <div className={fcUnsavedBanner} role="status">
                 未保存の変更があります — 「保存」または Ctrl+S
                 で保存してください

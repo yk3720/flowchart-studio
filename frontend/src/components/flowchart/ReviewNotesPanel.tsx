@@ -161,14 +161,7 @@ export function ReviewNotesPanel({ moduleId, authorEmail }: Props) {
   };
 
   if (isAuthDisabled()) {
-    return (
-      <details className={fcTableHelpDetails} data-testid="review-notes-panel">
-        <summary className={fcTableHelpSummary}>回覧（質問・回答）</summary>
-        <p className={fcStatusText}>
-          認証無効モードでは回覧メモは利用できません。
-        </p>
-      </details>
-    );
+    return null;
   }
 
   return (

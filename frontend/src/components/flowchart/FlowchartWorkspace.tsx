@@ -336,7 +336,7 @@ export function FlowchartWorkspace({
 
   const handleSelectModule = useCallback(
     (moduleId: string) => {
-      if (editorRef.current?.isUnsaved) {
+      if (!authDisabled && editorRef.current?.isUnsaved) {
         setPendingSwitch({ kind: "module", id: moduleId });
         return;
       }
@@ -351,13 +351,23 @@ export function FlowchartWorkspace({
         void loadModule(device, moduleId);
       }
     },
-    [persistCurrentModule, resetModuleLoadState, loadModule, device]
+    [
+      persistCurrentModule,
+      resetModuleLoadState,
+      loadModule,
+      device,
+      authDisabled,
+    ]
   );
 
   const handleSelectDevice = useCallback(
     (deviceId: string, options?: { skipUnsavedCheck?: boolean }) => {
       if (deviceId === selectedDeviceId) return;
-      if (!options?.skipUnsavedCheck && editorRef.current?.isUnsaved) {
+      if (
+        !authDisabled &&
+        !options?.skipUnsavedCheck &&
+        editorRef.current?.isUnsaved
+      ) {
         setPendingSwitch({ kind: "device", id: deviceId });
         return;
       }
@@ -375,7 +385,7 @@ export function FlowchartWorkspace({
       setExpandedUnitIds(new Set());
       setLoadKey((k) => k + 1);
     },
-    [persistCurrentModule, selectedDeviceId, visibleDevices]
+    [persistCurrentModule, selectedDeviceId, authDisabled]
   );
 
   useEffect(() => {
@@ -719,6 +729,7 @@ export function FlowchartWorkspace({
     initialSnapshot,
     workspaceMode: true,
     readOnly: !isEditor,
+    authDisabled,
     designMemoContext:
       moduleInfo && device
         ? {

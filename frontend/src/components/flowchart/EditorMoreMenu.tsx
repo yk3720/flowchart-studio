@@ -37,6 +37,8 @@ type EditorMoreMenuProps = {
   exportDisabledTitle?: string;
   clearDraftDisabled: boolean;
   clearDraftTitle: string;
+  /** AUTH_DISABLED デモモード — 取込/読込/オフライン/危険セクションを非表示 */
+  authDisabled?: boolean;
   pinOffline?: { pinned: boolean; onToggle: () => void };
   starters: readonly SampleOption[];
   samples: readonly SampleOption[];
@@ -129,6 +131,7 @@ export function EditorMoreMenu({
   exportDisabledTitle,
   clearDraftDisabled,
   clearDraftTitle,
+  authDisabled = false,
   pinOffline,
   starters,
   samples,
@@ -297,8 +300,8 @@ export function EditorMoreMenu({
           }
           onKeyDown={handleMenuKeyDown}
         >
-          {/* 取込: import.json（workspace のみ） */}
-          {!readOnly && workspaceMode && importBundle ? (
+          {/* 取込: import.json（workspace のみ · デモ非表示） */}
+          {!authDisabled && !readOnly && workspaceMode && importBundle ? (
             <>
               <MenuSection label="取込" isFirst />
               <MenuItem
@@ -333,9 +336,11 @@ export function EditorMoreMenu({
           {/* 書き出し */}
           <MenuSection
             label="書き出し"
-            isFirst={readOnly || !(workspaceMode && importBundle)}
+            isFirst={
+              authDisabled || readOnly || !(workspaceMode && importBundle)
+            }
           />
-          {!readOnly ? (
+          {!readOnly && !authDisabled ? (
             <>
               <MenuItem onClick={() => closeAnd(onSaveJson)}>
                 JSONをダウンロード
@@ -363,8 +368,8 @@ export function EditorMoreMenu({
             SVGをダウンロード
           </MenuItem>
 
-          {/* 読込（編集者のみ） */}
-          {!readOnly ? (
+          {/* 読込（編集者のみ · デモ非表示） */}
+          {!authDisabled && !readOnly ? (
             <>
               <MenuSection label="読込" />
               <MenuItem onClick={() => closeAnd(onImportJson)}>
@@ -396,8 +401,8 @@ export function EditorMoreMenu({
             </>
           ) : null}
 
-          {/* オフライン */}
-          {pinOffline ? (
+          {/* オフライン（デモ非表示） */}
+          {!authDisabled && pinOffline ? (
             <>
               <MenuSection label="オフライン" />
               <MenuItem onClick={() => closeAnd(pinOffline.onToggle)}>
@@ -408,10 +413,11 @@ export function EditorMoreMenu({
             </>
           ) : null}
 
-          {/* 危険 */}
-          {(!readOnly && workspaceMode && moduleSelected && resetFlow) ||
-          (!readOnly && workspaceMode && onRequestDeleteDevice) ||
-          !workspaceMode ? (
+          {/* 危険（デモ非表示） */}
+          {!authDisabled &&
+          ((!readOnly && workspaceMode && moduleSelected && resetFlow) ||
+            (!readOnly && workspaceMode && onRequestDeleteDevice) ||
+            !workspaceMode) ? (
             <>
               <MenuSection label="危険" />
               {!readOnly && workspaceMode && moduleSelected && resetFlow ? (

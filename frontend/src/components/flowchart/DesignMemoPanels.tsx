@@ -165,30 +165,7 @@ export function DesignMemoPanels({
   };
 
   if (isAuthDisabled()) {
-    return (
-      <>
-        <details
-          className={fcTableHelpDetails}
-          data-testid="design-memo-module-panel"
-        >
-          <summary className={fcTableHelpSummary}>設計メモ（動作）</summary>
-          <p className={fcStatusText}>
-            認証無効モードでは設計メモは利用できません。
-          </p>
-        </details>
-        <details
-          className={fcTableHelpDetails}
-          data-testid="design-memo-context-panel"
-        >
-          <summary className={fcTableHelpSummary}>
-            設計メモ（ユニット/装置）
-          </summary>
-          <p className={fcStatusText}>
-            認証無効モードでは設計メモは利用できません。
-          </p>
-        </details>
-      </>
-    );
+    return null;
   }
 
   const hasModuleContent = Boolean(savedModuleMemo);
