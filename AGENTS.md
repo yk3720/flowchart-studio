@@ -140,11 +140,12 @@ npm run test:e2e
 
 索引: `c:/yk-skill/rule/RULE_INDEX.md` · No **17** `APP_PROJECT_RULES` · No **25** `PROJECT_DOCUMENT_RULES`
 
-| 触るもの            | L1 / スキル                                    |
-| ------------------- | ---------------------------------------------- |
-| React Flow · 表駆動 | `REACTFLOW_RULES.md` · `creating-reactflow-yk` |
-| Next.js `app/`      | `NEXTJS_RULES.md`                              |
-| 引き継ぎ            | `handoff-session-work`                         |
+| 触るもの              | L1 / スキル                                                             |
+| --------------------- | ----------------------------------------------------------------------- |
+| React Flow · 表駆動   | `REACTFLOW_RULES.md` · `creating-reactflow-yk`                          |
+| Supabase · Auth · RLS | `SUPABASE_RULES.md` · `creating-supabase-yk` · `supabase-dev-entry.mdc` |
+| Next.js `app/`        | `NEXTJS_RULES.md`                                                       |
+| 引き継ぎ              | `handoff-session-work`                                                  |
 
 ---
 
