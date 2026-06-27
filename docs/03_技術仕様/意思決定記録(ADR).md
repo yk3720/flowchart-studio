@@ -251,7 +251,7 @@
 | **決定（技術デモ）**      | コード同梱 · 装置階層（既存 `DEMO_DEVICES` 系）。**2 装置**程度。具体データは後日。                                                                                                                     |
 | **決定（一般デモ）**      | コード同梱 · 同一 3 ペイン Nav。**装置=日常の作業 · ユニット=料理 · 動作=カレーを作る**（`sample-curry.json` 等）。他ユニット/動作は同装置下に追加可（後日）。                                          |
 | **却下**                  | URL 1 本で本番とデモ兼用 · 一般/技術でメニュー二重化 · デモ 3 URL 分の Supabase · Vercel プロジェクト 3 個（管理コスト優先で B 案）                                                                     |
-| **未決**                  | デモ固定 URL 文字列 · 初期フロー JSON 同梱 · ローカル technical/general 切替 · 将来の開発用 Supabase 2 個目 · 独自ドメイン                                                                              |
-| **状態**                  | **Accepted** · **実装前**                                                                                                                                                                               |
+| **未決**                  | 初期フロー JSON 同梱（技術/一般デモ動作） · 将来の開発用 Supabase 2 個目 · 独自ドメイン                                                                                                                 |
+| **状態**                  | **Accepted** · **実装済**（2026-06-27 · ホスト名解決 · 一般デモ階層 · Vercel デモプロジェクト）                                                                                                         |
 | **実装**                  | ホスト名解決 · 一般デモ階層データ · Vercel デモプロジェクト — Runbook [PUBLIC_URL_SETUP.md](../runbooks/PUBLIC_URL_SETUP.md)                                                                            |
 | **関連**                  | ADR-013（認証 · env 分離思想）· [grill-me_2026-06-27](../01_要求定義/grill-me_2026-06-27_公開URL3本.md) · [VERCEL_RULES §6-2](c:/yk-skill/rule/30_web_stack/VERCEL_RULES.md)                            |
