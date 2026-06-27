@@ -353,6 +353,7 @@ export const FlowchartEditor = forwardRef<
   const [jsonText, setJsonText] = useState(initial.jsonText);
   const [committedJson, setCommittedJson] = useState(initial.committedJson);
   const [paneView, setPaneView] = useState<PaneView>("table");
+  const [rightTab, setRightTab] = useState<"table" | "memo">("table");
   const [parseErrors, setParseErrors] = useState<string[]>([]);
   const [genErrors, setGenErrors] = useState<string[]>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
@@ -506,6 +507,7 @@ export const FlowchartEditor = forwardRef<
     setSavedJson(initial.committedJson);
     setUndoStack([]);
     setRedoStack([]);
+    setRightTab("table");
   }, [moduleId, clearModuleSamplePreview]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -1261,7 +1263,7 @@ export const FlowchartEditor = forwardRef<
                 moduleId={moduleId}
                 authorEmail={authorEmail}
               />
-              {designMemoContext ? (
+              {designMemoContext && !(workspaceMode && isDesktop) ? (
                 <DesignMemoPanels
                   key={moduleId}
                   {...designMemoContext}
@@ -1343,9 +1345,35 @@ export const FlowchartEditor = forwardRef<
     ) : null;
 
   if (workspaceMode && isDesktop) {
+    const showRightTabs = !!moduleId && !!designMemoContext;
+
     return (
       <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
         {replaceConfirmDialog}
+        {tableTopSlot}
+        <header className={fcPaneHeader}>
+          <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
+            <div className="flex min-w-0 flex-col gap-0.5">
+              {contextLabel ? (
+                <p className={cn("text-sm font-medium", fcStatusText)}>
+                  {contextLabel}
+                </p>
+              ) : null}
+              {previewModeHint ? (
+                <p className={fcEmptyHint}>{previewModeHint}</p>
+              ) : null}
+            </div>
+            {statusLine}
+          </div>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            {toolbarButtons}
+          </div>
+        </header>
+        {isUnsaved && !authDisabled ? (
+          <div className={fcUnsavedBanner} role="status">
+            未保存の変更があります — 「保存」または Ctrl+S で保存してください
+          </div>
+        ) : null}
         <Group
           id="workspace-inner"
           orientation="horizontal"
@@ -1374,35 +1402,53 @@ export const FlowchartEditor = forwardRef<
             defaultSize="60%"
             minSize="400px"
           >
-            {tableTopSlot}
-            {/* §E: デスクトップ — h1・バッジ・h2「表」削除、文脈+操作2段ヘッダー */}
-            <header className={fcPaneHeader}>
-              <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
-                <div className="flex min-w-0 flex-col gap-0.5">
-                  {contextLabel ? (
-                    <p className={cn("text-sm font-medium", fcStatusText)}>
-                      {contextLabel}
-                    </p>
-                  ) : null}
-                  {previewModeHint ? (
-                    <p className={fcEmptyHint}>{previewModeHint}</p>
-                  ) : null}
+            {showRightTabs ? (
+              <div className={cn("flex shrink-0", fcBorderB, "px-4 py-2")}>
+                <div
+                  className={fcMobileTabGroup}
+                  role="tablist"
+                  aria-label="表と設計メモ"
+                >
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={rightTab === "table"}
+                    onClick={() => setRightTab("table")}
+                    className={cn(
+                      rightTab === "table" ? fcMobileTabActive : fcMobileTabIdle
+                    )}
+                  >
+                    表
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={rightTab === "memo"}
+                    onClick={() => setRightTab("memo")}
+                    className={cn(
+                      rightTab === "memo" ? fcMobileTabActive : fcMobileTabIdle
+                    )}
+                  >
+                    設計メモ
+                  </button>
                 </div>
-                {statusLine}
-              </div>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                {toolbarButtons}
-              </div>
-            </header>
-            {isUnsaved && !authDisabled ? (
-              <div className={fcUnsavedBanner} role="status">
-                未保存の変更があります — 「保存」または Ctrl+S
-                で保存してください
               </div>
             ) : null}
-            <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
-              {tablePaneBody}
-            </div>
+            {!showRightTabs || rightTab === "table" ? (
+              <div className="flex min-h-0 flex-1 flex-col gap-2 p-4">
+                {tablePaneBody}
+              </div>
+            ) : (
+              <div className="min-h-0 flex-1 overflow-y-auto p-4">
+                {designMemoContext ? (
+                  <DesignMemoPanels
+                    key={moduleId ?? "memo"}
+                    {...designMemoContext}
+                    readOnly={readOnly}
+                  />
+                ) : null}
+              </div>
+            )}
           </Panel>
         </Group>
         {moduleLoading ? (
