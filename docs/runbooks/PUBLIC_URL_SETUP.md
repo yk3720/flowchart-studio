@@ -81,11 +81,11 @@ AUTH_DISABLED=1
 
 ## 5. 配布用 URL 一覧（テンプレ）
 
-| 読者         | URL                    | 備考                                      |
-| ------------ | ---------------------- | ----------------------------------------- |
-| 社内編集者   | _（本番 URL）_         | ログイン必要                              |
-| 技術レビュー | _（tech デモ URL）_    | ログイン不要                              |
-| 一般レビュー | _（general デモ URL）_ | ログイン不要 · 日常の作業 → 料理 → カレー |
+| 読者         | URL                                         | 備考                                      |
+| ------------ | ------------------------------------------- | ----------------------------------------- |
+| 社内編集者   | https://flowchart-studio-dun.vercel.app     | ログイン必要                              |
+| 技術レビュー | https://flowchart-studio-demo.vercel.app    | ログイン不要                              |
+| 一般レビュー | https://flowchart-studio-general.vercel.app | ログイン不要 · 日常の作業 → 料理 → カレー |
 
 ---
 
@@ -101,11 +101,11 @@ AUTH_DISABLED=1
 
 ## 7. 実装チェックリスト（未完了）
 
-- [ ] ホスト名 → `technical` | `general` 解決
-- [ ] 一般デモ階層（日常の作業 → 料理 → カレーを作る）
-- [ ] 技術デモ階層（既存 `DEMO_DEVICES` または同梱フロー）
-- [ ] デモ Vercel プロジェクト作成 · URL 2 本
-- [ ] 本 Runbook §5 URL 確定値の記入
+- [x] ホスト名 → `technical` | `general` 解決（`lib/demo/demoProfile.ts` · 2026-06-27）
+- [x] 一般デモ階層（日常の作業 → 料理 → カレーを作る）（`GENERAL_DEMO_DEVICES` · 2026-06-27）
+- [x] 技術デモ階層（既存 `DEMO_DEVICES` · プレス機 A/B）
+- [x] デモ Vercel プロジェクト作成 · URL 2 本（`flowchart-studio-demo` · 2026-06-27）
+- [x] 本 Runbook §5 URL 確定値の記入（2026-06-27）
 
 ---
 
