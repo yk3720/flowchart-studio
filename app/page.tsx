@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getAuthState } from "@/lib/auth/session";
@@ -7,7 +8,11 @@ import {
   mapDemoDevicesForClient,
   mapDevicesForClient,
 } from "@/lib/flowchart/mapDevicesForClient";
-import { DEMO_DEVICES } from "@/lib/flowchart/equipment/moduleHierarchy";
+import {
+  DEMO_DEVICES,
+  GENERAL_DEMO_DEVICES,
+} from "@/lib/flowchart/equipment/moduleHierarchy";
+import { getDemoProfile } from "@/lib/demo/demoProfile";
 
 export default async function HomePage() {
   const state = await getAuthState();
@@ -30,8 +35,14 @@ export default async function HomePage() {
     redirect("/login");
   }
 
+  const headersList = await headers();
+  const hostname = headersList.get("host") ?? "";
+  const demoProfile = getDemoProfile(hostname);
+  const rawDemoDevices =
+    demoProfile === "general" ? GENERAL_DEMO_DEVICES : DEMO_DEVICES;
+
   let devices = mapDemoDevicesForClient(
-    DEMO_DEVICES,
+    rawDemoDevices,
     context.role,
     context.userId
   );

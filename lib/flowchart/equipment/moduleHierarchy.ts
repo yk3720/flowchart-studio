@@ -160,6 +160,26 @@ export const DEMO_DEVICES: Device[] = [
 /** @deprecated 互換 — プレス機 A */
 export const DEMO_DEVICE = DEMO_DEVICE_PRESS_A;
 
+/** general デモ — 日常の作業（一般向けデモ · ADR-017） */
+export const GENERAL_DEMO_DEVICE_DAILY: Device = {
+  id: "a0000003-0001-4001-8001-000000000003",
+  name: "日常の作業",
+  units: [
+    {
+      id: "b0000003-0001-4001-8001-000000000301",
+      label: "料理",
+      modules: [
+        {
+          id: "c0000003-0001-4001-8001-000000003001",
+          label: "カレーを作る",
+        },
+      ],
+    },
+  ],
+};
+
+export const GENERAL_DEMO_DEVICES: Device[] = [GENERAL_DEMO_DEVICE_DAILY];
+
 /** 装置ドロップダウン — 社内番号：display_name */
 export function formatDeviceSelectLabel(device: {
   name: string;
