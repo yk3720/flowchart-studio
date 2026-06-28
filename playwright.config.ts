@@ -9,8 +9,30 @@ const baseURL =
   process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${devPort}`;
 const useDevServer = process.env.PLAYWRIGHT_USE_DEV === "1";
 
+function isAuthImportRun(): boolean {
+  if (process.env.PLAYWRIGHT_AUTH_IMPORT === "1") {
+    return true;
+  }
+  const args = process.argv.map((a) => a.replace(/\\/g, "/"));
+  const hasAuthSpec = args.some((a) => a.includes("import-bundle-auth"));
+  const runsWholeDir = args.some(
+    (a) => a === "e2e" || a.endsWith("/e2e") || a === "./e2e"
+  );
+  return hasAuthSpec && !runsWholeDir;
+}
+
+const authImportMode = isAuthImportRun();
+
+const playwrightE2eEnv = {
+  PLAYWRIGHT_E2E: "1",
+  IMPORT_E2E_STUB: "1",
+  RESET_FLOW_E2E_STUB: "1",
+  MODULE_DELETE_E2E_STUB: "1",
+} as const;
+
 export default defineConfig({
   testDir: "./e2e",
+  testIgnore: authImportMode ? undefined : "**/import-bundle-auth.spec.ts",
   timeout: 60_000,
   expect: { timeout: 10_000 },
   use: {
@@ -30,11 +52,10 @@ export default defineConfig({
         timeout: 120_000,
         env: {
           ...process.env,
-          AUTH_DISABLED: "1",
-          PLAYWRIGHT_E2E: "1",
-          IMPORT_E2E_STUB: "1",
-          RESET_FLOW_E2E_STUB: "1",
-          MODULE_DELETE_E2E_STUB: "1",
+          ...playwrightE2eEnv,
+          ...(authImportMode
+            ? { AUTH_DISABLED: "0", AUTH_E2E_STUB: "1" }
+            : { AUTH_DISABLED: "1", AUTH_E2E_STUB: "0" }),
         },
       },
 });

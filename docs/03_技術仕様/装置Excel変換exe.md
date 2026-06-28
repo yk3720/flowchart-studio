@@ -224,7 +224,7 @@ normalize_workbook(input_xlsx_path)
 | CI         | **v1 は手動ビルド** — **`npm run excel:converter:verify`**（exe 停止 → build → smoke） |
 | コード署名 | **未決** — 社内配布で SmartScreen 警告が出る場合は IT ポリシーに従う                   |
 
-**npm スクリプト:** `excel:converter:run` · **`excel:converter:verify`**（build+smoke 推奨）· `excel:converter:smoke` · `excel:converter:build`
+| **npm スクリプト:** `excel:converter:run` · **`excel:converter:verify`**（build+smoke 推奨）· **`excel:converter:release`**（verify → 版付き exe → タグ → GitHub Release）· `excel:converter:smoke` · `excel:converter:build`
 
 ### 8.1 トラブルシュート
 
@@ -258,7 +258,7 @@ normalize_workbook(input_xlsx_path)
 - [x] GUI · 変換ロジック · pytest（`test_converter_gui.py` · `test_converter_cli.py`）
 - [x] 既存 `import.json` があるとき **上書き確認**（GUI · CLI は `-y` で省略）
 - [ ] 構成エラー時に **日本語** で修正ヒントが読める（pytest の fixture エラーと同等以上）
-- [ ] 生成 JSON を Web「装置を取込…」→ プレビュー → 取込まで通せる
+- [x] 生成 JSON を Web「装置を取込…」→ プレビュー → 取込まで通せる — `e2e/import-bundle-auth.spec.ts`（`npm run test:e2e:import-auth` · RPC スタブ · 本番 auth UI）
 - [x] GitHub Release（または社内共有）に **版付き exe** が置ける — [excel-converter-v0.1.1](https://github.com/yk3720/flowchart-studio/releases/tag/excel-converter-v0.1.1) · `FlowchartStudio-ExcelConverter-v0.1.1-win64.exe`（2026-06-28 · MID 照合修正）
 - [x] [Excel取込.md](./Excel取込.md) · [python/README.md](../../python/README.md) から本設計へリンクされている
 
@@ -276,4 +276,4 @@ normalize_workbook(input_xlsx_path)
 
 ---
 
-_実装済 · Release v0.1.1 済 · 次: Python なし PC 実機 · Web プリフェッチ UX 完了_
+_実装済 · Release v0.1.1 済 · 次: Python なし PC 実機 · 設計メモ本番目視（[Runbook](../runbooks/DESIGN_MEMO_PRODUCTION_CHECK.md)）_

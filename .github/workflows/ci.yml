@@ -99,6 +99,11 @@ jobs:
       - name: Playwright E2E
         run: npm run test:e2e
 
+      - name: Playwright E2E (auth import)
+        run: npm run test:e2e:import-auth
+        env:
+          PLAYWRIGHT_FORCE_WEBSERVER: "1"
+
       - name: Upload axe report
         if: always()
         uses: actions/upload-artifact@v4

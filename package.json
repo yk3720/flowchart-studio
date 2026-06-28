@@ -15,6 +15,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test e2e --reporter=line",
+    "test:e2e:import-auth": "playwright test e2e/import-bundle-auth.spec.ts --reporter=line",
     "test:e2e:labels": "playwright test e2e/edge-label-placement.spec.ts --reporter=line",
     "test:e2e:ux": "playwright test e2e/table-pane-ux.spec.ts e2e/workspace-pane-resize.spec.ts --reporter=line",
     "excel:template": "python python/scripts/build_template.py",
@@ -41,7 +42,8 @@
     "excel:converter:run": "python -m excel_converter_gui",
     "excel:converter:build": "cd python && python -m PyInstaller packaging/excel_converter.spec --noconfirm",
     "excel:converter:smoke": "python python/scripts/smoke_converter_exe.py",
-    "excel:converter:verify": "python python/scripts/build_and_verify_converter.py"
+    "excel:converter:verify": "python python/scripts/build_and_verify_converter.py",
+    "excel:converter:release": "python python/scripts/release_converter.py"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [

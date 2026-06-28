@@ -151,6 +151,7 @@ cd c:\yk-application\flowchart-studio
 python -m pip install -e "python[dev]"
 npm run excel:converter:run
 npm run excel:converter:verify  # 推奨: exe 停止 → build → smoke
+npm run excel:converter:release # verify → 版付き exe → タグ → GitHub Release
 npm run excel:converter:build   # build のみ
 npm run excel:converter:smoke   # smoke のみ（dist 既存前提）
 ```

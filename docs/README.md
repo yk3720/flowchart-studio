@@ -23,12 +23,12 @@
 
 ### 運用（`docs/` 直下）
 
-| ファイル                               | 用途                                     |
-| -------------------------------------- | ---------------------------------------- |
-| [LOCAL_DEV.md](./LOCAL_DEV.md)         | ローカル起動 · E2E                       |
-| [design-system.md](./design-system.md) | スタイル索引 · コード変更マップ          |
-| [runbooks/](./runbooks/)               | Supabase · DB マイグレーション · C2 検証 |
-| [archive/](./archive/)                 | 調査 · grill-me · Historical             |
+| ファイル                               | 用途                                                                                                      |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| [LOCAL_DEV.md](./LOCAL_DEV.md)         | ローカル起動 · E2E                                                                                        |
+| [design-system.md](./design-system.md) | スタイル索引 · コード変更マップ                                                                           |
+| [runbooks/](./runbooks/)               | Supabase · DB マイグレーション · C2 検証 · [設計メモ本番目視](./runbooks/DESIGN_MEMO_PRODUCTION_CHECK.md) |
+| [archive/](./archive/)                 | 調査 · grill-me · Historical                                                                              |
 
 ---
 
@@ -41,4 +41,4 @@
 
 ---
 
-*最終更新: 2026-06-24（目次を `00*目次.md` に統一）\_
+_最終更新: 2026-06-28（runbooks · import auth E2E 索引）_

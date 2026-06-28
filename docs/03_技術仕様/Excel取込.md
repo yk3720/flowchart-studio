@@ -206,6 +206,7 @@ Supabase → 左ナビ + フロー表
 - **フロー:** ファイル選択 → **プレビュー**（ユニット/フロー数 · エラー/警告 · batch_id）→ **「取込」** 確定
 - **xlsx:** Web では **受け付けない** — PC で CLI / **[変換 exe](./装置Excel変換exe.md)** で `import.json` を作ってから取込（[暫定方針](../01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md)）
 - **保存:** Server Action `importEquipmentBundle` → RPC **`import_equipment_bundle`**（`005_import_equipment_bundle.sql`）
+- **E2E（UI 配線）:** デモ — `e2e/import-bundle.spec.ts`（取込非表示）· 本番 auth UI — **`npm run test:e2e:import-auth`**（`AUTH_E2E_STUB` + `IMPORT_E2E_STUB` · [PLAYWRIGHT §12-10](c:/yk-skill/rule/50_gas_html_test/references/PLAYWRIGHT_AGENT_OPS.md)）
 - **初版 upsert:** 名称マッチ · `sort_order` 更新 · 新規 INSERT — **prune / rename 非対応**
 
 **将来（保留）:** Web から xlsx → FastAPI 正規化 — 骨格はリポ内 · **本番未デプロイ**（[FASTAPI Runbook](../runbooks/FASTAPI_RAILWAY_SETUP.md)）

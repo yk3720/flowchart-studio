@@ -90,7 +90,7 @@
 
 ### 公開 URL 3 本 · デモ分離（2026-06-27）
 
-[grill-me_2026-06-27](../01_要求定義/grill-me_2026-06-27_公開URL3本.md) → [ADR-017](<../03_技術仕様/意思決定記録(ADR).md#adr-017-公開-url-3-本--vercel-b-案--デモ階層>) → [PUBLIC_URL_SETUP.md](../runbooks/PUBLIC_URL_SETUP.md) → [grill-me\_デモ整備とレイアウト](../01_要求定義/grill-me_2026-06-27_デモ整備とレイアウト.md) → [grill-me\_右ペインと3ペイン整理](../01_要求定義/grill-me_2026-06-27_右ペインと3ペイン整理.md) → [ADR-018](<../03_技術仕様/意思決定記録(ADR).md#adr-018-3-ペイン入替--右ドック--デモ整備草案--2026-06-27>)（**第1・第2弾実装済** · 残: 設計メモ実機 step2）
+[grill-me_2026-06-27](../01_要求定義/grill-me_2026-06-27_公開URL3本.md) → [ADR-017](<../03_技術仕様/意思決定記録(ADR).md#adr-017-公開-url-3-本--vercel-b-案--デモ階層>) → [PUBLIC_URL_SETUP.md](../runbooks/PUBLIC_URL_SETUP.md) → [grill-me\_デモ整備とレイアウト](../01_要求定義/grill-me_2026-06-27_デモ整備とレイアウト.md) → [grill-me\_右ペインと3ペイン整理](../01_要求定義/grill-me_2026-06-27_右ペインと3ペイン整理.md) → [ADR-018](<../03_技術仕様/意思決定記録(ADR).md#adr-018-3-ペイン入替--右ドック--デモ整備草案--2026-06-27>)（**第1・第2弾実装済** · 残: [設計メモ Runbook](../runbooks/DESIGN_MEMO_PRODUCTION_CHECK.md)）
 
 ### FastAPI 装置 Excel 取込（2026-06-28）
 
@@ -190,34 +190,35 @@
 | 2026-06-27      | 実装       | **v1.1 設計メモ 3 階層** — `018` · `DesignMemoPanels` · Excel `memo` 列 · hierarchy 先読み                                                   | [DB設計 §4.5.2](../03_技術仕様/DB設計.md) · [handoff \_59](c:/yk-memo/handoffs/flowchart-studio/2026-06-27_59_design-memo-v11-session-end.md)                                                                                                 | 実装完了                          | 実機検証へ                                                                                                                           |
 | 2026-06-27      | grill-me   | **公開 URL 3 本** — Vercel B 案 · デモ AUTH_DISABLED · 一般=日常の作業/料理/カレー · Supabase=本番                                           | [grill-me_2026-06-27](../01_要求定義/grill-me_2026-06-27_公開URL3本.md) · [ADR-017](<../03_技術仕様/意思決定記録(ADR).md#adr-017-公開-url-3-本--vercel-b-案--デモ階層>)                                                                       | Accepted                          | Runbook · ホスト名解決実装                                                                                                           |
 | 2026-06-27      | grill-me   | **デモ整備 · 3ペイン入替** — 2｜4｜6 · 右[表｜設計メモ] · 雛形削除 · DEMO0000 · 一般2×2 · デモ未保存オフ                                     | [grill-me\_デモ整備とレイアウト](../01_要求定義/grill-me_2026-06-27_デモ整備とレイアウト.md) · [ADR-018](<../03_技術仕様/意思決定記録(ADR).md#adr-018-3-ペイン入替--右ドック--デモ整備草案--2026-06-27>)                                      | Accepted · **第1弾実装済**        | 第2弾 chrome へ                                                                                                                      |
-| 2026-06-27      | grill-me   | **右ペイン chrome 整理** — 3タブ（コメント）· ペイン3 sticky · D1 · 本番列の意味なし · モバイル M1 · line tabs                               | [grill-me\_右ペインと3ペイン整理](../01_要求定義/grill-me_2026-06-27_右ペインと3ペイン整理.md) · [ADR-018 追補](<../03_技術仕様/意思決定記録(ADR).md#adr-018-3-ペイン入替--右ドック--デモ整備草案--2026-06-27>)                               | Accepted · **第2弾実装済**        | E2E 追従完了 · 残: 設計メモ実機 step2                                                                                                |
+| 2026-06-27      | grill-me   | **右ペイン chrome 整理** — 3タブ（コメント）· ペイン3 sticky · D1 · 本番列の意味なし · モバイル M1 · line tabs                               | [grill-me\_右ペインと3ペイン整理](../01_要求定義/grill-me_2026-06-27_右ペインと3ペイン整理.md) · [ADR-018 追補](<../03_技術仕様/意思決定記録(ADR).md#adr-018-3-ペイン入替--右ドック--デモ整備草案--2026-06-27>)                               | Accepted · **第2弾実装済**        | E2E 追従完了 · 残: [設計メモ Runbook](../runbooks/DESIGN_MEMO_PRODUCTION_CHECK.md)                                                   |
 | 2026-06-27      | 運用       | **yk-skill P15/P16** — Supabase No 37 `active` · Tauri 統合保留 · flowchart 資料追随                                                         | [handoff \_63](c:/yk-memo/handoffs/flowchart-studio/2026-06-27_63_yk-skill-rule-p15-p16-session-end.md) · [tauri-practice HANDOFF](c:/yk-memo/handoffs/tauri-practice/HANDOFF.md) §6                                                          | 完了                              | 要求定義 Web 専用と整合                                                                                                              |
 | 2026-06-28      | grill-me   | **FastAPI 装置 Excel 取込** — 同 Python · Web が DB · プレビュー確認 ·「装置を取込…」統合 · ガードレール 5 条                                | [grill-me 第1回](../01_要求定義/grill-me_2026-06-28_FastAPI装置Excel取込.md) · [ADR-019 草案](<../03_技術仕様/意思決定記録(ADR).md#adr-019-fastapi-装置-excel-ブラウザ取込草案--2026-06-28>)                                                  | Draft · 骨格/UI 実装済            | → 暫定方針（第2回）                                                                                                                  |
 | 2026-06-28      | grill-me   | **装置取込 暫定方針** — Web **import.json のみ** · PC 変換（CLI/exe）· FastAPI/Railway **デプロイ保留** · Vercel `FASTAPI_*` 不要            | [暫定方針](../01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md) · [Excel取込 §6](../03_技術仕様/Excel取込.md) · [ボタン一覧 M9](../02_機能設計/ボタン一覧.md)                                                                              | **暫定合意 · UI 反映済**          | 完了 → 197（exe 実装）                                                                                                               |
 | 2026-06-28      | 実装       | **Excel 変換 exe** — `FlowchartStudio-ExcelConverter.exe` · PyInstaller · A0001 実機変換 OK · `PYTHON_RULES` §13                             | [装置Excel変換exe.md](../03_技術仕様/装置Excel変換exe.md) · `npm run excel:converter:verify` · [PYTHON_RULES §13](c:/yk-skill/rule/40_python/PYTHON_RULES.md)                                                                                 | **Release v0.1.1 済**             | Python なし PC 実機                                                                                                                  |
 | 2026-06-28      | 実装       | **v0.3 MID 見出し行** — フロー表↔モジュール照合を ListObject 名から **直上 MID + 構成** へ · `FlowTableMeta` · `test_tables.py`              | [Excel入力フォーマット §6.4](../03_技術仕様/Excel入力フォーマット_v0.3.md) · [PYTHON_RULES §13](c:/yk-skill/rule/40_python/PYTHON_RULES.md) · `tables.py`                                                                                     | **実装済 · v0.1.1 Release 済**    | —                                                                                                                                    |
 | 2026-06-28      | UX         | **装置プリフェッチ UX** — warm cache overlay スキップ · prefetch 完了待ち **実装済**                                                         | [REACTFLOW_UX_WORKSPACE §5.6-1d](c:/yk-skill/rule/35_reactflow/references/REACTFLOW_UX_WORKSPACE.md) · `peekModuleWarmCache` · `devicePrefetchCoordinator` · `FlowchartWorkspace`                                                             | **完了**                          | —                                                                                                                                    |
+| 2026-06-28      | E2E        | **import.json 本番 auth UI** — `AUTH_E2E_STUB` · `import-bundle-auth.spec.ts` · `test:e2e:import-auth`                                       | [PLAYWRIGHT §12-10](c:/yk-skill/rule/50_gas_html_test/references/PLAYWRIGHT_AGENT_OPS.md) · `e2eStub.ts` · `LOCAL_DEV.md`                                                                                                                     | **完了**                          | —                                                                                                                                    |
 
 ---
 
 ## ADR 索引（クイック参照）
 
-| ADR     | タイトル（短）                     | 状態                                                                     |
-| ------- | ---------------------------------- | ------------------------------------------------------------------------ |
-| 001–006 | MVP · バリデーション · RF 派生     | Accepted · 実装済                                                        |
-| 007     | MZ0000 参照廃止                    | Accepted                                                                 |
-| 008     | P0 UX（再生成契約）                | Accepted                                                                 |
-| 009     | 実用版 UX 一括                     | Accepted                                                                 |
-| 010     | RF / Mermaid 比較 · リネーム       | Accepted                                                                 |
-| 011     | 3 ペイン · 装置 Nav                | Accepted · **Pane 並びは ADR-018**                                       |
-| 012     | 9 列（段+列）· 10列色              | Accepted · layoutGrid tier 実装済                                        |
-| 013     | Supabase DB-1                      | Accepted · 実装済                                                        |
-| 014     | 装置階層 DB-2                      | Accepted · dev/本番適用済                                                |
-| 015     | フロー共同編集 RLS                 | Accepted · 本番適用済（`016`）                                           |
-| 016     | 10列 v2 · 3ペインリサイズ          | Accepted · **PR-A · PR-B 実装済**                                        |
-| 017     | 公開 URL 3 本 · Vercel B 案        | Accepted · 実装済                                                        |
-| 018     | 3ペイン · 右ドック · デモ · chrome | **Accepted** · **第1・第2弾実装済** · 残: 設計メモ実機 step2             |
-| 019     | FastAPI 装置 Excel ブラウザ取込    | **Draft** · **暫定: Web JSON-only** · 骨格/UI 済 · FastAPI 本番 **保留** |
+| ADR     | タイトル（短）                     | 状態                                                                                                      |
+| ------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| 001–006 | MVP · バリデーション · RF 派生     | Accepted · 実装済                                                                                         |
+| 007     | MZ0000 参照廃止                    | Accepted                                                                                                  |
+| 008     | P0 UX（再生成契約）                | Accepted                                                                                                  |
+| 009     | 実用版 UX 一括                     | Accepted                                                                                                  |
+| 010     | RF / Mermaid 比較 · リネーム       | Accepted                                                                                                  |
+| 011     | 3 ペイン · 装置 Nav                | Accepted · **Pane 並びは ADR-018**                                                                        |
+| 012     | 9 列（段+列）· 10列色              | Accepted · layoutGrid tier 実装済                                                                         |
+| 013     | Supabase DB-1                      | Accepted · 実装済                                                                                         |
+| 014     | 装置階層 DB-2                      | Accepted · dev/本番適用済                                                                                 |
+| 015     | フロー共同編集 RLS                 | Accepted · 本番適用済（`016`）                                                                            |
+| 016     | 10列 v2 · 3ペインリサイズ          | Accepted · **PR-A · PR-B 実装済**                                                                         |
+| 017     | 公開 URL 3 本 · Vercel B 案        | Accepted · 実装済                                                                                         |
+| 018     | 3ペイン · 右ドック · デモ · chrome | **Accepted** · **第1・第2弾実装済** · 残: [設計メモ Runbook](../runbooks/DESIGN_MEMO_PRODUCTION_CHECK.md) |
+| 019     | FastAPI 装置 Excel ブラウザ取込    | **Draft** · **暫定: Web JSON-only** · 骨格/UI 済 · FastAPI 本番 **保留**                                  |
 
 全文: [意思決定記録(ADR).md](<../03_技術仕様/意思決定記録(ADR).md>)
 

@@ -1,4 +1,5 @@
 import { isAuthDisabled } from "@/lib/supabase/env";
+import { isPlaywrightAuthStubEnabled } from "@/lib/supabase/e2eStub";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 import { isAppRole } from "./roles";
@@ -20,6 +21,10 @@ const DEV_CONTEXT: AuthContext = {
 export async function getAuthState(): Promise<AuthState> {
   if (isAuthDisabled()) {
     return { kind: "disabled", context: DEV_CONTEXT };
+  }
+
+  if (isPlaywrightAuthStubEnabled()) {
+    return { kind: "allowed", context: DEV_CONTEXT };
   }
 
   const supabase = await createSupabaseServerClient();

@@ -4,8 +4,9 @@ import path from "node:path";
 
 import {
   EQUIPMENT_IMPORT_MENU_ITEM,
-  importBundleJsonFile,
+  ensureNavExpanded,
   ensureWorkspaceLoaded,
+  importBundleJsonFile,
   openMoreMenu,
 } from "./helpers/flowchart";
 
@@ -19,27 +20,35 @@ const A0001_IMPORT = path.join(
   "data/devices/A0001_塗布装置/import.json"
 );
 
-test.describe("装置一括取込（import.json · デモ AUTH_DISABLED）", () => {
+/**
+ * 本番 auth UI（authDisabled=false）— Playwright 専用。
+ * webServer: AUTH_DISABLED=0 · AUTH_E2E_STUB=1 · IMPORT_E2E_STUB=1
+ * 実行: npm run test:e2e:import-auth
+ */
+test.describe("装置一括取込（import.json · auth UI）", () => {
   test.beforeEach(async ({ page }) => {
     await ensureWorkspaceLoaded(page);
   });
 
-  // ADR-018 第2弾: AUTH_DISABLED (デモ) モードでは「取込」セクション自体が非表示
-  test("AUTH_DISABLED 時は装置取込項目がメニューに表示されない", async ({
-    page,
-  }) => {
+  test("その他メニューに装置取込が表示される", async ({ page }) => {
     await openMoreMenu(page);
     await expect(
       page.getByRole("menuitem", { name: EQUIPMENT_IMPORT_MENU_ITEM })
-    ).toHaveCount(0);
+    ).toBeVisible();
+    await expect(page.getByTestId("import-bundle-file")).toBeAttached();
+  });
+
+  test("右ペインに設計メモタブが表示される（本番 auth UI）", async ({
+    page,
+  }) => {
+    await ensureNavExpanded(page);
+    await expect(page.locator("#table [role='tablist']")).toBeVisible();
+    await expect(
+      page.getByRole("tab", { name: "設計メモ", exact: true })
+    ).toBeVisible();
   });
 
   test("fixture import.json で取込成功バナーが表示される", async ({ page }) => {
-    // ADR-018 第2弾: AUTH_DISABLED モードでは import-bundle-file input が非表示
-    test.skip(
-      true,
-      "AUTH_DISABLED モードでは import.json 取込 input が DOM に存在しないためスキップ"
-    );
     const json = fs.readFileSync(IMPORT_FIXTURE, "utf-8");
     await importBundleJsonFile(page, {
       name: "import-z00001.json",
@@ -52,10 +61,6 @@ test.describe("装置一括取込（import.json · デモ AUTH_DISABLED）", () 
   });
 
   test("A0001 import.json で取込成功バナーが表示される", async ({ page }) => {
-    test.skip(
-      true,
-      "AUTH_DISABLED モードでは import.json 取込 input が DOM に存在しないためスキップ"
-    );
     test.skip(
       !fs.existsSync(A0001_IMPORT),
       "npm run excel:a0001:normalize で import.json を生成してください"
@@ -83,10 +88,6 @@ test.describe("装置一括取込（import.json · デモ AUTH_DISABLED）", () 
   test("不正な JSON ではプレビュー前に失敗バナーが表示される", async ({
     page,
   }) => {
-    test.skip(
-      true,
-      "AUTH_DISABLED モードでは import 取込 input が DOM に存在しないためスキップ"
-    );
     await openMoreMenu(page);
     await page.getByTestId("import-bundle-file").setInputFiles({
       name: "broken.json",
