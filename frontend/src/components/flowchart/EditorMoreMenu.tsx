@@ -306,24 +306,27 @@ export function EditorMoreMenu({
           }
           onKeyDown={handleMenuKeyDown}
         >
-          {/* 取込: import.json（workspace のみ · デモ非表示） */}
+          {/* 取込: import.json（workspace のみ · デモ非表示 · xlsx は PC 変換） */}
           {!authDisabled && !readOnly && workspaceMode && importBundle ? (
             <>
               <MenuSection label="取込" isFirst />
               <MenuItem
                 disabled={importBundle.disabled}
-                title={importBundle.disabledTitle}
+                title={
+                  importBundle.disabledTitle ??
+                  "import.json を選択（Excel は PC で変換してから）"
+                }
                 onClick={() => {
                   if (importBundle.disabled) return;
                   importInputRef.current?.click();
                 }}
               >
-                import.jsonを取込…
+                装置を取込…
               </MenuItem>
               <input
                 ref={importInputRef}
                 type="file"
-                accept="application/json,.json"
+                accept=".json,application/json"
                 className="hidden"
                 data-testid="import-bundle-file"
                 aria-hidden

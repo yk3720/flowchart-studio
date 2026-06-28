@@ -4,7 +4,7 @@
 
 **SSOT:** [Excel取込.md](../docs/03_技術仕様/Excel取込.md)（パイプライン）· [Excel入力フォーマット\_v0.3.md](../docs/03_技術仕様/Excel入力フォーマット_v0.3.md)（v0.3 作者 xlsx）
 
-## 作者 Excel の置き場所
+**Web 取込（2026-06-28 暫定）:** 作者は PC で本 CLI（または **将来配布 exe**）で `import.json` を作り、Web **「装置を取込…」** で JSON のみ取込 — [暫定方針](../docs/01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md)。FastAPI 本番は保留 · `normalize_api/` は再開用に温存。
 
 **決定:** 2026-06-25 — 装置ごとの手書き xlsx · import.json は **`data/devices/`**（Python 層外）。
 
@@ -139,7 +139,49 @@ npm run excel:test
 
 1. 上記で `testdata/fixtures/import-z00001.json` を生成（または `-o` で任意パス）
 2. dev Supabase に **`005_import_equipment_bundle.sql`** を適用（`docs/runbooks/DB2_MIGRATION_RUNBOOK.md`）
-3. Web アプリ（editor ログイン）→ **その他 → import.jsonを取込…**
+3. Web アプリ（editor ログイン）→ **その他 → 装置を取込…** → `import.json` 選択 · プレビュー → 取込
 4. 左ナビに装置が追加され、各動作のフローが読み込めること
+
+## FastAPI 正規化 API（ADR-019 · 骨格 · **本番保留**）
+
+> **暫定（2026-06-28）:** Web は **import.json のみ**。本節は **再開用** — [暫定方針](../docs/01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md) · [Runbook](../docs/runbooks/FASTAPI_RAILWAY_SETUP.md)（保留バナー付き）
+
+**ホスト方針（第1回 · 未デプロイ）:** **Railway**（Vercel 非載せ · 変換専用）
+
+| 項目               | 内容                                                                                   |
+| ------------------ | -------------------------------------------------------------------------------------- |
+| **エンドポイント** | `POST /api/v1/normalize`（`multipart/form-data` · フィールド `file`）                  |
+| **認証**           | `X-API-Key` ヘッダ（Next プロキシのみが知る共有鍵）                                    |
+| **ロジック SSOT**  | `excel_normalize.normalize_workbook`（CLI と同一）                                     |
+| **Next プロキシ**  | `POST /api/equipment/normalize`（editor セッション必須 · ブラウザ直叩き FastAPI 不可） |
+
+### ローカル起動
+
+```powershell
+cd c:\yk-application\flowchart-studio
+python -m pip install -e "python[dev]"
+# .env.local に FASTAPI_BASE_URL / FASTAPI_API_KEY を設定（.env.example 参照）
+npm run excel:api:dev
+```
+
+別ターミナルで Next.js（`npm run dev`）。プロキシ経由の normalize は editor ログイン後に **その他 → 装置を取込…** から利用。
+
+### Railway 本番デプロイ
+
+**Runbook:** [`docs/runbooks/FASTAPI_RAILWAY_SETUP.md`](../docs/runbooks/FASTAPI_RAILWAY_SETUP.md)
+
+| 項目           | 内容                                                                                         |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| Root Directory | `python/`                                                                                    |
+| ビルド         | `python/Dockerfile`                                                                          |
+| ヘルス         | `GET /health`                                                                                |
+| Vercel env     | `FASTAPI_BASE_URL` · `FASTAPI_API_KEY`（**本番 JSON-only 期間は不要** · FastAPI 再開時のみ） |
+
+### テスト
+
+```powershell
+npm run excel:test
+npm run test -- backend/src/lib/flowchart/normalize/equipmentNormalizeProxy.test.ts
+```
 
 **再取込:** 追加・更新のみ。構成から行を消しても DB からは自動削除されない（ADR-014）。

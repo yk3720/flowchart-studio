@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import {
-  IMPORT_JSON_MENU_ITEM,
+  EQUIPMENT_IMPORT_MENU_ITEM,
   importBundleJsonFile,
   ensureWorkspaceLoaded,
   openMoreMenu,
@@ -19,18 +19,18 @@ const A0001_IMPORT = path.join(
   "data/devices/A0001_塗布装置/import.json"
 );
 
-test.describe("import.json 装置一括取込", () => {
+test.describe("装置一括取込（import.json）", () => {
   test.beforeEach(async ({ page }) => {
     await ensureWorkspaceLoaded(page);
   });
 
   // ADR-018 第2弾: AUTH_DISABLED (デモ) モードでは「取込」セクション自体が非表示
-  test("AUTH_DISABLED 時は import.json 取込項目がメニューに表示されない", async ({
+  test("AUTH_DISABLED 時は装置取込項目がメニューに表示されない", async ({
     page,
   }) => {
     await openMoreMenu(page);
     await expect(
-      page.getByRole("menuitem", { name: IMPORT_JSON_MENU_ITEM })
+      page.getByRole("menuitem", { name: EQUIPMENT_IMPORT_MENU_ITEM })
     ).toHaveCount(0);
   });
 
@@ -80,16 +80,23 @@ test.describe("import.json 装置一括取込", () => {
     });
   });
 
-  test("不正な JSON では取込失敗バナーが表示される", async ({ page }) => {
+  test("不正な JSON ではプレビュー前に失敗バナーが表示される", async ({
+    page,
+  }) => {
     test.skip(
       true,
-      "AUTH_DISABLED モードでは import.json 取込 input が DOM に存在しないためスキップ"
+      "AUTH_DISABLED モードでは import 取込 input が DOM に存在しないためスキップ"
     );
-    await importBundleJsonFile(page, {
+    await openMoreMenu(page);
+    await page.getByTestId("import-bundle-file").setInputFiles({
       name: "broken.json",
+      mimeType: "application/json",
       buffer: Buffer.from('{"internal_code":"X"}'),
     });
 
-    await expect(page.getByText(/取込失敗/)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/取込プレビュー失敗/)).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.getByTestId("equipment-import-preview")).toHaveCount(0);
   });
 });

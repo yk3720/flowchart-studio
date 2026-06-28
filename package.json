@@ -35,6 +35,7 @@
     "seed:device": "npx tsx --tsconfig tsconfig.json database/src/seed/import-device.ts",
     "seed:a0001": "npx tsx --tsconfig tsconfig.json database/src/seed/import-device.ts A0001",
     "excel:test": "cd python && python -m pytest",
+    "excel:api:dev": "cd python && python -m uvicorn normalize_api.main:app --reload --host 127.0.0.1 --port 8000",
     "excel:lint": "cd python && python -m ruff check . && python -m ruff format --check .",
     "excel:mypy": "cd python && python -m mypy -p excel_normalize"
   },

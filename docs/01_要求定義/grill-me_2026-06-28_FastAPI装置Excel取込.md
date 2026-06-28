@@ -2,7 +2,9 @@
 
 **種別:** grill-me（設計深掘り · 実装前）  
 **正本:** [ADR-019 草案](<../03_技術仕様/意思決定記録(ADR).md#adr-019-fastapi-装置-excel-ブラウザ取込草案--2026-06-28>) · [Excel取込.md](../03_技術仕様/Excel取込.md)  
-**経緯:** session 71（FastAPI 理解）→ 本 grill-me（Q1〜Q5）→ Web/多視点再レビュー → ADR-019
+**経緯:** session 71 → 本 grill（Q1〜Q5）→ 実装 → **[暫定方針（第2回）](./grill-me_2026-06-28_装置取込暫定方針.md)** — Web JSON-only · FastAPI デプロイ保留
+
+> **最新の運用方針:** [grill-me*2026-06-28*装置取込暫定方針.md](./grill-me_2026-06-28_装置取込暫定方針.md) — 本書の Q5（xlsx + json）は **Web では JSON のみに縮小**（FastAPI 本番は保留）。
 
 ---
 
@@ -47,13 +49,17 @@
 
 ## 未決（実装フェーズ）
 
-- FastAPI ホスト（Railway 等）
+- ~~FastAPI ホスト（Railway 等）~~ → **本番デプロイ保留**（[暫定方針](./grill-me_2026-06-28_装置取込暫定方針.md)）
+- **変換 exe 配布**（作者 PC · Python なし想定）
 - import.json ダウンロード（任意 · 推奨）
 - 非同期/進捗 UI（大ファイル）
+- FastAPI 再開条件
 
 ---
 
 ## 関連
+
+- [暫定方針（第2回 · 正本）](./grill-me_2026-06-28_装置取込暫定方針.md)
 
 - [handoff session 71 §4](c:/yk-memo/handoffs/flowchart-studio/2026-06-27_71_fastapi-discussion-session-end.md)
 - [FASTAPI_RULES.md](c:/yk-skill/rule/40_python/FASTAPI_RULES.md)

@@ -21,6 +21,12 @@ import { deleteUnitById } from "@/lib/flowchart/actions/delete/deleteUnit";
 import { resetFlowContentByModuleId } from "@/lib/flowchart/actions/documents/resetFlowContent";
 import { importEquipmentBundle } from "@/lib/flowchart/actions/import/importEquipmentBundle";
 import {
+  buildEquipmentImportPreview,
+  verifyEquipmentImportPreviewBatchId,
+  type EquipmentImportPreviewState,
+} from "@/lib/flowchart/import/equipmentImportPreview";
+import { parseImportBundleJson } from "@/lib/flowchart/import/importBundleSchema";
+import {
   statusBannerClassName,
   statusBannerTone,
 } from "@/lib/flowchart/visual/statusBanner";
@@ -47,6 +53,7 @@ import {
 import { getStarterFlowSnapshot } from "@/lib/flowchart/equipment/starterFlowSnapshot";
 
 import { useIsDesktop } from "@/hooks/useIsDesktop";
+import { EquipmentImportPreviewDialog } from "./EquipmentImportPreviewDialog";
 import { FlowAlertDialog } from "./FlowAlertDialog";
 import { FlowchartEditor, type FlowchartEditorHandle } from "./FlowchartEditor";
 import { UnsavedSwitchDialog } from "./UnsavedSwitchDialog";
@@ -71,6 +78,10 @@ type Props = {
   authDisabled?: boolean;
   devices: readonly Device[];
 };
+
+/** Web 装置取込 — 当面 import.json のみ（xlsx は PC 変換 · ADR-019 暫定） */
+const EQUIPMENT_IMPORT_JSON_ONLY_HINT =
+  "Web では import.json のみ取込できます。Excel は PC で import.json に変換してから取込してください（npm run excel:a0001:normalize 等 · 変換 exe 配布予定）。";
 
 export function FlowchartWorkspace({
   role,
@@ -123,6 +134,11 @@ export function FlowchartWorkspace({
   const [flowResetConfirmOpen, setFlowResetConfirmOpen] = useState(false);
   const [flowResetPending, setFlowResetPending] = useState(false);
   const flowResetInFlightRef = useRef(false);
+  const [equipmentImportPreview, setEquipmentImportPreview] =
+    useState<EquipmentImportPreviewState | null>(null);
+  const [equipmentImportPending, setEquipmentImportPending] = useState(false);
+  const [equipmentImportLoading, setEquipmentImportLoading] = useState(false);
+  const equipmentImportInFlightRef = useRef(false);
   /** 未保存切替確認ダイアログ用 — kind: "module"|"device", id: 切替先 ID */
   const [pendingSwitch, setPendingSwitch] = useState<{
     kind: "module" | "device";
@@ -525,29 +541,85 @@ export function FlowchartWorkspace({
     }
   }, [selectedModuleId, moduleInfo, device, router]);
 
-  const handleImportBundleFile = useCallback(
-    async (file: File) => {
-      setImportBanner("import.json を取込中…");
-      try {
-        const text = await file.text();
-        const result = await importEquipmentBundle(text);
-        if (!result.ok) {
-          setImportBanner(`取込失敗: ${result.error}`);
-          return;
-        }
-        setImportBanner(
-          `取込完了: ${result.internal_code}（フロー ${result.flows_upserted} 件）`
-        );
-        setSelectDeviceAfterImport(result.internal_code);
-        router.refresh();
-      } catch (e) {
-        setImportBanner(
-          `取込失敗: ${e instanceof Error ? e.message : String(e)}`
-        );
+  const handleSelectEquipmentImportFile = useCallback(async (file: File) => {
+    const lowerName = file.name.trim().toLowerCase();
+    if (lowerName.endsWith(".xlsx") || lowerName.endsWith(".xls")) {
+      setImportBanner(EQUIPMENT_IMPORT_JSON_ONLY_HINT);
+      return;
+    }
+    if (!lowerName.endsWith(".json")) {
+      setImportBanner("対応形式は import.json（.json）のみです");
+      return;
+    }
+
+    setEquipmentImportLoading(true);
+    try {
+      const text = await file.text();
+      const parsed = parseImportBundleJson(text);
+      if (!parsed.ok) {
+        setImportBanner(`取込プレビュー失敗: ${parsed.error}`);
+        return;
       }
-    },
-    [router]
-  );
+      const preview = await buildEquipmentImportPreview({
+        bundle: parsed.bundle,
+        sourceKind: "json",
+        sourceName: file.name,
+      });
+      setEquipmentImportPreview(preview);
+      setImportBanner("");
+    } catch (e) {
+      setImportBanner(
+        `取込プレビュー失敗: ${e instanceof Error ? e.message : String(e)}`
+      );
+    } finally {
+      setEquipmentImportLoading(false);
+    }
+  }, []);
+
+  const handleConfirmEquipmentImport = useCallback(async () => {
+    if (!equipmentImportPreview || equipmentImportInFlightRef.current) return;
+    if (equipmentImportPreview.errors.length > 0) return;
+
+    const parsed = parseImportBundleJson(equipmentImportPreview.jsonText);
+    if (!parsed.ok) {
+      setImportBanner(`取込失敗: ${parsed.error}`);
+      setEquipmentImportPreview(null);
+      return;
+    }
+
+    const batchMatches = await verifyEquipmentImportPreviewBatchId(
+      equipmentImportPreview,
+      parsed.bundle
+    );
+    if (!batchMatches) {
+      setImportBanner(
+        "プレビューと内容が一致しません。再度ファイルを選択してください"
+      );
+      setEquipmentImportPreview(null);
+      return;
+    }
+
+    equipmentImportInFlightRef.current = true;
+    setEquipmentImportPending(true);
+    try {
+      const result = await importEquipmentBundle(
+        equipmentImportPreview.jsonText
+      );
+      if (!result.ok) {
+        setImportBanner(`取込失敗: ${result.error}`);
+        return;
+      }
+      setEquipmentImportPreview(null);
+      setImportBanner(
+        `取込完了: ${result.internal_code}（フロー ${result.flows_upserted} 件）`
+      );
+      setSelectDeviceAfterImport(result.internal_code);
+      router.refresh();
+    } finally {
+      equipmentImportInFlightRef.current = false;
+      setEquipmentImportPending(false);
+    }
+  }, [equipmentImportPreview, router]);
 
   const handleTogglePin = useCallback(async () => {
     if (!moduleInfo) return;
@@ -650,14 +722,21 @@ export function FlowchartWorkspace({
     () =>
       isEditor
         ? {
-            disabled: Boolean(authDisabled),
+            disabled: Boolean(authDisabled) || equipmentImportLoading,
             disabledTitle: authDisabled
               ? "クラウド未設定のため取込できません"
-              : undefined,
-            onSelectFile: handleImportBundleFile,
+              : equipmentImportLoading
+                ? "取込ファイルを処理中です"
+                : undefined,
+            onSelectFile: handleSelectEquipmentImportFile,
           }
         : undefined,
-    [isEditor, authDisabled, handleImportBundleFile]
+    [
+      isEditor,
+      authDisabled,
+      equipmentImportLoading,
+      handleSelectEquipmentImportFile,
+    ]
   );
 
   const resetFlowProps = useMemo(
@@ -673,7 +752,9 @@ export function FlowchartWorkspace({
     : undefined;
 
   let statusBanner = importBanner || cloudSaveBanner;
-  if (!statusBanner && loadingModule) {
+  if (!statusBanner && equipmentImportLoading) {
+    statusBanner = "取込ファイルを処理中…";
+  } else if (!statusBanner && loadingModule) {
     statusBanner = "モジュールを読み込み中…";
   } else if (!statusBanner && isOffline) {
     statusBanner = offlineCachedAt
@@ -819,6 +900,18 @@ export function FlowchartWorkspace({
           />
         </div>
       )}
+
+      {equipmentImportPreview ? (
+        <EquipmentImportPreviewDialog
+          preview={equipmentImportPreview}
+          pending={equipmentImportPending}
+          onCancel={() => {
+            if (equipmentImportPending) return;
+            setEquipmentImportPreview(null);
+          }}
+          onConfirm={() => void handleConfirmEquipmentImport()}
+        />
+      ) : null}
 
       <UnsavedSwitchDialog
         open={pendingSwitch !== null}

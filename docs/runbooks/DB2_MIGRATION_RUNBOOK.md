@@ -123,7 +123,7 @@ select proname from pg_proc where proname = 'import_equipment_bundle';
 
 ## 4. 005 — import.json 一括取込
 
-**Web:** その他 → **「import.jsonを取込…」**（editor · workspace のみ）— **ADR-019 草案:** 将来 **「装置を取込…」** に統合（xlsx + import.json · 未実装）
+**Web:** その他 → **「装置を取込…」**（editor · workspace のみ）— **import.json のみ** · プレビュー確認後に RPC（[暫定方針](../01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md) · ADR-019）
 
 **正規化（ローカル）:**
 
@@ -219,7 +219,7 @@ select count(*) from public.devices;
 -- 期待: >= 2（従来どおり）
 ```
 
-**アプリ確認:** その他 → **「import.jsonを取込…」** · **「装置を削除…」**（M12）· **「フローをリセット…」** が従来どおり動くこと（§13）。
+**アプリ確認:** その他 → **「装置を取込…」**（import.json · プレビュー）· **「装置を削除…」**（M12）· **「フローをリセット…」** が従来どおり動くこと（§13）。
 
 ---
 
@@ -313,7 +313,7 @@ where table_schema = 'public' and table_name = 'devices' and column_name = 'memo
 ログイン後、次を 1 件ずつ:
 
 1. **クラウド保存** — 表編集 → **[再生成]**（workspace モード · 014 適用後 · admin でも OK）
-2. **import 取込** — その他 → **「import.jsonを取込…」**（M9）
+2. **import 取込** — その他 → **「装置を取込…」**（M9 · import.json のみ）
 3. **フローリセット** — その他 → **「フローをリセット…」**（M10 · 危険）
 4. **装置削除** — その他 → **「装置を削除…」**（M12 · 危険 · テスト用装置 · `canDelete`）
 5. **動作削除** — 左ナビ · 動作行のゴミ箱
@@ -340,11 +340,11 @@ where table_schema = 'public' and table_name = 'devices' and column_name = 'memo
 
 ### 13-1. メニュー文言（`ボタン一覧.md` 正本）
 
-| ID  | ラベル（そのまま）     | セクション |
-| --- | ---------------------- | ---------- |
-| M9  | **import.jsonを取込…** | 取込       |
-| M10 | **フローをリセット…**  | 危険       |
-| M12 | **装置を削除…**        | 危険       |
+| ID  | ラベル（そのまま）    | セクション                      |
+| --- | --------------------- | ------------------------------- |
+| M9  | **装置を取込…**       | 取込 · import.json · プレビュー |
+| M10 | **フローをリセット…** | 危険                            |
+| M12 | **装置を削除…**       | 危険                            |
 
 表ペインヘッダー **その他** は `fixed` 配置（スクロール後も表示）。E2E: `e2e/import-bundle.spec.ts`（M12 含む）。
 

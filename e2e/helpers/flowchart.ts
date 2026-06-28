@@ -43,7 +43,10 @@ export function headerRegenerate(page: Page) {
   return page.locator("#table").getByRole("button", { name: "再生成" });
 }
 
-export const IMPORT_JSON_MENU_ITEM = "import.jsonを取込…";
+export const EQUIPMENT_IMPORT_MENU_ITEM = "装置を取込…";
+
+/** @deprecated ADR-019 以前のラベル */
+export const IMPORT_JSON_MENU_ITEM = EQUIPMENT_IMPORT_MENU_ITEM;
 
 export async function openMoreMenu(page: Page) {
   await page.getByRole("button", { name: "その他" }).click();
@@ -63,6 +66,10 @@ export async function importBundleJsonFile(
     mimeType: "application/json",
     buffer: file.buffer,
   });
+  await expect(page.getByTestId("equipment-import-preview")).toBeVisible({
+    timeout: 15_000,
+  });
+  await page.getByTestId("equipment-import-commit").click();
 }
 
 export async function loadSampleFromMenu(page: Page, label: string) {
