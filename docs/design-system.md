@@ -39,7 +39,7 @@
 | **B. キャンバス**   | [`lib/flowchart/visual/flowColors.ts`](../lib/flowchart/visual/flowColors.ts) · [`FlowColorLegend.tsx`](../frontend/src/components/flowchart/FlowColorLegend.tsx) | ノード色・矢印色・枠太さ · **凡例は workspace 非表示**（`/dev/style` のみ） |
 | **C. 操作 UI**      | [`frontend/src/components/flowchart/flowchartUiClasses.ts`](../frontend/src/components/flowchart/flowchartUiClasses.ts)                                           | ボタン・ナビ・バナー・ワークスペース比率                                    |
 | **D. shadcn 基盤**  | [`app/globals.css`](../app/globals.css) · [`frontend/src/components/ui/`](../frontend/src/components/ui/)                                                         | ログイン・admin 等（**フロー編集 chrome は C**）                            |
-| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md)                                                                                         | 枠・ストロークの太さ方針                                                    |
+| **E. 横断**         | [VISUAL_DESIGN_RULES.md](c:/yk-skill/rule/25_design_ux/VISUAL_DESIGN_RULES.md)                                                                                    | 枠・ストロークの太さ方針                                                    |
 
 ### なぜ 1 ファイルに統合しないか
 
@@ -141,7 +141,7 @@ WCAG 2.2 は最小フォント px を規定しない（[SC 1.4.4 200% 拡大](ht
 2. フロー編集画面のボタン → `flowchartUiClasses.ts` に追加してから使う
 3. キャンバス色 → `flowColors.ts` のみ（chrome に波及させない）
 4. 意味の変更 → `docs/03_技術仕様/作者ガイド.md` 先
-5. 枠太さ → [VISUAL_DESIGN_RULES](c:/yk-skill/rule/10_meta/VISUAL_DESIGN_RULES.md) §2
+5. 枠太さ → [VISUAL_DESIGN_RULES](c:/yk-skill/rule/25_design_ux/VISUAL_DESIGN_RULES.md) §2
 6. 実装詳細 → [REACTFLOW_RULES §5.6](c:/yk-skill/rule/35_reactflow/REACTFLOW_RULES.md) · [flowchart-practical-ux-yk.mdc](../.cursor/rules/flowchart-practical-ux-yk.mdc)
 
 ---
@@ -176,13 +176,13 @@ WCAG 2.2 は最小フォント px を規定しない（[SC 1.4.4 200% 拡大](ht
 
 ## 11. 関連ドキュメント
 
-| ドキュメント                                                                            | 用途                                       |
-| --------------------------------------------------------------------------------------- | ------------------------------------------ |
-| [作者ガイド.md](./03_技術仕様/作者ガイド.md)                                            | 表列 · 図形 · 色（作者向け）               |
-| [LOCAL_DEV.md](./LOCAL_DEV.md)                                                          | ローカル確認                               |
-| [flowchart-practical-ux-yk.mdc](../.cursor/rules/flowchart-practical-ux-yk.mdc)         | エージェント L0                            |
-| [USABILITY_HEURISTICS_RULES.md](c:/yk-skill/rule/10_meta/USABILITY_HEURISTICS_RULES.md) | ニールセン10原則 · UI/UX レビュー（No 20） |
-| [data/devices/README.md](../data/devices/README.md)                                     | 作者 Excel 置き場                          |
+| ドキュメント                                                                                 | 用途                                       |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| [作者ガイド.md](./03_技術仕様/作者ガイド.md)                                                 | 表列 · 図形 · 色（作者向け）               |
+| [LOCAL_DEV.md](./LOCAL_DEV.md)                                                               | ローカル確認                               |
+| [flowchart-practical-ux-yk.mdc](../.cursor/rules/flowchart-practical-ux-yk.mdc)              | エージェント L0                            |
+| [USABILITY_HEURISTICS_RULES.md](c:/yk-skill/rule/25_design_ux/USABILITY_HEURISTICS_RULES.md) | ニールセン10原則 · UI/UX レビュー（No 20） |
+| [data/devices/README.md](../data/devices/README.md)                                          | 作者 Excel 置き場                          |
 
 ---
 

@@ -7,7 +7,7 @@
 | **handoffs slug**     | `flowchart-studio`                                                          |
 | **Product Spec 正本** | 本リポ `docs/`（コードと同居 · SDD）                                        |
 | **講座・提出**        | `c:/yk-memo/00.ai-driven-school/個人テーマ_フローチャートアプリ/00_テーマ/` |
-| **更新**              | 2026-06-26（製品開発フェーズ継続 · 検証駆動 · スケジュール白紙）            |
+| **更新**              | 2026-06-28（ADR-019 暫定 JSON-only · exe v0.1.1 Release · import-auth E2E） |
 
 ---
 
@@ -162,4 +162,4 @@ npm run test:e2e
 
 - [docs/README.md](./docs/README.md) — Product Spec 索引
 - [README.md](./README.md) — 実装 · 起動
-- [APP_PROJECT_RULES.md](c:/yk-skill/rule/10_meta/APP_PROJECT_RULES.md)
+- [APP_PROJECT_RULES.md](c:/yk-skill/rule/15_project_mgmt/APP_PROJECT_RULES.md)
