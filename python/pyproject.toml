@@ -8,7 +8,7 @@ include = ["excel_normalize*", "normalize_api*", "excel_converter_gui*"]
 
 [project]
 name = "excel-normalize"
-version = "0.1.0"
+version = "0.1.1"
 description = "入力用 Excel → import.json（装置階層 + フロー表）"
 requires-python = ">=3.10"
 dependencies = [

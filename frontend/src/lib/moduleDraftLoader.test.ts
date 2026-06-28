@@ -40,6 +40,7 @@ import { isAuthDisabled } from "@/lib/supabase/env";
 import {
   clearModuleWarmCache,
   loadModuleDraft,
+  peekModuleWarmCache,
   prefetchDeviceModuleDrafts,
 } from "./moduleDraftLoader";
 
@@ -135,6 +136,14 @@ describe("prefetchDeviceModuleDrafts warm cache", () => {
     expect(result.source).toBe("cloud");
     expect(result.snapshot?.jsonText).toContain("prefetched");
     expect(loadFlowDocument).not.toHaveBeenCalled();
+
+    const peeked = peekModuleWarmCache(device.id, testModule.id);
+    expect(peeked?.source).toBe("cloud");
+    expect(peeked?.snapshot?.jsonText).toContain("prefetched");
+  });
+
+  it("peekModuleWarmCache はプリフェッチ前は null", () => {
+    expect(peekModuleWarmCache(device.id, testModule.id)).toBeNull();
   });
 
   it("isCancelled 中は warm cache を作らない", async () => {

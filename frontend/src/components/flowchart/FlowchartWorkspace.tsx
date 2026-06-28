@@ -32,9 +32,11 @@ import {
 } from "@/lib/flowchart/visual/statusBanner";
 import {
   loadModuleDraft,
+  peekModuleWarmCache,
   persistModuleDraft,
   prefetchDeviceModuleDrafts,
 } from "@/client/moduleDraftLoader";
+import { createDevicePrefetchCoordinator } from "@/client/devicePrefetchCoordinator";
 import type { ModuleSnapshot } from "@/lib/flowchart/browser/moduleDraftRepository";
 import type { Device } from "@/lib/flowchart/equipment/moduleHierarchy";
 import {
@@ -95,6 +97,7 @@ export function FlowchartWorkspace({
   const loadGenerationRef = useRef(0);
   /** 装置プリフェッチの世代 — 装置切替で古い一括読込を無効化 */
   const prefetchGenerationRef = useRef(0);
+  const prefetchCoordinatorRef = useRef(createDevicePrefetchCoordinator());
   /** ユーザーがサンプル等で上書きしたら true — 遅延 loadModule の適用を拒否 */
   const userContentOverrideRef = useRef(false);
   const [selectedDeviceId, setSelectedDeviceId] = useState(
@@ -298,7 +301,20 @@ export function FlowchartWorkspace({
       if (!found) return;
 
       const generation = ++loadGenerationRef.current;
-      setLoadingModule(true);
+      const coordinator = prefetchCoordinatorRef.current;
+      const prefetchInFlight = coordinator.isInFlight(targetDevice.id);
+      if (prefetchInFlight) {
+        setLoadingModule(true);
+      }
+      await coordinator.awaitFor(targetDevice.id);
+      if (isModuleLoadStale(generation) || userContentOverrideRef.current) {
+        return;
+      }
+
+      const warmCached = peekModuleWarmCache(targetDevice.id, moduleId);
+      if (!warmCached) {
+        setLoadingModule(true);
+      }
       try {
         const result = await loadModuleDraft(found.module, targetDevice, {
           isCancelled: () => isModuleLoadStale(generation),
@@ -340,9 +356,11 @@ export function FlowchartWorkspace({
 
   const prefetchDevice = useCallback(async (targetDevice: Device) => {
     const generation = ++prefetchGenerationRef.current;
-    await prefetchDeviceModuleDrafts(targetDevice, {
+    const promise = prefetchDeviceModuleDrafts(targetDevice, {
       isCancelled: () => generation !== prefetchGenerationRef.current,
     });
+    prefetchCoordinatorRef.current.track(targetDevice.id, promise);
+    await promise;
   }, []);
 
   useEffect(() => {

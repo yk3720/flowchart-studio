@@ -4,7 +4,7 @@
 
 **作成:** 2026-06-28  
 **更新:** 2026-06-28（命名確定 · 実装着手）  
-**状態:** **実装済 · Release v0.1.0 済**（2026-06-28 · [excel-converter-v0.1.0](https://github.com/yk3720/flowchart-studio/releases/tag/excel-converter-v0.1.0)）· **MID 照合修正は dist 再ビルド済 · GitHub は v0.1.1 予定**  
+**状態:** **実装済 · Release v0.1.1 済**（2026-06-28 · [excel-converter-v0.1.1](https://github.com/yk3720/flowchart-studio/releases/tag/excel-converter-v0.1.1)）· **MID 照合修正入り**  
 **関連:** [Excel取込.md](./Excel取込.md) · [暫定方針 grill](../01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md) · [ADR-019 暫定](<./意思決定記録(ADR).md#adr-019-fastapi-装置-excel-ブラウザ取込草案--2026-06-28>) · `python/src/excel_normalize/`
 
 ---
@@ -35,11 +35,11 @@ Web 調査 · サブエージェントレビュー（作者 UX / エンジニア
 | **ユーザー向け（GUI）**  | `Flowchart Studio — Excel 変換`                                  | ウィンドウタイトル                           |
 | **ユーザー向け（補足）** | `Web 取込用 import.json を出力`                                  | 画面サブタイトル                             |
 | **exe ファイル名**       | `FlowchartStudio-ExcelConverter.exe`                             | 配布 · PATH · SmartScreen 互換               |
-| **Release 資産**         | `FlowchartStudio-ExcelConverter-v0.1.0-win64.exe`                | GitHub Release 添付                          |
+| **Release 資産**         | `FlowchartStudio-ExcelConverter-v0.1.1-win64.exe`                | GitHub Release 添付                          |
 | **VERSIONINFO**          | ProductName=`Flowchart Studio` · FileDescription=`Excel 変換…`   | エクスプローラ「詳細」                       |
 | **内部（Python）**       | `excel_converter_gui`                                            | モジュール · `python -m excel_converter_gui` |
 | **内部（ビルド）**       | `excel_converter.spec` · `--name FlowchartStudio-ExcelConverter` | PyInstaller                                  |
-| **内部（Git タグ）**     | `excel-converter-v0.1.0`                                         | Release と 1:1                               |
+| **内部（Git タグ）**     | `excel-converter-v0.1.1`                                         | Release と 1:1                               |
 
 **却下:** exe ファイル名に日本語（`FlowchartStudio-Excel変換.exe`）— 社内 PATH/UNC での文字化けリスク。作者向け exe 名から「装置」を外す（Web 入口「装置を取込…」と混同しにくくするため GUI 補足で説明）。
 
@@ -72,7 +72,7 @@ Web 調査 · サブエージェントレビュー（作者 UX / エンジニア
 | ------------------ | ---------------------------------------------------------------- |
 | ウィンドウタイトル | `Flowchart Studio — Excel 変換`                                  |
 | サブタイトル       | `Web 取込用 import.json を出力`                                  |
-| 版表示             | `excel-normalize` のバージョン（例: `v0.1.0`）を右下または About |
+| 版表示             | `excel-normalize` のバージョン（例: `v0.1.1`）を右下または About |
 | 主操作             | **「Excel ファイルを選ぶ…」** ボタン                             |
 
 ### 4.2 ファイル選択
@@ -185,7 +185,7 @@ normalize_workbook(input_xlsx_path)
 
 | 項目           | ルール                                                                               |
 | -------------- | ------------------------------------------------------------------------------------ |
-| **表示版**     | `python/pyproject.toml` の `excel-normalize` 版（現行 `0.1.0`）                      |
+| **表示版**     | `python/pyproject.toml` の `excel-normalize` 版（現行 `0.1.1`）                      |
 | **ビルド識別** | Git タグ `excel-converter-v{semver}` または Release 名と一致                         |
 | **互換**       | exe 版 ≦ Web 本番が受け付ける import.json スキーマ — 破壊的変更時は **両方リリース** |
 
@@ -197,7 +197,7 @@ normalize_workbook(input_xlsx_path)
 | 2   | **社内ファイルサーバー**（装置設計フォルダ横）           | Python なし作者の日常運用  |
 | 3   | （任意）作者 PC への直接配布                             | 初期試用 · 1〜2 名         |
 
-**Release 資産名:** `FlowchartStudio-ExcelConverter-v0.1.0-win64.exe`
+**Release 資産名:** `FlowchartStudio-ExcelConverter-v0.1.1-win64.exe`
 
 ### 7.3 更新告知
 
@@ -259,7 +259,7 @@ normalize_workbook(input_xlsx_path)
 - [x] 既存 `import.json` があるとき **上書き確認**（GUI · CLI は `-y` で省略）
 - [ ] 構成エラー時に **日本語** で修正ヒントが読める（pytest の fixture エラーと同等以上）
 - [ ] 生成 JSON を Web「装置を取込…」→ プレビュー → 取込まで通せる
-- [x] GitHub Release（または社内共有）に **版付き exe** が置ける — [excel-converter-v0.1.0](https://github.com/yk3720/flowchart-studio/releases/tag/excel-converter-v0.1.0) · `FlowchartStudio-ExcelConverter-v0.1.0-win64.exe`（2026-06-28）
+- [x] GitHub Release（または社内共有）に **版付き exe** が置ける — [excel-converter-v0.1.1](https://github.com/yk3720/flowchart-studio/releases/tag/excel-converter-v0.1.1) · `FlowchartStudio-ExcelConverter-v0.1.1-win64.exe`（2026-06-28 · MID 照合修正）
 - [x] [Excel取込.md](./Excel取込.md) · [python/README.md](../../python/README.md) から本設計へリンクされている
 
 ---
@@ -276,4 +276,4 @@ normalize_workbook(input_xlsx_path)
 
 ---
 
-_実装済 · Release v0.1.0 済 · 次: v0.1.1（MID 修正 exe）· Web プリフェッチ UX · Python なし PC 実機_
+_実装済 · Release v0.1.1 済 · 次: Python なし PC 実機 · Web プリフェッチ UX 完了_

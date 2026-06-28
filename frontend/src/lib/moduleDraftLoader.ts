@@ -63,6 +63,14 @@ function getWarmCache(
   return warmCache.get(moduleId) ?? null;
 }
 
+/** プリフェッチ済みなら同期的に結果を返す — 読込 UI スキップ判定用 */
+export function peekModuleWarmCache(
+  deviceId: string,
+  moduleId: string
+): ModuleLoadResult | null {
+  return getWarmCache(deviceId, moduleId);
+}
+
 /** テスト用 */
 export function clearModuleWarmCache(): void {
   warmCache.clear();

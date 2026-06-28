@@ -294,15 +294,15 @@ Supabase → 左ナビ + フロー表
 
 ## 10. 参照
 
-| ドキュメント                                                                                              | 用途                                                                                                                 |
-| --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| [Excel入力フォーマット\_v0.3.md](./Excel入力フォーマット_v0.3.md)                                         | **作者 xlsx 入力 SSOT**（v0.3）                                                                                      |
-| [grill-me_2026-05-31_DB-2装置階層.md](../01_要求定義/grill-me_2026-05-31_DB-2装置階層.md)                 | Q8–Q10 正規化 · VBA 却下                                                                                             |
-| [grill-me_2026-06-28_FastAPI装置Excel取込.md](../01_要求定義/grill-me_2026-06-28_FastAPI装置Excel取込.md) | ADR-019 grill-me 第1回 Q1〜Q5                                                                                        |
-| [grill-me*2026-06-28*装置取込暫定方針.md](../01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md)         | **暫定正本** — Web JSON-only · exe · FastAPI 保留                                                                    |
-| [装置Excel変換exe.md](./装置Excel変換exe.md)                                                              | **作者向け exe**（Release [v0.1.0](https://github.com/yk3720/flowchart-studio/releases/tag/excel-converter-v0.1.0)） |
-| [DB設計 §8](./DB設計.md)                                                                                  | Excel パイプライン草案                                                                                               |
-| `flowchart-studio/lib/flowchart/table/tableColumns.ts`                                                    | 10 列 SSOT                                                                                                           |
+| ドキュメント                                                                                              | 用途                                                                                                                                |
+| --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [Excel入力フォーマット\_v0.3.md](./Excel入力フォーマット_v0.3.md)                                         | **作者 xlsx 入力 SSOT**（v0.3）                                                                                                     |
+| [grill-me_2026-05-31_DB-2装置階層.md](../01_要求定義/grill-me_2026-05-31_DB-2装置階層.md)                 | Q8–Q10 正規化 · VBA 却下                                                                                                            |
+| [grill-me_2026-06-28_FastAPI装置Excel取込.md](../01_要求定義/grill-me_2026-06-28_FastAPI装置Excel取込.md) | ADR-019 grill-me 第1回 Q1〜Q5                                                                                                       |
+| [grill-me*2026-06-28*装置取込暫定方針.md](../01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md)         | **暫定正本** — Web JSON-only · exe · FastAPI 保留                                                                                   |
+| [装置Excel変換exe.md](./装置Excel変換exe.md)                                                              | **作者向け exe**（Release [v0.1.1](https://github.com/yk3720/flowchart-studio/releases/tag/excel-converter-v0.1.1) · MID 照合修正） |
+| [DB設計 §8](./DB設計.md)                                                                                  | Excel パイプライン草案                                                                                                              |
+| `flowchart-studio/lib/flowchart/table/tableColumns.ts`                                                    | 10 列 SSOT                                                                                                                          |
 
 ---
 
