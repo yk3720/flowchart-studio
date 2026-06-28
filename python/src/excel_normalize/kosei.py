@@ -44,6 +44,21 @@ class KoseiSheet:
     def modules_for_unit(self, unit_label: str) -> list[str]:
         return [r.module_label for r in self.rows if r.unit_label == unit_label]
 
+    def module_label_for_mid(
+        self,
+        unit_label: str,
+        mid: int,
+        *,
+        uin_id: int | None = None,
+    ) -> str | None:
+        for row in self.rows:
+            if row.unit_label != unit_label or row.module_id != mid:
+                continue
+            if uin_id is not None and row.uin_id != uin_id:
+                continue
+            return row.module_label
+        return None
+
     def unit_sheet_title(self, unit_label: str) -> str:
         if self.format_version == "v03":
             uin_id = self._uin_id_for_unit(unit_label)

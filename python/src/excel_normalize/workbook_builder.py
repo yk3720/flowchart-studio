@@ -2,11 +2,24 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.worksheet.table import Table, TableStyleInfo
 
 from .constants import FLOW_HEADERS, KOSEI_HEADERS, KOSEI_SHEET
+
+
+@dataclass(frozen=True)
+class FlowTableMeta:
+    """U{n} シート上 · フローテーブル直上 2 行（v0.3 · §6.4 Q5）。"""
+
+    uin_id: int
+    unit_label: str
+    mid: int
+    module_label: str
+
 
 INTERNAL_CODE = "Z00001"
 DISPLAY_NAME = "プレス機B"
@@ -61,19 +74,29 @@ def _add_flow_table(
     start_col: int,
     start_row: int,
     data_rows: list[list[str]],
+    meta: FlowTableMeta | None = None,
 ) -> None:
     headers = list(FLOW_HEADERS)
+    if meta is not None:
+        ws.cell(start_row, start_col, meta.uin_id)
+        ws.cell(start_row, start_col + 1, meta.unit_label)
+        ws.cell(start_row + 1, start_col, meta.mid)
+        ws.cell(start_row + 1, start_col + 1, meta.module_label)
+        header_row = start_row + 2
+    else:
+        header_row = start_row
+
     row_count = 1 + len(data_rows)
     end_col = start_col + len(headers) - 1
-    end_row = start_row + row_count - 1
+    end_row = header_row + row_count - 1
 
     for c, header in enumerate(headers):
-        ws.cell(start_row, start_col + c, header)
+        ws.cell(header_row, start_col + c, header)
     for r_idx, data in enumerate(data_rows, start=1):
         for c_idx, value in enumerate(data):
-            ws.cell(start_row + r_idx, start_col + c_idx, value)
+            ws.cell(header_row + r_idx, start_col + c_idx, value)
 
-    start_cell = ws.cell(start_row, start_col).coordinate
+    start_cell = ws.cell(header_row, start_col).coordinate
     end_cell = ws.cell(end_row, end_col).coordinate
     ref = f"{start_cell}:{end_cell}"
 

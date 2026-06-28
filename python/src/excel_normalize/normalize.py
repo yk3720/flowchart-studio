@@ -72,7 +72,7 @@ def normalize_workbook(workbook_path: Path) -> NormalizeResult:
     flows: list[dict] = []
     for unit_label, ws in unit_sheets.items():
         expected_modules = kosei.modules_for_unit(unit_label)
-        blocks = extract_unit_sheet_tables(ws, unit_label, expected_modules)
+        blocks = extract_unit_sheet_tables(ws, unit_label, expected_modules, kosei)
         block_by_module = {b.module_label: b for b in blocks}
 
         for module_label in expected_modules:

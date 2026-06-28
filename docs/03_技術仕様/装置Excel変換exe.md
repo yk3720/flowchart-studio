@@ -4,7 +4,7 @@
 
 **作成:** 2026-06-28  
 **更新:** 2026-06-28（命名確定 · 実装着手）  
-**状態:** **実装済 · ビルド smoke 済**（Release 初回は未）  
+**状態:** **実装済 · Release v0.1.0 済**（2026-06-28 · [excel-converter-v0.1.0](https://github.com/yk3720/flowchart-studio/releases/tag/excel-converter-v0.1.0)）· **MID 照合修正は dist 再ビルド済 · GitHub は v0.1.1 予定**  
 **関連:** [Excel取込.md](./Excel取込.md) · [暫定方針 grill](../01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md) · [ADR-019 暫定](<./意思決定記録(ADR).md#adr-019-fastapi-装置-excel-ブラウザ取込草案--2026-06-28>) · `python/src/excel_normalize/`
 
 ---
@@ -259,8 +259,8 @@ normalize_workbook(input_xlsx_path)
 - [x] 既存 `import.json` があるとき **上書き確認**（GUI · CLI は `-y` で省略）
 - [ ] 構成エラー時に **日本語** で修正ヒントが読める（pytest の fixture エラーと同等以上）
 - [ ] 生成 JSON を Web「装置を取込…」→ プレビュー → 取込まで通せる
-- [ ] GitHub Release（または社内共有）に **版付き exe** が置ける
-- [ ] [Excel取込.md](./Excel取込.md) · [python/README.md](../../python/README.md) から本設計へリンクされている
+- [x] GitHub Release（または社内共有）に **版付き exe** が置ける — [excel-converter-v0.1.0](https://github.com/yk3720/flowchart-studio/releases/tag/excel-converter-v0.1.0) · `FlowchartStudio-ExcelConverter-v0.1.0-win64.exe`（2026-06-28）
+- [x] [Excel取込.md](./Excel取込.md) · [python/README.md](../../python/README.md) から本設計へリンクされている
 
 ---
 
@@ -276,4 +276,4 @@ normalize_workbook(input_xlsx_path)
 
 ---
 
-_実装済 · smoke 済 · 次: Python なし PC 実機 · GitHub Release 初回_
+_実装済 · Release v0.1.0 済 · 次: v0.1.1（MID 修正 exe）· Web プリフェッチ UX · Python なし PC 実機_

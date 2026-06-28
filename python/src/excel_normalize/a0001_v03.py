@@ -9,7 +9,7 @@ from excel_normalize.constants import (
     KOSEI_SHEET,
     TABLE_GAP_COLS,
 )
-from excel_normalize.workbook_builder import _add_flow_table
+from excel_normalize.workbook_builder import FlowTableMeta, _add_flow_table
 
 INTERNAL_CODE = "A0001"
 DISPLAY_NAME = "塗布装置"
@@ -560,11 +560,18 @@ def _populate_unit_flow_sheets(wb: Workbook) -> None:
         start_col = 1
         for mod_index in range(MODULES_PER_UNIT):
             mod_name = module_label(uin_id, mod_index)
+            mid = module_id(uin_id, mod_index)
             _add_flow_table(
                 ws_unit,
-                table_name=mod_name,
+                table_name=f"M{mid:03d}",
                 start_col=start_col,
                 start_row=1,
+                meta=FlowTableMeta(
+                    uin_id=uin_id,
+                    unit_label=unit_label(uin_id),
+                    mid=mid,
+                    module_label=mod_name,
+                ),
                 data_rows=flow_rows_for_module(mod_name),
             )
             start_col += TABLE_GAP_COLS

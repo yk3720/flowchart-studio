@@ -52,6 +52,57 @@ def _mid_from_label(label: str) -> int | None:
     return int(m.group(1)) if m else None
 
 
+def _parse_int_cell(value: object) -> int | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    text = str(value).strip()
+    if text.isdigit():
+        return int(text)
+    return None
+
+
+def _read_table_meta_rows(
+    ws: Worksheet, header_row: int, min_col: int
+) -> tuple[int, int] | None:
+    """テーブルヘッダー行直上の UinID / MID 行を読む（1 行空きにも対応）。"""
+    for uin_off, mid_off in ((-2, -1), (-3, -2)):
+        uin_row = header_row + uin_off
+        mid_row = header_row + mid_off
+        if uin_row < 1 or mid_row < 1:
+            continue
+        uin_id = _parse_int_cell(ws.cell(uin_row, min_col).value)
+        mid = _parse_int_cell(ws.cell(mid_row, min_col).value)
+        if uin_id is not None and mid is not None:
+            return uin_id, mid
+    return None
+
+
+def _resolve_module_label(
+    ws: Worksheet,
+    table_name: str,
+    header_row: int,
+    min_col: int,
+    unit_label: str,
+    expected_modules: list[str],
+    kosei: KoseiSheet,
+) -> str | None:
+    meta = _read_table_meta_rows(ws, header_row, min_col)
+    if meta is not None:
+        uin_id, mid = meta
+        label = kosei.module_label_for_mid(unit_label, mid, uin_id=uin_id)
+        if label is not None and label in expected_modules:
+            return label
+        return None
+
+    return resolve_table_module_label(table_name, unit_label, expected_modules)
+
+
 def resolve_table_module_label(
     table_name: str,
     unit_label: str,
@@ -132,6 +183,7 @@ def extract_unit_sheet_tables(
     ws: Worksheet,
     unit_label: str,
     expected_modules: list[str],
+    kosei: KoseiSheet,
 ) -> list[FlowTableBlock]:
     if not ws.tables:
         raise ValueError(
@@ -144,6 +196,7 @@ def extract_unit_sheet_tables(
 
     for table in ws.tables.values():
         table_name = table.name
+        min_col, header_row, _, _ = range_boundaries(table.ref)
         matrix = _read_table_rows(ws, table.ref)
         try:
             data_rows = _data_rows_from_matrix(matrix)
@@ -157,10 +210,24 @@ def extract_unit_sheet_tables(
                 f"シート「{ws.title}」· テーブル「{table_name}」: データ行がありません"
             )
 
-        module_label = resolve_table_module_label(
-            table_name, unit_label, expected_modules
+        module_label = _resolve_module_label(
+            ws,
+            table_name,
+            header_row,
+            min_col,
+            unit_label,
+            expected_modules,
+            kosei,
         )
         if module_label is None:
+            meta = _read_table_meta_rows(ws, header_row, min_col)
+            if meta is not None:
+                uin_id, mid = meta
+                raise ValueError(
+                    f"シート「{ws.title}」· テーブル「{table_name}」: "
+                    f"直上の MID {mid}（UinID {uin_id}）が"
+                    f"構成のユニット「{unit_label}」にありません"
+                )
             raise ValueError(
                 f"シート「{ws.title}」· テーブル「{table_name}」: "
                 f"構成シートの動作名と一致しません（期待: {', '.join(expected_modules)}）"

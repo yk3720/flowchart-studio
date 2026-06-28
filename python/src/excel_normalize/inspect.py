@@ -134,7 +134,7 @@ def inspect_workbook(workbook_path: Path) -> InspectReport:
     for unit_label, ws in unit_sheets.items():
         expected_modules = kosei.modules_for_unit(unit_label)
         try:
-            blocks = extract_unit_sheet_tables(ws, unit_label, expected_modules)
+            blocks = extract_unit_sheet_tables(ws, unit_label, expected_modules, kosei)
         except ValueError as exc:
             report.blockers.append(str(exc))
             continue
