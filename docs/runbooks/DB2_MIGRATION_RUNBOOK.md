@@ -123,7 +123,7 @@ select proname from pg_proc where proname = 'import_equipment_bundle';
 
 ## 4. 005 — import.json 一括取込
 
-**Web:** その他 → **「import.jsonを取込…」**（editor · workspace のみ）
+**Web:** その他 → **「import.jsonを取込…」**（editor · workspace のみ）— **ADR-019 草案:** 将来 **「装置を取込…」** に統合（xlsx + import.json · 未実装）
 
 **正規化（ローカル）:**
 
