@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["excel_normalize*", "normalize_api*"]
+include = ["excel_normalize*", "normalize_api*", "excel_converter_gui*"]
 
 [project]
 name = "excel-normalize"
@@ -29,6 +29,7 @@ dev = [
   "fastapi[standard]>=0.115",
   "pydantic-settings>=2.0",
   "python-multipart>=0.0.9",
+  "pyinstaller>=6.0",
 ]
 
 [tool.ruff]

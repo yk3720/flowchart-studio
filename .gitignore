@@ -43,6 +43,8 @@ next-env.d.ts
 python/.pytest_cache/
 python/.mypy_cache/
 python/.ruff_cache/
+python/build/
+python/dist/
 python/**/*.xlsx
 python/**/~$*
 

@@ -37,7 +37,11 @@
     "excel:test": "cd python && python -m pytest",
     "excel:api:dev": "cd python && python -m uvicorn normalize_api.main:app --reload --host 127.0.0.1 --port 8000",
     "excel:lint": "cd python && python -m ruff check . && python -m ruff format --check .",
-    "excel:mypy": "cd python && python -m mypy -p excel_normalize"
+    "excel:mypy": "cd python && python -m mypy -p excel_normalize",
+    "excel:converter:run": "python -m excel_converter_gui",
+    "excel:converter:build": "cd python && python -m PyInstaller packaging/excel_converter.spec --noconfirm",
+    "excel:converter:smoke": "python python/scripts/smoke_converter_exe.py",
+    "excel:converter:verify": "python python/scripts/build_and_verify_converter.py"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [

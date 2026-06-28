@@ -21,7 +21,8 @@
 2. **1 動作の確認** — `_scratch/` に 10 列表を置き、Web 表タブ → **Excel ファイル…** → **再生成**
    - 試行用 xlsx 再生成: リポジトリルートで `npm run excel:a0001:scratch` → `_scratch/取出.xlsx`
 3. **装置一式** — `A0001_塗布装置.xlsx` を手書き更新 → PC で正規化 → **その他 → 装置を取込…**（`import.json`）
-   - **手書き後:** リポジトリルートで `npm run excel:a0001:normalize` のみ（`import.json` 再生成）
+   - **作者（推奨）:** `FlowchartStudio-ExcelConverter.exe` — xlsx 選択 → 同フォルダに `import.json`（[装置Excel変換exe.md](../../docs/03_技術仕様/装置Excel変換exe.md)）
+   - **開発者 CLI:** リポジトリルートで `npm run excel:a0001:normalize`（`import.json` 再生成）
    - **段階手書き:** U0 のみ · フロー一部だけでも normalize 可（U1〜 はシート追加後に追記）
    - **初回スキャフォールド / xlsx 全再生成:** `npm run excel:a0001:build`（**手編集を上書きする** — 手書き後は使わない）
    - Supabase 実取込: `npm run seed:a0001`（要 `SUPABASE_SERVICE_ROLE_KEY` または生成 SQL を SQL Editor で Run）

@@ -4,7 +4,7 @@
 
 **SSOT:** [Excel取込.md](../docs/03_技術仕様/Excel取込.md)（パイプライン）· [Excel入力フォーマット\_v0.3.md](../docs/03_技術仕様/Excel入力フォーマット_v0.3.md)（v0.3 作者 xlsx）
 
-**Web 取込（2026-06-28 暫定）:** 作者は PC で本 CLI（または **将来配布 exe**）で `import.json` を作り、Web **「装置を取込…」** で JSON のみ取込 — [暫定方針](../docs/01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md)。FastAPI 本番は保留 · `normalize_api/` は再開用に温存。
+**Web 取込（2026-06-28 暫定）:** 作者は PC で本 CLI または **[変換 exe](../docs/03_技術仕様/装置Excel変換exe.md)**（`FlowchartStudio-ExcelConverter.exe`）で `import.json` を作り、Web **「装置を取込…」** で JSON のみ取込 — [暫定方針](../docs/01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md)。FastAPI 本番は保留 · `normalize_api/` は再開用に温存。
 
 **決定:** 2026-06-25 — 装置ごとの手書き xlsx · import.json は **`data/devices/`**（Python 層外）。
 
@@ -141,6 +141,19 @@ npm run excel:test
 2. dev Supabase に **`005_import_equipment_bundle.sql`** を適用（`docs/runbooks/DB2_MIGRATION_RUNBOOK.md`）
 3. Web アプリ（editor ログイン）→ **その他 → 装置を取込…** → `import.json` 選択 · プレビュー → 取込
 4. 左ナビに装置が追加され、各動作のフローが読み込めること
+
+## 作者向け Excel 変換 GUI（exe）
+
+**設計:** [装置Excel変換exe.md](../docs/03_技術仕様/装置Excel変換exe.md)
+
+```powershell
+cd c:\yk-application\flowchart-studio
+python -m pip install -e "python[dev]"
+npm run excel:converter:run
+npm run excel:converter:verify  # 推奨: exe 停止 → build → smoke
+npm run excel:converter:build   # build のみ
+npm run excel:converter:smoke   # smoke のみ（dist 既存前提）
+```
 
 ## FastAPI 正規化 API（ADR-019 · 骨格 · **本番保留**）
 

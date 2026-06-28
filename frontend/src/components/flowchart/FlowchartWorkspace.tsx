@@ -81,7 +81,7 @@ type Props = {
 
 /** Web 装置取込 — 当面 import.json のみ（xlsx は PC 変換 · ADR-019 暫定） */
 const EQUIPMENT_IMPORT_JSON_ONLY_HINT =
-  "Web では import.json のみ取込できます。Excel は PC で import.json に変換してから取込してください（npm run excel:a0001:normalize 等 · 変換 exe 配布予定）。";
+  "Web では import.json のみ取込できます。Excel は PC で import.json に変換してから取込してください（FlowchartStudio-ExcelConverter.exe · 開発者は npm run excel:a0001:normalize）。";
 
 export function FlowchartWorkspace({
   role,
