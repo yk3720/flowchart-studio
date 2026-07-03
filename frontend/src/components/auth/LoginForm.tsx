@@ -54,7 +54,7 @@ export function LoginForm({ nextPath, authError }: Props) {
       if (!result.ok) {
         setError(result.error);
       } else {
-        // Server Action で Cookie 設定後 — フルリロードで middleware / RSC がセッションを読む
+        // Server Action で Cookie 設定後 — フルリロードで proxy / RSC がセッションを読む
         window.location.assign(nextPath);
       }
     } catch (e) {
