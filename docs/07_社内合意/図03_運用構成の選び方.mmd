@@ -1,0 +1,21 @@
+%% 図03 — 運用構成 A/B/C/D の選び方
+%% 補足資料 · 上司判断用
+
+flowchart TD
+  Start([調査結果の確認]) --> Q1{有償クラウド<br/>月 $25〜50 OK?}
+
+  Q1 -->|No| Q2{Web のまま<br/>検証のみ?}
+  Q1 -->|Yes| Q3{ログイン<br/>ユーザー管理}
+
+  Q2 -->|Yes| A["構成 A<br/>$0 · PoC 継続"]
+  Q2 -->|No| D["構成 D<br/>$0 · デスクトップ"]
+
+  Q3 -->|要| B["構成 B（推奨）<br/>$50/月 · 本番"]
+  Q3 -->|不要| C["構成 C<br/>$25〜35/月"]
+
+  B --> Note1[FastAPI · バックアップ<br/>商用 Vercel]
+
+  classDef rec fill:#dcfce7,stroke:#166534
+  classDef free fill:#fef9c3,stroke:#854d0e
+  class B rec
+  class A,D free

@@ -1,0 +1,40 @@
+%% Flowchart Studio — 運用構成図（2026-07-05）
+%% 上司向け調査報告用 · Mermaid プレビュー可
+
+flowchart TB
+  subgraph author [作者 PC]
+    Excel[Excel 装置データ]
+    Exe[変換 exe / CLI]
+    Excel --> Exe
+  end
+
+  subgraph git [GitHub · ソース保管]
+    Repo[flowchart-studio リポジトリ]
+  end
+
+  subgraph vercel [Vercel · Web 公開]
+    Web[Next.js 操作画面]
+  end
+
+  subgraph supabase [Supabase · DB + ログイン]
+    DB[(フロー保存 · 認証)]
+  end
+
+  subgraph railway [Railway · FastAPI]
+    API[xlsx 正規化 API]
+  end
+
+  User([課内ユーザー]) --> Web
+  Repo -->|自動デプロイ| Web
+  Web --> DB
+  Web -->|B/C のみ| API
+  Exe -->|import.json| Web
+  Excel -->|B/C: ブラウザ直接| Web
+
+  classDef poc fill:#e8f4e8,stroke:#2d6a2d
+  classDef prod fill:#e8eef4,stroke:#2d4a6a
+  classDef unused fill:#f0f0f0,stroke:#999,stroke-dasharray: 5 5
+
+  noteA["構成 A: Vercel/Supabase 無料枠 · Railway 未使用 · exe→JSON"]
+  noteB["構成 B（推奨）: 全サービス Pro/有料 · FastAPI 稼働"]
+  noteD["構成 D: クラウド不使用 · Python+Excel のみ"]

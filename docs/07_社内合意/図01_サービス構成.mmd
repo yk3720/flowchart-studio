@@ -1,0 +1,29 @@
+%% 図01 — サービス構成（Flowchart Studio · 構成 B 想定）
+%% 補足資料 · 01_調査報告_概要.txt とセット
+
+flowchart TB
+  User([課内ユーザー<br/>ブラウザ])
+
+  subgraph pc [作者 PC · 構成 A でも利用可]
+    Excel[Excel 装置データ]
+    Exe[変換 exe]
+    Excel --> Exe
+  end
+
+  subgraph cloud [クラウドサービス]
+    direction TB
+    GitHub[GitHub<br/>ソース保管]
+    Vercel[Vercel<br/>Web 操作画面]
+    Supabase[(Supabase<br/>DB · ログイン)]
+    Railway[Railway<br/>FastAPI xlsx 変換]
+  end
+
+  User --> Vercel
+  GitHub -->|push で自動反映| Vercel
+  Vercel --> Supabase
+  Vercel -->|構成 B/C| Railway
+  Exe -->|import.json| Vercel
+  Excel -->|構成 B/C| Vercel
+
+  classDef highlight fill:#dbeafe,stroke:#1d4ed8
+  class Vercel,Supabase,Railway highlight

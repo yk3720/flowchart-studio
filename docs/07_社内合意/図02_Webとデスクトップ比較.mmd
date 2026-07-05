@@ -1,0 +1,23 @@
+%% 図02 — Web版 vs デスクトップ（Excel+オートシェイプ）比較
+%% 補足資料 · 03 §2 Web版を選んだ理由 W1〜W4
+
+flowchart LR
+  subgraph desktop [デスクトップ Excel+オートシェイプ]
+    direction TB
+    D1[シートにフロー貼付]
+    D2[場所が散らばる<br/>探す手間]
+    D3[オートシェイプ<br/>作り直しが重い]
+    D4[配布 · 版管理が大変]
+    D1 --> D2 --> D3 --> D4
+  end
+
+  subgraph web [Web Flowchart Studio]
+    direction TB
+    W1[DB に一元保存]
+    W2[開けば一覧<br/>他者フローも参照可]
+    W3[表編集 → 再生成<br/>作図工数が小さい]
+    W4[一箇所修正<br/>全員が即利用]
+    W1 --> W2 --> W3 --> W4
+  end
+
+  desktop -.->|課題| web
