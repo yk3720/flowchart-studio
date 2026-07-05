@@ -53,23 +53,23 @@
         <ol class="space-y-3">
           <li>
             <span class="font-semibold text-ads-text">1.</span>
-            フローチャート作成のやり方について調査し、<strong>自分がベストだと考える Web 版</strong>で叩き台を作成した（下記 URL で触れる）。
+            <strong>経緯：</strong>作成方法を調査し、<strong>自分がベストだと考える形</strong>で叩き台を作成した。
           </li>
           <li>
             <span class="font-semibold text-ads-text">2.</span>
-            <strong>進捗：</strong>試作版は動いている。個人検証用の<strong>無料枠</strong>で公開中。
+            <strong>進捗：</strong>試作版は動作中。<strong>個人検証用の無料枠</strong>で公開している。
           </li>
           <li>
             <span class="font-semibold text-ads-text">3.</span>
-            <strong>位置づけ：</strong>本番運用の前提はまだ決まっていない · 方針確定後に開発を進める。
+            <strong>位置づけ：</strong>本番運用の前提は未確定 · 方針確定後に開発を進める。
           </li>
           <li>
             <span class="font-semibold text-ads-text">4.</span>
-            調査の結果、この叩き台を<strong>課内で本番運用</strong>するには、外部の<strong>有償クラウドサービス</strong>（後述の 4 種）が必要になる。
+            <strong>本番運用：</strong>課内本番には外部の<strong>有償クラウドサービス</strong>（後述 4 種）が必要になる見込み。
           </li>
           <li>
             <span class="font-semibold text-ads-text">5.</span>
-            有償が難しい場合は、<strong>無償でできる範囲に絞って</strong>運用方法を再検討するつもりである。
+            <strong>有償が難しい場合：</strong><strong>無償でできる範囲</strong>に絞り、運用方法を再検討する。
           </li>
         </ol>
       </div>
@@ -116,20 +116,21 @@
         いまの URL は<strong>個人検証用の無料枠</strong>（月 0 円）。叩き台の確認には足りるが、課内の正式ツールとして使い続けるには向かない。
       </p>
 
-      <h3 class="text-sm font-semibold text-ads-text mb-2">利用する外部サービス（有償版 · 本番想定）</h3>
+      <h3 class="text-sm font-semibold text-ads-text mb-2">本番で使う外部サービス（推奨構成）</h3>
       <div class="overflow-x-auto rounded-xl border border-ads-border mb-5">
         <table class="w-full text-sm">
           <thead class="bg-ads-surface">
             <tr>
               <th class="text-left p-3 font-semibold text-ads-text">サービス名</th>
               <th class="text-left p-3 font-semibold text-ads-text">何をするか（一言）</th>
+              <th class="text-left p-3 font-semibold text-ads-text">目安月額</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-ads-border">
-            <tr><td class="p-3 font-medium">GitHub</td><td class="p-3 text-ads-muted">プログラムの保管と変更履歴</td></tr>
-            <tr><td class="p-3 font-medium">Vercel</td><td class="p-3 text-ads-muted">Web 画面（ツール本体）を配信するサーバ</td></tr>
-            <tr><td class="p-3 font-medium">Supabase</td><td class="p-3 text-ads-muted">フローデータの保存とログイン管理</td></tr>
-            <tr><td class="p-3 font-medium">Railway</td><td class="p-3 text-ads-muted">装置 Excel の変換処理を動かすサーバ</td></tr>
+            <tr><td class="p-3 font-medium">GitHub</td><td class="p-3 text-ads-muted">プログラムの保管と変更履歴</td><td class="p-3 text-ads-muted font-mono text-xs">$0（無料枠可）</td></tr>
+            <tr><td class="p-3 font-medium">Vercel</td><td class="p-3 text-ads-muted">Web 画面（ツール本体）を配信するサーバ</td><td class="p-3 text-ads-muted font-mono text-xs">$20/月</td></tr>
+            <tr><td class="p-3 font-medium">Supabase</td><td class="p-3 text-ads-muted">フローデータの保存とログイン管理</td><td class="p-3 text-ads-muted font-mono text-xs">$25/月</td></tr>
+            <tr><td class="p-3 font-medium">Railway</td><td class="p-3 text-ads-muted">装置 Excel の変換処理を動かすサーバ</td><td class="p-3 text-ads-muted font-mono text-xs">$5/月</td></tr>
           </tbody>
         </table>
       </div>
@@ -147,15 +148,30 @@
           <ul class="list-disc pl-5 space-y-1 text-ads-muted">
             <li>データを止まらず保存 · ログインで誰のデータか分ける</li>
             <li>装置 Excel をブラウザから取込（現状は作者 PC 依存）</li>
-            <li>契約を会社名義に（現状は個人名義）</li>
           </ul>
         </li>
       </ul>
-      <p class="text-sm text-ads-text mt-4">
-        上記を満たす有償プランの合計は、調査上<strong>月 約 7,500 円（$50 目安）が上限</strong>（ログイン認証あり · 本番推奨）。
-        <strong>ログイン認証が不要</strong>でよい場合は、<strong>約 3,750〜5,250 円（$25〜35 目安）</strong>程度まで抑えられる見込み（差は月 約 2,250〜3,750 円 · 面談で相談可）。
-        内訳の詳細は面談で説明する。
-      </p>
+      <div class="rounded-lg border border-ads-border p-4 bg-ads-surface text-sm mt-4">
+        <p class="font-semibold text-ads-text mb-2">参考：有償を検討する場合の月額イメージ</p>
+        <p class="text-ads-muted text-xs mb-2">（判断依頼ではありません · 為替 150 円目安）</p>
+        <p class="text-ads-text">
+          上記有償プランの合計 <strong>月 約 $50（約 7,500 円）</strong> — ログインあり · 推奨構成の上限。
+        </p>
+        <p class="text-ads-muted text-xs mt-2">
+          ベストと考える仕組みを実現する場合に、実現可能性が高い組み合わせ。本番に載せる機能を絞れば、目安はさらに下がる。
+        </p>
+      </div>
+    </section>
+
+    <section id="data-context" class="mb-10">
+      <div class="rounded-lg border border-ads-accent/30 bg-ads-accent/5 p-4 text-sm space-y-2">
+        <p class="text-ads-text">
+          <strong>保存するデータ：</strong>フロー表 · 社内番号 · 装置名 · PLC コメント等（フローチャートに必要な社内設計データ）。<strong>客先名 · 契約情報等の社外秘は含めない</strong>想定。
+        </p>
+        <p class="text-ads-text">
+          <strong>ログイン：</strong>課内で使うツールとして認証が必要。認証とデータ保存に <strong>Supabase</strong> を使う想定（有償プラン検討時）。
+        </p>
+      </div>
     </section>
 
     <section id="ask" class="mb-10">
@@ -163,11 +179,10 @@
         <i data-lucide="help-circle" class="w-5 h-5 text-ads-accent"></i>
         ご判断いただきたい点
       </h2>
-      <p class="text-sm text-ads-muted mb-3">本番運用に向けて、次の 3 点についてご判断いただきたい。</p>
+      <p class="text-sm text-ads-muted mb-3">本番運用に向けて、次の 2 点についてご判断いただきたい（月額の承認はこの段階ではお願いしていません）。</p>
       <ol class="list-decimal pl-5 space-y-3 text-sm text-ads-text">
-        <li>上記の<strong>有償クラウドサービス</strong>を、課内本番に使ってよいか（月 約 3,750〜7,500 円 · <strong>7,500 円は上限</strong>）</li>
-        <li><strong>社内設計データ</strong>（社内番号 · 装置名 · PLC コメント等）を、外部クラウドに保存してよいか</li>
-        <li>契約を<strong>会社名義</strong>で取れるか</li>
+        <li>外部クラウドの<strong>有償プラン</strong>を、課内本番に使ってよいか</li>
+        <li>上記の範囲の<strong>社内設計データ</strong>を、外部クラウドに保存してよいか</li>
       </ol>
     </section>
 
@@ -183,15 +198,14 @@
         </div>
         <div class="rounded-xl border border-ads-accent/40 p-4 bg-ads-accent/5">
           <p class="font-semibold text-ads-text mb-1">有償 OK の場合</p>
-          <p class="text-ads-muted">課内共有 · 本番運用へ。月 約 3,750〜7,500 円（ログイン要否で変動 · 7,500 円は上限）。</p>
+          <p class="text-ads-muted">課内共有 · 本番運用へ進める（詳細 · 月額 · 契約名義は面談で相談）。</p>
         </div>
       </div>
     </section>
 
     <section id="more" class="mb-6">
       <p class="text-sm text-ads-muted border-t border-ads-border pt-6">
-        詳細資料：01_調査報告_概要.txt · 03_調査報告_詳細.txt（任意）<br>
-        図解の設計 · 議論ログ：<a href="図解_補足_設計メモ.md" class="text-ads-accent hover:underline">図解_補足_設計メモ.md</a>
+        詳細資料（任意）：01_調査報告_概要.txt · 02_触ってみる手順.txt · 03_調査報告_詳細.txt（03 以降は面談用）
       </p>
     </section>
 
