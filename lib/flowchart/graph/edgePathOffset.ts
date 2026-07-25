@@ -1,5 +1,8 @@
 import { Position } from "@xyflow/react";
 
+/** ソース直下で早めに折れて縦走させるための余白（px）。既定 gapV(=30) より小さく保つ */
+const FORWARD_DOWN_BEND_MARGIN_PX = 18;
+
 /** getSmoothStepPath の centerX / centerY 上書き（並列エッジのバス分離） */
 export function smoothStepCenterWithPathOffset(
   sourceX: number,
@@ -10,11 +13,21 @@ export function smoothStepCenterWithPathOffset(
   targetPosition: Position,
   pathOffset: number
 ): { centerX?: number; centerY?: number } {
+  if (sourcePosition === Position.Bottom && targetPosition === Position.Top) {
+    // 中点で曲げると複数段をまたぐ接続先(下)が途中の段のノードを貫通するため、
+    // ソース直後（次段の手前）で早めに折れてターゲット列を縦走させる。
+    const bendMargin = Math.min(
+      FORWARD_DOWN_BEND_MARGIN_PX,
+      (targetY - sourceY) * 0.4
+    );
+    return {
+      centerX: (sourceX + targetX) / 2 + pathOffset,
+      centerY: sourceY + bendMargin,
+    };
+  }
+
   if (pathOffset === 0) return {};
 
-  if (sourcePosition === Position.Bottom && targetPosition === Position.Top) {
-    return { centerX: (sourceX + targetX) / 2 + pathOffset };
-  }
   if (sourcePosition === Position.Right && targetPosition === Position.Top) {
     return { centerY: (sourceY + targetY) / 2 + pathOffset };
   }
