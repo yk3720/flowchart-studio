@@ -20,12 +20,12 @@ export function smoothStepCenterWithPathOffset(
       FORWARD_DOWN_BEND_MARGIN_PX,
       (targetY - sourceY) * 0.4
     );
-    // 同じソースから複数本が近い高さで折れると、途中まで完全に重なって
-    // 1本の太い線に見える（車線の横ずらしだけでは分離しきれない）。
-    // 折れる高さ自体も pathOffset に応じてわずかにずらし、重なりを避ける。
+    // 折れる高さ（centerY）は同じソース/ターゲットを共有する全エッジで揃える
+    // （幹線から各枝が分岐する見た目）。高さを個別にずらすと差が小さく
+    // 分かりにくい上、ずらし幅を広げると近い接続先の枠に入り込みやすくなる。
     return {
       centerX: (sourceX + targetX) / 2 + pathOffset,
-      centerY: sourceY + bendMargin + pathOffset,
+      centerY: sourceY + bendMargin,
     };
   }
 
