@@ -7,6 +7,20 @@ import type {
   ShapeKind,
 } from "../model/types";
 
+/**
+ * 段（tier）間の最小垂直マージン(px)。config.gapV がこれより小さければこちらを使う。
+ * ここを変えると、保存済みドキュメント（layout.gapV が既定値のまま）も含めて
+ * 次回生成時に即座に反映される。
+ *
+ * 目的: 1段だけ下の接続先へ横に大きくオフセットして繋ぐ弧（buildEdges の
+ * forwardDown 分岐）は、段間が狭いと react-flow の getSmoothStepPath が
+ * 角を1つの丸めで描けず「くの字」の二重の折れになる。段間に十分な縦の
+ * 余白があれば1回のきれいな丸めで曲がる。
+ *
+ * 元に戻す場合は DEFAULT_LAYOUT.gapV（types.ts）と同じ値に戻す。
+ */
+export const MIN_TIER_GAP_V = 45;
+
 function shapeKindFor(type: FlowNode["type"]): ShapeKind {
   if (type === "判断") return "diamond";
   if (type === "端子") return "rounded";
@@ -60,7 +74,9 @@ export function layoutGrid(
     if (!bucket) continue;
     if (lastTier !== null) {
       const prev = tierMap.get(lastTier);
-      currentTop += (prev?.height ?? config.heightMin) + config.gapV;
+      currentTop +=
+        (prev?.height ?? config.heightMin) +
+        Math.max(config.gapV, MIN_TIER_GAP_V);
     }
 
     for (const n of bucket.nodes.sort(
