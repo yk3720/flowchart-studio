@@ -99,6 +99,6 @@ export function buildEdges(
     }
   }
 
-  assignEdgePathOffsets(edges);
+  assignEdgePathOffsets(edges, placedById);
   return edges;
 }

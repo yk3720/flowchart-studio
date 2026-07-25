@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseTable } from "../table/parseTable";
 import { generateFlowchart } from "./generate";
+import { EDGE_PARALLEL_LANE_SPACING_PX } from "./assignEdgePathOffsets";
 import type { FlowchartDocument } from "../model/types";
 
 function loadFixture(name: string): FlowchartDocument {
@@ -134,10 +135,17 @@ describe("generateFlowchart (ADR-012 tier-based layout)", () => {
     // Regression guard for ADR-012 / M002 fixture.
     expect(into6).toHaveLength(3);
     expect(into6.every((e) => e.route === "elbow")).toBe(true);
-    const offsets = into6
-      .map((e) => e.pathOffset)
-      .sort((a, b) => (a ?? 0) - (b ?? 0));
-    expect(offsets).toEqual([-12, 0, 12]);
+    // ID3 は ID6 と同じ列（x 揃い）— まっすぐ降りるだけなので車線分けの対象外
+    // （不要な折れを避けるため）。offset が付くのは横移動が要る ID4/ID5 のみ。
+    const bySource = new Map(into6.map((e) => [e.sourceId, e.pathOffset]));
+    expect(bySource.get("3")).toBeUndefined();
+    const angledOffsets = [bySource.get("4"), bySource.get("5")].sort(
+      (a, b) => (a ?? 0) - (b ?? 0)
+    );
+    expect(angledOffsets).toEqual([
+      -EDGE_PARALLEL_LANE_SPACING_PX / 2,
+      EDGE_PARALLEL_LANE_SPACING_PX / 2,
+    ]);
   });
 
   it("offsets fan-out elbow edges from decision node 2 to 3/4/5", () => {
