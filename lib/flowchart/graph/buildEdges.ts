@@ -69,23 +69,19 @@ export function buildEdges(
                 ? "straight"
                 : "elbow";
           } else {
-            // ループ（上へ戻る）· 同段 — 左/右入口
+            // ループ（上へ戻る）— source=right / target=left 固定
+            // （本線は bottom→top を使うため、ここで top に入ると重なる。
+            //   ノードには source 側 bottom/right・target 側 top/left の 4 ハンドルしかなく、
+            //   right は target ハンドルとして使えないため target 側の逃げ場は left のみ）
             route = "elbow";
-            sourceSide = "bottom";
-            if (levelDiff < 0) {
-              targetSide = "left";
-            } else if (levelDiff > 0) {
-              sourceSide = "right";
-              targetSide = "top";
-            } else if (isLoop) {
-              targetSide = "left";
-            }
+            sourceSide = "right";
+            targetSide = "left";
           }
         } else {
           sourceSide = "right";
           targetSide = "top";
           route = "elbow";
-          if (levelDiff === 0 && isLoop) targetSide = "right";
+          if (levelDiff === 0 && isLoop) targetSide = "left";
           else if (levelDiff < 0) targetSide = "left";
         }
 
