@@ -23,6 +23,18 @@ function isXAligned(
   return Math.abs(source.x - target.x) < 5;
 }
 
+/** source/target の縦距離（span）。placedById が無ければ 0 扱い */
+function verticalSpan(
+  edge: FlowEdge,
+  placedById: Map<string, PlacedNode> | undefined
+): number {
+  if (!placedById) return 0;
+  const source = placedById.get(edge.sourceId);
+  const target = placedById.get(edge.targetId);
+  if (!source || !target) return 0;
+  return Math.abs(target.y - source.y);
+}
+
 function assignGroupOffsets(
   edges: FlowEdge[],
   keyFn: (e: FlowEdge) => string | null,
@@ -46,7 +58,14 @@ function assignGroupOffsets(
       (edge) => edge.route === "elbow" && !isXAligned(edge, placedById)
     );
     if (laned.length < 2) continue;
-    const sorted = [...laned].sort((a, b) => a.id.localeCompare(b.id));
+    // 縦距離が長いエッジほど手前（浅い高さ）で折れさせ、縦距離が短いエッジ
+    // ほど奥（深い高さ）で折れさせる。逆にすると、遠い側の水平区間が
+    // 近い側エッジの「ターゲットへ降りる縦区間」を横切ってしまう
+    // （階段状の分岐/合流で発生）。placedById が無いときは従来通り id 順。
+    const sorted = [...laned].sort((a, b) => {
+      const spanDiff = verticalSpan(b, placedById) - verticalSpan(a, placedById);
+      return spanDiff !== 0 ? spanDiff : a.id.localeCompare(b.id);
+    });
     const n = sorted.length;
     sorted.forEach((edge, index) => {
       const laneOffset = (index - (n - 1) / 2) * EDGE_PARALLEL_LANE_SPACING_PX;
