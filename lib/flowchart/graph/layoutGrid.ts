@@ -8,18 +8,40 @@ import type {
 } from "../model/types";
 
 /**
- * 段（tier）間の最小垂直マージン(px)。config.gapV がこれより小さければこちらを使う。
+ * 段（tier）をまたいで列（level）が変わる接続がある場合にだけ使う、その段の
+ * 直後の最小垂直マージン(px)。config.gapV がこれより小さければこちらを使う。
  * ここを変えると、保存済みドキュメント（layout.gapV が既定値のまま）も含めて
  * 次回生成時に即座に反映される。
  *
- * 目的: 1段だけ下の接続先へ横に大きくオフセットして繋ぐ弧（buildEdges の
- * forwardDown 分岐）は、段間が狭いと react-flow の getSmoothStepPath が
- * 角を1つの丸めで描けず「くの字」の二重の折れになる。段間に十分な縦の
- * 余白があれば1回のきれいな丸めで曲がる。
+ * 目的: 接続先(下)が別の列（＝横に大きくオフセットする弧、buildEdges の
+ * forwardDown 分岐）になる場合、段間が狭いと react-flow の getSmoothStepPath が
+ * 角を1つの丸めで描けず「くの字」の二重の折れになる。同じ列にまっすぐ繋ぐだけの
+ * 1対1接続にはこのマージンは不要なため、その段の直後には適用しない。
  *
  * 元に戻す場合は DEFAULT_LAYOUT.gapV（types.ts）と同じ値に戻す。
  */
 export const MIN_TIER_GAP_V = 45;
+
+/** 接続先(下)が別列になる段（＝直後に MIN_TIER_GAP_V を要する段）の集合 */
+function tiersNeedingWideGap(rowMap: Map<number, FlowNode[]>): Set<number> {
+  const allNodes: FlowNode[] = [];
+  for (const nodes of rowMap.values()) allNodes.push(...nodes);
+  const byId = new Map(allNodes.map((n) => [n.id, n]));
+
+  const wide = new Set<number>();
+  for (const n of allNodes) {
+    const tier = n.tier ?? n.rowIndex;
+    for (const did of n.destsDown) {
+      const target = byId.get(did);
+      if (!target) continue;
+      const targetTier = target.tier ?? target.rowIndex;
+      if (targetTier > tier && target.level !== n.level) {
+        wide.add(tier);
+      }
+    }
+  }
+  return wide;
+}
 
 function shapeKindFor(type: FlowNode["type"]): ShapeKind {
   if (type === "判断") return "diamond";
@@ -66,6 +88,7 @@ export function layoutGrid(
     }
   }
 
+  const wideGapAfterTier = tiersNeedingWideGap(rowMap);
   let currentTop = config.baseTop;
   let lastTier: number | null = null;
 
@@ -74,9 +97,10 @@ export function layoutGrid(
     if (!bucket) continue;
     if (lastTier !== null) {
       const prev = tierMap.get(lastTier);
-      currentTop +=
-        (prev?.height ?? config.heightMin) +
-        Math.max(config.gapV, MIN_TIER_GAP_V);
+      const gapV = wideGapAfterTier.has(lastTier)
+        ? Math.max(config.gapV, MIN_TIER_GAP_V)
+        : config.gapV;
+      currentTop += (prev?.height ?? config.heightMin) + gapV;
     }
 
     for (const n of bucket.nodes.sort(
