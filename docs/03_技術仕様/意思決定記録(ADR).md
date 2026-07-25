@@ -2,7 +2,7 @@
 
 **目次:** [00\_目次.md](./00_目次.md)
 
-**更新:** 2026-06-28（ADR-019 暫定方針 · Web JSON-only）  
+**更新:** 2026-07-25（ADR-003 追補 · RF Handle 4 固定）  
 **経緯索引:** [decision-log.md](../05_開発ガイドライン/decision-log.md)  
 **実装側の置き場:** 本ファイル（`docs/03_技術仕様/意思決定記録(ADR).md`）が正本。コードと同居。
 
@@ -36,6 +36,8 @@
 | **決定**       | ラベルは **判断ノードかつ `direction` から導出**（`down`→Yes, `right`→No）。ノード名のテキストからは推測しない |
 | **接続サイト** | `FlowEdge` に `sourceSide` / `targetSide` を持ち、`connector_manager.py` と同型で `buildEdges` が設定する      |
 | **React Flow** | `toReactFlow` のみが RF の Handle 位置に変換する                                                               |
+
+**追補（2026-07-25）:** `FlowShapeNode.tsx` の RF Handle は4つ固定（source=`bottom`/`right`・target=`top`/`left`）。`sourceSide`/`targetSide` はこの4通り以外を設定しない（詳細: [データモデル.md §4](./データモデル.md)）。
 
 ---
 
