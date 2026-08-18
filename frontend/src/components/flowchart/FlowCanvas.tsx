@@ -18,6 +18,7 @@ import {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   type KeyboardEvent,
 } from "react";
 import type { FlowNodeData } from "@/lib/flowchart/graph/toReactFlow";
@@ -53,6 +54,8 @@ type FlowCanvasProps = {
   /** workspace プレビュー列: 縦いっぱい・左ボーダーのみ */
   fillContainer?: boolean;
   onViewportZoomChange?: (percent: number) => void;
+  /** nodes/edges 変更時にビューポートを自動リセットするか（デフォルト true） */
+  autoFitView?: boolean;
 };
 
 const PAN_STEP = 50;
@@ -63,6 +66,7 @@ function FlowCanvasInner(
     edges,
     fillContainer = false,
     onViewportZoomChange,
+    autoFitView = true,
   }: FlowCanvasProps,
   ref: React.Ref<FlowCanvasHandle>
 ) {
@@ -108,12 +112,15 @@ function FlowCanvasInner(
     [applyHomeViewport, fitView, nodeCount, zoomIn, zoomOut, getViewport]
   );
 
+  const isInitialFit = useRef(true);
   useEffect(() => {
     if (nodes.length > 0 && width > 0 && height > 0) {
+      if (!autoFitView && !isInitialFit.current) return;
+      isInitialFit.current = false;
       const t = window.setTimeout(() => applyHomeViewport(true), 50);
       return () => window.clearTimeout(t);
     }
-  }, [nodes, edges, width, height, applyHomeViewport]);
+  }, [nodes, edges, width, height, applyHomeViewport, autoFitView]);
 
   const defaultEdgeOptions = useMemo(
     () => ({
