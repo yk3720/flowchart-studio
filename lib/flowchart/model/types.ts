@@ -21,7 +21,7 @@ export const DEFAULT_LAYOUT: LayoutConfig = {
 
 import type { ColorHint } from "../visual/flowColors";
 
-export type ShapeType = "端子" | "処理" | "判断" | "入出力" | "手動入力";
+export type ShapeType = "端子" | "処理" | "判断" | "入出力" | "手動入力" | "〇";
 
 export type FlowNode = {
   id: string;
@@ -43,7 +43,8 @@ export type ShapeKind =
   | "diamond"
   | "rounded"
   | "parallelogram"
-  | "manual";
+  | "manual"
+  | "oval";
 
 export type PlacedNode = FlowNode & {
   x: number;

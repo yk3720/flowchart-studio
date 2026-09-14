@@ -169,6 +169,53 @@ function DiamondShape({
   );
 }
 
+/** 省略記号（〇）— 列つなぎコネクタ */
+function OvalShape({
+  data,
+  width,
+  height,
+}: {
+  data: FlowNodeData;
+  width: number;
+  height: number;
+}) {
+  const stroke = FLOW_NODE_DIAMOND_STROKE_WIDTH;
+  const cx = width / 2;
+  const cy = height / 2;
+  const r = Math.max(1, Math.min(width, height) / 2 - stroke);
+  const fill = nodeBackgroundColor(data.colorHint);
+
+  return (
+    <svg
+      width={width}
+      height={height}
+      className="flow-node-oval block overflow-visible"
+      aria-hidden={false}
+    >
+      <title>{data.shapeType}</title>
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r}
+        fill={fill}
+        stroke={FLOW_NODE_FRAME_STROKE}
+        strokeWidth={stroke}
+      />
+      <foreignObject x={0} y={0} width={width} height={height}>
+        <div
+          {...({ xmlns: "http://www.w3.org/1999/xhtml" } as Record<
+            string,
+            string
+          >)}
+          className="flex h-full w-full flex-col items-center justify-center text-center text-[12px] font-semibold leading-none text-slate-800"
+        >
+          <LabelLines label={data.label} />
+        </div>
+      </foreignObject>
+    </svg>
+  );
+}
+
 function ShapeBody({
   data,
   width,
@@ -187,6 +234,8 @@ function ShapeBody({
   switch (data.shapeKind) {
     case "diamond":
       return <DiamondShape data={data} width={width} height={height} />;
+    case "oval":
+      return <OvalShape data={data} width={width} height={height} />;
     case "rounded":
       return (
         <div

@@ -41,7 +41,7 @@ export const TABLE_HEADERS_9 = [
 
 /** 作者向け · 図形種別（自動機）— SSOT: docs/03_技術仕様/作者ガイド.md §2 */
 export const SHAPE_TYPE_COLUMN_HELP =
-  "端子=開始/終了 · 処理=自動ステップ · 判断=分岐(Yes下/No右) · 入出力=PLC/上位 · 手動入力=オペ操作";
+  "端子=開始/終了 · 処理=自動ステップ · 判断=分岐(Yes下/No右) · 入出力=PLC/上位 · 手動入力=オペ操作 · 〇=省略記号（列つなぎ）";
 
 /** 作者向け · 色列（自動機）— SSOT: docs/03_技術仕様/作者ガイド.md §3 */
 export const COLOR_COLUMN_HELP =
@@ -108,6 +108,7 @@ export const SHAPE_TYPE_OPTIONS = [
   "判断",
   "入出力",
   "手動入力",
+  "〇",
 ] as const;
 
 export type TableLayout = "legacy8" | "tier9";

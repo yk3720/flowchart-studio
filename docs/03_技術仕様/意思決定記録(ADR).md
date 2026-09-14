@@ -319,3 +319,18 @@
 | **未決（実装フェーズ）**                    | ~~**変換 exe**（出力先 · 版管理 · 配布先）~~ → [装置Excel変換exe.md](./装置Excel変換exe.md) **Release v0.1.1 済**（MID 照合修正 · Python なし PC 実機は未） · 非同期/進捗 UI · import.json DL · FastAPI 再開条件                                                                                                                                                                     |
 | **状態**                                    | **Draft** — Web **JSON-only 暫定反映済** · プレビュー/batch_id · FastAPI 骨格 · Next プロキシ **リポ内（未デプロイ）**                                                                                                                                                                                                                                                               |
 | **関連**                                    | ADR-014 · [Excel取込.md](./Excel取込.md) · [grill-me 第1回](../01_要求定義/grill-me_2026-06-28_FastAPI装置Excel取込.md) · [grill-me 暫定方針](../01_要求定義/grill-me_2026-06-28_装置取込暫定方針.md) · [FASTAPI_RULES.md](c:/yk-skill/rule/40_python/FASTAPI_RULES.md) · [handoff session 71](c:/yk-memo/handoffs/flowchart-studio/2026-06-27_71_fastapi-discussion-session-end.md) |
+
+---
+
+## ADR-020: 図形種別「〇」（省略記号）· Excel 色塗り追随（2026-09-14）
+
+<a id="adr-020-図形種別〇省略記号--excel-色塗り追随2026-09-14"></a>
+
+| 項目     | 内容                                                                                                                                                                                                                                                           |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **状況** | PLC 仕様書で列つなぎに使う丸（1 / 2 / E）が表に無く、矩形で代用していた。また Web プレビューは色列どおり塗るが、flowchart-excel の AutoShape は常に白塗りだった。                                                                                              |
+| **決定** | **図形種別「〇」** を追加（alias: `○` · `省略記号`）。Text1 に記号文字。レイアウトは段高さに内接する円（幅は列スロット中央寄せ）。**色セレクトに赤は追加しない**（作者ガイド §3 維持）。Excel 生成は `flowColors` と同じ黄/橙/青 HEX を VBA RGB で Fill する。 |
+| **理由** | プレビューと Excel の見た目を揃える。省略記号は端子（角丸）とは別の意味。                                                                                                                                                                                      |
+| **却下** | 赤塗り · 自動ページ列分割 · 〇専用の接続線なしジャンプ（接続先列は既存どおり使う）                                                                                                                                                                             |
+| **状態** | **Accepted** · studio / excel / mermaid ドメイン同期                                                                                                                                                                                                           |
+| **関連** | [作者ガイド §2](./作者ガイド.md) · `normalizeShapeType.ts` · `layoutGrid.ts` · `FlowShapeNode.tsx` · flowchart-excel `flow_colors.py` · `shape_placer.py`                                                                                                      |

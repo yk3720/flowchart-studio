@@ -43,6 +43,31 @@ describe("parseTable", () => {
   });
 });
 
+describe("generateFlowchart (oval connector)", () => {
+  it("places oval connectors as centered circles", () => {
+    const table = [
+      [10, "処理", "20", "", 0, 0, "手前", "", ""],
+      [20, "〇", "30", "", 1, 0, "1", "", ""],
+      [30, "処理", "", "", 2, 0, "先", "", ""],
+    ];
+    const result = generateFlowchart(table, {
+      width: 160,
+      heightMin: 60,
+      gapV: 30,
+      gapH: 100,
+      baseLeft: 40,
+      baseTop: 40,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    const oval = result.placed.find((p) => p.id === "20");
+    expect(oval?.shapeKind).toBe("oval");
+    expect(oval?.width).toBe(60);
+    expect(oval?.height).toBe(60);
+    expect(oval?.x).toBe(40 + (160 - 60) / 2);
+  });
+});
+
 describe("generateFlowchart (golden: sample-basic)", () => {
   it("produces placed nodes and edges for basic decision flow", () => {
     const doc = loadFixture("sample-basic.json");

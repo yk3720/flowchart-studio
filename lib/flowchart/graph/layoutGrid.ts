@@ -1,4 +1,4 @@
-import { isDecisionType } from "../model/normalizeShapeType";
+import { isDecisionType, isOvalType } from "../model/normalizeShapeType";
 import type {
   Bounds,
   FlowNode,
@@ -45,6 +45,7 @@ function tiersNeedingWideGap(rowMap: Map<number, FlowNode[]>): Set<number> {
 
 function shapeKindFor(type: FlowNode["type"]): ShapeKind {
   if (type === "判断") return "diamond";
+  if (type === "〇") return "oval";
   if (type === "端子") return "rounded";
   if (type === "入出力") return "parallelogram";
   if (type === "手動入力") return "manual";
@@ -106,25 +107,34 @@ export function layoutGrid(
     for (const n of bucket.nodes.sort(
       (a, b) => a.level - b.level || a.id.localeCompare(b.id)
     )) {
-      const leftPos = config.baseLeft + n.level * (config.width + config.gapH);
+      const cellLeft = config.baseLeft + n.level * (config.width + config.gapH);
       const rowH = bucket.height || config.heightMin;
       const isDiamond = isDecisionType(n.type);
-      const shpH = isDiamond ? rowH * 1.3 : rowH;
-      const vOff = isDiamond ? (shpH - rowH) / 2 : 0;
-      const top = currentTop - vOff;
+      const isOval = isOvalType(n.type);
+      let width = config.width;
+      let shpH = isDiamond ? rowH * 1.3 : rowH;
+      let leftPos = cellLeft;
+      let top = currentTop;
+      if (isOval) {
+        width = Math.min(config.width, rowH);
+        shpH = width;
+        leftPos = cellLeft + (config.width - width) / 2;
+      } else if (isDiamond) {
+        top = currentTop - (shpH - rowH) / 2;
+      }
 
       const node: PlacedNode = {
         ...n,
         x: leftPos,
         y: top,
-        width: config.width,
+        width,
         height: shpH,
         shapeKind: shapeKindFor(n.type),
       };
       placed.push(node);
       lefts.push(leftPos);
       tops.push(top);
-      rights.push(leftPos + config.width);
+      rights.push(leftPos + width);
       bottoms.push(top + shpH);
     }
     lastTier = tier;

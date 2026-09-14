@@ -198,6 +198,7 @@
 | 2026-06-28      | 実装       | **v0.3 MID 見出し行** — フロー表↔モジュール照合を ListObject 名から **直上 MID + 構成** へ · `FlowTableMeta` · `test_tables.py`              | [Excel入力フォーマット §6.4](../03_技術仕様/Excel入力フォーマット_v0.3.md) · [PYTHON_RULES §13](c:/yk-skill/rule/40_python/PYTHON_RULES.md) · `tables.py`                                                                                     | **実装済 · v0.1.1 Release 済**    | —                                                                                                                                    |
 | 2026-06-28      | UX         | **装置プリフェッチ UX** — warm cache overlay スキップ · prefetch 完了待ち **実装済**                                                         | [REACTFLOW_UX_WORKSPACE §5.6-1d](c:/yk-skill/rule/35_reactflow/references/REACTFLOW_UX_WORKSPACE.md) · `peekModuleWarmCache` · `devicePrefetchCoordinator` · `FlowchartWorkspace`                                                             | **完了**                          | —                                                                                                                                    |
 | 2026-06-28      | E2E        | **import.json 本番 auth UI** — `AUTH_E2E_STUB` · `import-bundle-auth.spec.ts` · `test:e2e:import-auth`                                       | [PLAYWRIGHT §12-10](c:/yk-skill/rule/50_gas_html_test/references/PLAYWRIGHT_AGENT_OPS.md) · `e2eStub.ts` · `LOCAL_DEV.md`                                                                                                                     | **完了**                          | —                                                                                                                                    |
+| 2026-09-14      | ADR        | **〇（省略記号）** · Excel AutoShape に色列塗り追随 · 赤は非追加                                                                             | [ADR-020](<../03_技術仕様/意思決定記録(ADR).md#adr-020-図形種別〇省略記号--excel-色塗り追随2026-09-14>) · [作者ガイド §2](../03_技術仕様/作者ガイド.md)                                                                                       | Accepted                          | studio + excel + mermaid 同期                                                                                                        |
 
 ---
 
@@ -219,6 +220,7 @@
 | 017     | 公開 URL 3 本 · Vercel B 案        | Accepted · 実装済                                                                                         |
 | 018     | 3ペイン · 右ドック · デモ · chrome | **Accepted** · **第1・第2弾実装済** · 残: [設計メモ Runbook](../runbooks/DESIGN_MEMO_PRODUCTION_CHECK.md) |
 | 019     | FastAPI 装置 Excel ブラウザ取込    | **Draft** · **暫定: Web JSON-only** · 骨格/UI 済 · FastAPI 本番 **保留**                                  |
+| 020     | 〇（省略記号）· Excel 色塗り       | **Accepted** · 2026-09-14                                                                                 |
 
 全文: [意思決定記録(ADR).md](<../03_技術仕様/意思決定記録(ADR).md>)
 
