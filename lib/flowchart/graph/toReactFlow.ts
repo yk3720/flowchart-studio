@@ -1,5 +1,6 @@
 import { MarkerType, type Edge, type Node } from "@xyflow/react";
 import { branchFromEdgeLabel } from "./edgeLabelPlacement";
+import { nodeTier } from "./buildEdges";
 import { FLOW_EDGE_STROKE, type ColorHint } from "../visual/flowColors";
 import type { FlowEdge, PlacedNode, ShapeKind } from "../model/types";
 
@@ -17,6 +18,10 @@ export type FlowNodeData = {
   shapeKind: ShapeKind;
   shapeType: string;
   colorHint?: ColorHint;
+  /** 横位置（段・列ルーラー用。表示座標ではなく論理列） */
+  level: number;
+  /** 縦位置（段・列ルーラー用。tier 未設定時は rowIndex にフォールバック済み） */
+  tier: number;
 };
 
 const NODE_TYPE = "flowShape";
@@ -37,6 +42,8 @@ export function toReactFlow(
       label: p.fullText || p.type,
       shapeKind: p.shapeKind,
       shapeType: p.type,
+      level: p.level,
+      tier: nodeTier(p),
       ...(p.colorHint !== undefined ? { colorHint: p.colorHint } : {}),
     },
     width: p.width,

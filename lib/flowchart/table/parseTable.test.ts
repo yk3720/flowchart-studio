@@ -19,3 +19,28 @@ describe("parseTable color column", () => {
     expect(nodes[0].colorHint).toBeUndefined();
   });
 });
+
+describe("parseTable blank shape type", () => {
+  it("excludes a row whose ID is set but shape type is blank", () => {
+    const table = [
+      [10, "端子", "", "20", "", 0, 0, "開始", "", ""],
+      [15, "", "", "20", "", 0, 0, "空欄種別", "", ""],
+      [20, "処理", "", "30", "", 1, 0, "手順A", "", ""],
+    ];
+    const { nodes } = parseTable(table);
+    expect(nodes.map((n) => n.id)).toEqual(["10", "20"]);
+  });
+});
+
+describe("parseTable duplicate id", () => {
+  it("keeps only the first occurrence of a duplicate id", () => {
+    const table = [
+      [10, "端子", "", "20", "", 0, 0, "最初", "", ""],
+      [10, "処理", "", "30", "", 1, 0, "重複", "", ""],
+      [20, "処理", "", "", "", 1, 0, "手順A", "", ""],
+    ];
+    const { nodes } = parseTable(table, "table-10col-v2");
+    expect(nodes.map((n) => n.id)).toEqual(["10", "20"]);
+    expect(nodes[0].fullText).toBe("最初");
+  });
+});

@@ -405,6 +405,22 @@ export const fcPreviewCanvasMd = cn(
 /** プレビュー canvas — keyboard pan/zoom フォーカス面 */
 export const fcCanvasA11y = cn("relative outline-none", fcFocusRing);
 
+/* ── 段・列ルーラー（表の tier/level を可視化。エクスポート対象外） ── */
+
+/** ルーラー1本の太さ（px） */
+export const FC_RULER_SIZE = 22;
+
+export const fcRulerCorner = cn(fcBorderB, fcBorderR, "bg-flow-surface-subtle");
+
+export const fcRulerTrack = cn(
+  "relative overflow-hidden bg-flow-surface-subtle"
+);
+
+export const fcRulerCell = cn(
+  fcTextHint,
+  "absolute flex items-center justify-center font-medium text-flow-text-muted"
+);
+
 export const fcEmptyState = cn(
   "flex flex-1 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-flow-border-strong bg-flow-surface-muted p-6 text-center text-sm text-flow-text-muted"
 );

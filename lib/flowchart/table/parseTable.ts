@@ -30,11 +30,22 @@ export function parseTable(
   const rowMap = new Map<number, FlowNode[]>();
   const colCount = table[0]?.length ?? 0;
   const isV2 = isTenColV2Schema(schema);
+  const seenIds = new Set<string>();
 
   for (let i = 0; i < table.length; i++) {
     const row = table[i] ?? [];
     const nid = normId(row[0]);
     if (!nid || !/^\d+$/.test(nid)) continue;
+
+    const rawType =
+      row[1] != null && String(row[1]).trim() !== "" ? String(row[1]) : null;
+    if (rawType === null) continue; // ID はあるが図形種別が空欄 → フローから除外（描画・接続先解決のいずれの対象にもしない）
+
+    if (seenIds.has(nid)) {
+      console.warn(`[parseTable] duplicate id skipped: id=${nid} row=${i}`);
+      continue; // 仕様: 最初に見つかったノードのみ使用（後続は無視）
+    }
+    seenIds.add(nid);
 
     let txts: string[];
     let destsDown: string[];
@@ -102,7 +113,6 @@ export function parseTable(
       level = row.length > 4 ? parseLevel(row[4]) : 0;
     }
 
-    const rawType = row[1] != null && row[1] !== "" ? String(row[1]) : "処理";
     const node: FlowNode = {
       id: nid,
       type: normalizeShapeType(rawType),

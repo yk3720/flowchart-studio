@@ -6,6 +6,7 @@ import {
   ReactFlowProvider,
   useReactFlow,
   useStore,
+  useViewport,
   type Edge,
   type Node,
   type Viewport,
@@ -22,6 +23,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import type { FlowNodeData } from "@/lib/flowchart/graph/toReactFlow";
+import { computeRulerSegments } from "@/lib/flowchart/graph/rulerSegments";
 import {
   computeHomeViewport,
   FC_HOME_VIEW,
@@ -30,10 +32,16 @@ import {
 import { flowPreviewAriaLabel } from "@/lib/flowchart/visual/flowPreviewA11y";
 import { cn } from "@/lib/utils";
 import {
+  FC_RULER_SIZE,
+  fcBorderB,
+  fcBorderR,
   fcCanvasA11y,
   fcFitViewOptions,
   fcPreviewCanvasLg,
   fcPreviewCanvasMd,
+  fcRulerCell,
+  fcRulerCorner,
+  fcRulerTrack,
 } from "./flowchartUiClasses";
 import { flowEdgeTypes, flowNodeTypes } from "./flowTypes";
 
@@ -76,6 +84,28 @@ function FlowCanvasInner(
   const nodeCount = nodes.length;
   const edgeCount = edges.length;
   const previewLabel = flowPreviewAriaLabel(nodeCount, edgeCount);
+
+  const { x: viewportX, y: viewportY, zoom: viewportZoom } = useViewport();
+  const colSegments = useMemo(
+    () =>
+      computeRulerSegments(
+        nodes,
+        (n) => n.data.level,
+        (n) => n.position.x,
+        (n) => n.width ?? 0
+      ),
+    [nodes]
+  );
+  const rowSegments = useMemo(
+    () =>
+      computeRulerSegments(
+        nodes,
+        (n) => n.data.tier,
+        (n) => n.position.y,
+        (n) => n.height ?? 0
+      ),
+    [nodes]
+  );
 
   const applyHomeViewport = useCallback(
     (animated = true) => {
@@ -183,35 +213,84 @@ function FlowCanvasInner(
   );
 
   return (
-    <div
-      data-flowchart-export-root
-      data-testid="flow-preview-canvas"
-      className={fillContainer ? fcPreviewCanvasLg : fcPreviewCanvasMd}
-    >
+    <div className={fillContainer ? fcPreviewCanvasLg : fcPreviewCanvasMd}>
       <div
-        role="group"
-        aria-label={previewLabel}
-        tabIndex={0}
-        onKeyDown={handlePanZoomKey}
-        className={cn(fcCanvasA11y, "h-full w-full")}
+        className="grid h-full w-full"
+        style={{
+          gridTemplateColumns: `${FC_RULER_SIZE}px 1fr`,
+          gridTemplateRows: `${FC_RULER_SIZE}px 1fr`,
+        }}
       >
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={flowNodeTypes}
-          edgeTypes={flowEdgeTypes}
-          defaultEdgeOptions={defaultEdgeOptions}
-          nodesDraggable={false}
-          nodesConnectable={false}
-          elementsSelectable={false}
-          edgesReconnectable={false}
-          panOnDrag
-          zoomOnScroll
-          onViewportChange={handleViewportChange}
-          proOptions={{ hideAttribution: true }}
+        <div className={fcRulerCorner} aria-hidden="true" />
+        <div className={cn(fcRulerTrack, fcBorderB)} aria-hidden="true">
+          {colSegments.map((seg) => (
+            <div
+              key={seg.key}
+              className={cn(
+                fcRulerCell,
+                "top-0 h-full border-r border-flow-border/60"
+              )}
+              style={{
+                left: viewportX + seg.start * viewportZoom,
+                width: Math.max(1, seg.size * viewportZoom),
+              }}
+            >
+              {seg.index}
+            </div>
+          ))}
+        </div>
+        <div className={cn(fcRulerTrack, fcBorderR)} aria-hidden="true">
+          {rowSegments.map((seg) => (
+            <div
+              key={seg.key}
+              className={cn(
+                fcRulerCell,
+                "left-0 w-full border-b border-flow-border/60"
+              )}
+              style={{
+                top: viewportY + seg.start * viewportZoom,
+                height: Math.max(1, seg.size * viewportZoom),
+              }}
+            >
+              {seg.index}
+            </div>
+          ))}
+        </div>
+        <div
+          data-flowchart-export-root
+          data-testid="flow-preview-canvas"
+          className="relative h-full w-full"
         >
-          <Background gap={16} size={1} color="var(--flow-border)" />
-        </ReactFlow>
+          <div
+            role="group"
+            aria-label={previewLabel}
+            tabIndex={0}
+            onKeyDown={handlePanZoomKey}
+            className={cn(fcCanvasA11y, "h-full w-full")}
+          >
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              nodeTypes={flowNodeTypes}
+              edgeTypes={flowEdgeTypes}
+              defaultEdgeOptions={defaultEdgeOptions}
+              nodesDraggable={false}
+              nodesConnectable={false}
+              elementsSelectable={false}
+              edgesReconnectable={false}
+              panOnDrag
+              zoomOnScroll
+              onViewportChange={handleViewportChange}
+              proOptions={{ hideAttribution: true }}
+            >
+              <Background
+                gap={16}
+                size={1.5}
+                color="var(--flow-border-strong)"
+              />
+            </ReactFlow>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ function labelForDecision(
   return direction === "down" ? "Yes" : "No";
 }
 
-function nodeTier(n: FlowNode): number {
+export function nodeTier(n: FlowNode): number {
   return n.tier ?? n.rowIndex;
 }
 

@@ -24,6 +24,8 @@ describe("toReactFlow", () => {
     expect(nodes).toHaveLength(5);
     expect(nodes.every((n) => n.type === "flowShape")).toBe(true);
     expect(nodes.find((n) => n.id === "30")?.data.shapeKind).toBe("diamond");
+    expect(nodes.every((n) => typeof n.data.level === "number")).toBe(true);
+    expect(nodes.every((n) => typeof n.data.tier === "number")).toBe(true);
 
     const labels = edges
       .map((e) => (e.data as { edgeLabel?: string })?.edgeLabel)
