@@ -32,7 +32,7 @@ describe("computeRulerSegments", () => {
   it("groups nodes sharing the same logical level into one segment", () => {
     const nodes = [shape(0, 0, 0, 0), shape(0, 1, 0, 90), shape(1, 0, 260, 0)];
     const cols = computeRulerSegments(nodes, byLevel, byX, byWidth);
-    expect(cols.map((s) => s.index)).toEqual([1, 2]);
+    expect(cols.map((s) => s.index)).toEqual([0, 1]);
     expect(cols[0]).toMatchObject({ start: 0, size: 160 });
     expect(cols[1]).toMatchObject({ start: 260, size: 160 });
   });
@@ -41,7 +41,7 @@ describe("computeRulerSegments", () => {
     const nodes = [shape(2, 0, 260, 0), shape(0, 0, 0, 0), shape(1, 0, 130, 0)];
     const cols = computeRulerSegments(nodes, byLevel, byX, byWidth);
     expect(cols.map((s) => s.start)).toEqual([0, 130, 260]);
-    expect(cols.map((s) => s.index)).toEqual([1, 2, 3]);
+    expect(cols.map((s) => s.index)).toEqual([0, 1, 2]);
   });
 
   it("keeps the min start and max size for a shared logical key even when a centered/enlarged shape offsets its own position", () => {

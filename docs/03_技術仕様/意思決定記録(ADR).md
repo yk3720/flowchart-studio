@@ -334,3 +334,18 @@
 | **却下** | 赤塗り · 自動ページ列分割 · 〇専用の接続線なしジャンプ（接続先列は既存どおり使う）                                                                                                                                                                             |
 | **状態** | **Accepted** · studio / excel / mermaid ドメイン同期                                                                                                                                                                                                           |
 | **関連** | [作者ガイド §2](./作者ガイド.md) · `normalizeShapeType.ts` · `layoutGrid.ts` · `FlowShapeNode.tsx` · flowchart-excel `flow_colors.py` · `shape_placer.py`                                                                                                      |
+
+---
+
+## ADR-021: 段・列ルーラー表示を 0 始まりに統一（2026-09-18）
+
+<a id="adr-021-段列ルーラー表示を0始まりに統一2026-09-18"></a>
+
+| 項目     | 内容                                                                                                                                                                                                                                                                                                                                             |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **状況** | flowchart-excel のプレビューで、Excel 表の「段」「列」列（ADR-012、0 始まり）と、Web プレビューの段・列ルーラー表示（`computeRulerSegments` が `index: i + 1` で 1 始まりにしていた）の原点がずれていた。ノード配置座標自体（`layoutGrid.ts` の `n.level * (width + gapH)`）は表の値をそのまま使っており正しい。ずれはルーラーの表示ラベルのみ。 |
+| **決定** | **ルーラー表示側を 0 始まりに統一する**（`rulerSegments.ts` の `index: i + 1` → `index: i`）。表の「段」「列」の値・意味（ADR-012）は変更しない。                                                                                                                                                                                                |
+| **理由** | 表側（Excel の 0 始まり運用）を正本とし、既存の Excel 表・`layoutGrid` の座標計算・後方互換 fallback に一切手を入れずに揃えられる。表側を 1 始まりに変えると `layoutGrid` の位置計算・既存ユーザー表の互換性に波及する。                                                                                                                         |
+| **却下** | 表（parseTable/parse_table.py）の段・列を 1 始まりへ変更 — 既存 Excel 表の値の意味が変わり非互換                                                                                                                                                                                                                                                 |
+| **状態** | **Accepted** · studio 側 `rulerSegments.ts` のみ修正、flowchart-excel は `preview-web` 経由で自動反映（`@` エイリアスで studio ソースを直接参照）                                                                                                                                                                                                |
+| **関連** | `lib/flowchart/graph/rulerSegments.ts` · `rulerSegments.test.ts` · `FlowCanvas.tsx` · flowchart-excel `preview-web/vite.config.ts`（`@` → `../../flowchart-studio`）                                                                                                                                                                             |

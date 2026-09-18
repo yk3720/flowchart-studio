@@ -39,7 +39,8 @@ export function computeRulerSegments<T>(
     .sort(([, a], [, b]) => a.start - b.start)
     .map(([key, v], i) => ({
       key: String(key),
-      index: i + 1,
+      // 表側の段・列は 0 始まり（ADR-012）。ルーラー表示もそれに合わせて 0 始まりにする。
+      index: i,
       start: v.start,
       size: v.size,
     }));
