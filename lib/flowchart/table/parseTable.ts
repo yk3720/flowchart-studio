@@ -1,7 +1,12 @@
 import { normalizeShapeType } from "../model/normalizeShapeType";
 import { normalizeColorHint } from "../visual/flowColors";
 import { isTenColV2Schema } from "./tableColumns";
-import type { FlowNode, FlowTableRow, ParseResult } from "../model/types";
+import type {
+  FlowNode,
+  FlowTableRow,
+  ParseIssue,
+  ParseResult,
+} from "../model/types";
 
 function normId(v: unknown): string {
   if (v === null || v === undefined || v === "") return "";
@@ -31,6 +36,7 @@ export function parseTable(
   const colCount = table[0]?.length ?? 0;
   const isV2 = isTenColV2Schema(schema);
   const seenIds = new Set<string>();
+  const issues: ParseIssue[] = [];
 
   for (let i = 0; i < table.length; i++) {
     const row = table[i] ?? [];
@@ -39,11 +45,16 @@ export function parseTable(
 
     const rawType =
       row[1] != null && String(row[1]).trim() !== "" ? String(row[1]) : null;
-    if (rawType === null) continue; // ID はあるが図形種別が空欄 → フローから除外（描画・接続先解決のいずれの対象にもしない）
+    if (rawType === null) {
+      // ID はあるが図形種別が空欄 → フローから除外（描画・接続先解決のいずれの対象にもしない、ADR-019/022）
+      issues.push({ kind: "empty_type", id: nid, rowIndex: i });
+      continue;
+    }
 
     if (seenIds.has(nid)) {
       console.warn(`[parseTable] duplicate id skipped: id=${nid} row=${i}`);
-      continue; // 仕様: 最初に見つかったノードのみ使用（後続は無視）
+      issues.push({ kind: "duplicate_id", id: nid, rowIndex: i }); // 仕様: 最初に見つかったノードのみ使用（後続は無視）
+      continue;
     }
     seenIds.add(nid);
 
@@ -113,6 +124,21 @@ export function parseTable(
       level = row.length > 4 ? parseLevel(row[4]) : 0;
     }
 
+    let colorHint: FlowNode["colorHint"];
+    if (colorHintRaw !== undefined) {
+      const normalized = normalizeColorHint(colorHintRaw);
+      colorHint = normalized.hint;
+      if (normalized.unknown) {
+        // 黄/橙/青以外の値 → 描画時は白塗りへ無条件フォールバックするため要通知（ADR-019/022）
+        issues.push({
+          kind: "unknown_color",
+          id: nid,
+          rowIndex: i,
+          detail: String(colorHintRaw),
+        });
+      }
+    }
+
     const node: FlowNode = {
       id: nid,
       type: normalizeShapeType(rawType),
@@ -121,9 +147,7 @@ export function parseTable(
       destsRight,
       level,
       ...(tier !== undefined ? { tier } : {}),
-      ...(colorHintRaw !== undefined
-        ? { colorHint: normalizeColorHint(colorHintRaw).hint }
-        : {}),
+      ...(colorHint !== undefined ? { colorHint } : {}),
       rowIndex: i,
     };
     nodes.push(node);
@@ -132,5 +156,5 @@ export function parseTable(
     rowMap.set(i, bucket);
   }
 
-  return { nodes, rowMap, colCount };
+  return { nodes, rowMap, colCount, issues };
 }

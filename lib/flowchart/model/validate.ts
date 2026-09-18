@@ -25,18 +25,28 @@ export function validateTable(
     }
   }
 
-  const { nodes } = parseTable(table, schema);
+  const { nodes, issues } = parseTable(table, schema);
   if (nodes.length === 0) {
     errors.push("有効なノードが 1 件もありません（ID 列を確認してください）");
     return errors;
   }
 
-  const idSet = new Set<string>();
-  for (const n of nodes) {
-    if (idSet.has(n.id)) {
-      errors.push(`ID ${n.id} が重複しています`);
+  // サイレントに消えていた4点（ID重複/種別空欄/色未知値/段列重複）を可視化する（ADR-019/022）
+  for (const issue of issues) {
+    const at = `${issue.rowIndex + 1}行目`;
+    switch (issue.kind) {
+      case "duplicate_id":
+        errors.push(`ID ${issue.id} が重複しています（${at}）`);
+        break;
+      case "empty_type":
+        errors.push(`ID ${issue.id}: 図形種別が空欄です（${at}）`);
+        break;
+      case "unknown_color":
+        errors.push(
+          `ID ${issue.id}: 色 "${issue.detail}" は未対応の値です（黄/橙/青のみ有効、${at}）`
+        );
+        break;
     }
-    idSet.add(n.id);
   }
 
   const ids = new Set(nodes.map((n) => n.id));
@@ -45,6 +55,22 @@ export function validateTable(
       if (!ids.has(did)) {
         errors.push(`ID ${n.id}: 接続先 ${did} が見つかりません`);
       }
+    }
+  }
+
+  const tierLevelGroups = new Map<string, string[]>();
+  for (const n of nodes) {
+    const tier = n.tier ?? n.rowIndex;
+    const key = `${tier}:${n.level}`;
+    const bucket = tierLevelGroups.get(key) ?? [];
+    bucket.push(n.id);
+    tierLevelGroups.set(key, bucket);
+  }
+  for (const groupIds of tierLevelGroups.values()) {
+    if (groupIds.length > 1) {
+      errors.push(
+        `ID ${groupIds.join(", ")}: 段・列が重複しています（座標が重なり図形が隠れます）`
+      );
     }
   }
 

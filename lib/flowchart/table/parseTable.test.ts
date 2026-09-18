@@ -44,3 +44,34 @@ describe("parseTable duplicate id", () => {
     expect(nodes[0].fullText).toBe("最初");
   });
 });
+
+describe("parseTable issues (ADR-019/022)", () => {
+  it("records a duplicate_id issue for the skipped second occurrence", () => {
+    const table = [
+      [10, "端子", "", "20", "", 0, 0, "最初", "", ""],
+      [10, "処理", "", "30", "", 1, 0, "重複", "", ""],
+    ];
+    const { issues } = parseTable(table, "table-10col-v2");
+    expect(issues).toEqual([{ kind: "duplicate_id", id: "10", rowIndex: 1 }]);
+  });
+
+  it("records an empty_type issue for a row with an ID but no shape type", () => {
+    const table = [[15, "", "", "20", "", 0, 0, "空欄種別", "", ""]];
+    const { issues } = parseTable(table, "table-10col-v2");
+    expect(issues).toEqual([{ kind: "empty_type", id: "15", rowIndex: 0 }]);
+  });
+
+  it("records an unknown_color issue for a color cell outside 黄/橙/青", () => {
+    const table = [[10, "処理", "赤", "20", "", 0, 0, "A", "", ""]];
+    const { issues } = parseTable(table, "table-10col-v2");
+    expect(issues).toEqual([
+      { kind: "unknown_color", id: "10", rowIndex: 0, detail: "赤" },
+    ]);
+  });
+
+  it("does not flag an empty color cell as unknown", () => {
+    const table = [[10, "処理", "", "20", "", 0, 0, "A", "", ""]];
+    const { issues } = parseTable(table, "table-10col-v2");
+    expect(issues).toEqual([]);
+  });
+});

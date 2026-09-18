@@ -86,10 +86,21 @@ export type Bounds = {
   bottom: number;
 };
 
+export type ParseIssueKind = "duplicate_id" | "empty_type" | "unknown_color";
+
+/** parseTable が検知したがノード生成をブロックしない事象（サイレントに消えていた4点、ADR-019） */
+export type ParseIssue = {
+  kind: ParseIssueKind;
+  id: string;
+  rowIndex: number;
+  detail?: string;
+};
+
 export type ParseResult = {
   nodes: FlowNode[];
   rowMap: Map<number, FlowNode[]>;
   colCount: number;
+  issues: ParseIssue[];
 };
 
 export type GenerateSuccess = {
